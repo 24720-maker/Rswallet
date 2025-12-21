@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RICH WALLET - ระบบฝากถอนอัจฉริยะ</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+
+    <style>
+        body { font-family: 'Prompt', sans-serif; background: #f0f2f5; color: #1f2937; }
+        .gradient-card { background: linear-gradient(135deg, #2563eb, #1e40af); color: white; }
+        .maintenance-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.95); z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            color: #ef4444; text-align: center;
+        }
+        .promo-card:hover { transform: translateY(-5px); transition: 0.3s; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body class="pb-20">
+
+    <div id="maint-screen" class="maintenance-overlay hidden">
+        <i class="fa-solid fa-triangle-exclamation text-6xl mb-4"></i>
+        <h1 class="text-3xl font-bold">ปิดปรับปรุงชั่วคราว</h1>
+        <p class="text-gray-400 mt-2">กรุณาติดต่อแอดมินหรือลองใหม่ภายหลัง</p>
+    </div>
+
+    <div id="auth-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl p-8 w-full max-w-sm shadow-2xl">
+            <h2 class="text-2xl font-bold text-center mb-6 text-blue-800">เข้าสู่ระบบ</h2>
+            <input id="l-email" class="w-full border p-3 rounded-lg mb-3" placeholder="อีเมล">
+            <input id="l-pass" type="password" class="w-full border p-3 rounded-lg mb-4" placeholder="รหัสผ่าน">
+            <button onclick="Auth.login()" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold">LOGIN</button>
+            <div class="mt-4 text-center text-sm">
+                ยังไม่มีบัญชี? <span onclick="UI.regMode()" class="text-blue-600 cursor-pointer font-bold">สมัครสมาชิก</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-view" class="hidden max-w-md mx-auto min-h-screen bg-white shadow-xl relative">
+        
+        <header class="bg-white p-4 sticky top-0 z-40 border-b">
+            <div class="flex justify-between items-center">
+                <h1 class="text-xl font-bold text-blue-800"><i class="fa-solid fa-wallet"></i> RICH WALLET</h1>
+                <button onclick="Auth.logout()" class="text-gray-400 hover:text-red-500"><i class="fa-solid fa-power-off"></i></button>
+            </div>
+            <div class="mt-3 bg-blue-50 border-l-4 border-blue-600 p-2 rounded text-xs text-blue-800 flex items-center">
+                <i class="fa-solid fa-bullhorn mr-2"></i>
+                <marquee id="announcement">ยินดีต้อนรับสมาชิกทุกท่าน...</marquee>
+            </div>
+        </header>
+
+        <main class="p-4 space-y-6">
+            <div class="gradient-card rounded-2xl p-6 shadow-lg relative overflow-hidden">
+                <div class="absolute right-0 top-0 opacity-10"><i class="fa-solid fa-coins text-8xl"></i></div>
+                <p class="text-blue-200 text-sm">ยอดเงินคงเหลือ</p>
+                <h2 id="u-bal" class="text-4xl font-bold my-2">฿0.00</h2>
+                <div class="flex justify-between items-end mt-4">
+                    <div>
+                        <p class="text-xs text-blue-200">ชื่อบัญชี</p>
+                        <p id="u-name" class="font-bold">Loading...</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-blue-200">เลขบัญชี (ID)</p>
+                        <p id="u-id" class="font-mono text-sm">...</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="Wallet.deposit()" class="bg-green-600 text-white py-4 rounded-xl font-bold shadow hover:bg-green-700 transition">
+                    <i class="fa-solid fa-circle-arrow-down text-xl mb-1"></i><br>ฝากเงิน
+                </button>
+                <button onclick="Wallet.withdraw()" class="bg-red-500 text-white py-4 rounded-xl font-bold shadow hover:bg-red-600 transition">
+                    <i class="fa-solid fa-circle-arrow-up text-xl mb-1"></i><br>ถอนเงิน
+                </button>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-gray-700 mb-3 border-l-4 border-blue-600 pl-2">โปรโมชั่นแนะนำ</h3>
+                <div id="promo-list" class="space-y-3">
+                    </div>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-gray-700 mb-3 border-l-4 border-gray-600 pl-2">ประวัติล่าสุด</h3>
+                <div id="tx-list" class="space-y-2 text-sm"></div>
+            </div>
+        </main>
+
+    </div>
+
+    <script>
+        // CONFIG
+        const firebaseConfig = { apiKey: "AIzaSyAochx_FIKbXLrbhhcLdVrpaurjjk4aQYc", authDomain: "paoshuv-c260d.firebaseapp.com", databaseURL: "https://paoshuv-c260d-default-rtdb.asia-southeast1.firebasedatabase.app", projectId: "paoshuv-c260d" };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+        const auth = firebase.auth();
+
+        let user = null, userData = {}, config = {};
+
+        // AUTH
+        auth.onAuthStateChanged(u => {
+            user = u;
+            if(u) {
+                document.getElementById('auth-modal').classList.add('hidden');
+                document.getElementById('app-view').classList.remove('hidden');
+                App.init();
+            } else {
+                document.getElementById('auth-modal').classList.remove('hidden');
+                document.getElementById('app-view').classList.add('hidden');
+            }
+        });
+
+        const Auth = {
+            login: () => auth.signInWithEmailAndPassword(document.getElementById('l-email').value, document.getElementById('l-pass').value).catch(e=>Swal.fire('Error',e.message,'error')),
+            logout: () => auth.signOut()
+        };
+
+        const UI = {
+            regMode: async () => {
+                const { value: form } = await Swal.fire({
+                    title: 'สมัครสมาชิก',
+                    html: '<input id="r-email" class="swal2-input" placeholder="อีเมล"><input id="r-pass" type="password" class="swal2-input" placeholder="รหัสผ่าน"><input id="r-name" class="swal2-input" placeholder="ชื่อ-นามสกุล"><input id="r-bank" class="swal2-input" placeholder="ธนาคาร"><input id="r-acc" class="swal2-input" placeholder="เลขบัญชี">',
+                    focusConfirm: false,
+                    preConfirm: () => [
+                        document.getElementById('r-email').value, document.getElementById('r-pass').value,
+                        document.getElementById('r-name').value, document.getElementById('r-bank').value, document.getElementById('r-acc').value
+                    ]
+                });
+                if(form && form[0]) {
+                    auth.createUserWithEmailAndPassword(form[0], form[1]).then(c => {
+                        db.ref('users/'+c.user.uid).set({email:form[0], name:form[2], bank:form[3], acc:form[4], balance:0});
+                        Swal.fire('สำเร็จ','เข้าสู่ระบบได้เลย','success');
+                    }).catch(e=>Swal.fire('Error',e.message,'error'));
+                }
+            }
+        };
+
+        const App = {
+            init: () => {
+                // Monitor Settings
+                db.ref('settings').on('value', s => {
+                    config = s.val() || {};
+                    if(config.isMaintenance) document.getElementById('maint-screen').classList.remove('hidden');
+                    else document.getElementById('maint-screen').classList.add('hidden');
+                    if(config.announcement) document.getElementById('announcement').innerText = config.announcement;
+                });
+
+                // User Data
+                db.ref('users/'+user.uid).on('value', s => {
+                    userData = s.val();
+                    document.getElementById('u-bal').innerText = `฿${(userData.balance||0).toLocaleString()}`;
+                    document.getElementById('u-name').innerText = userData.name;
+                    document.getElementById('u-id').innerText = user.uid.slice(0,8);
+                });
+
+                // Promotions
+                db.ref('promotions').on('value', s => {
+                    const l = document.getElementById('promo-list'); l.innerHTML = '';
+                    s.forEach(d => {
+                        const p = d.val();
+                        l.innerHTML += `
+                            <div class="bg-white p-3 rounded-xl shadow-sm flex items-center gap-3 promo-card border border-gray-100">
+                                <img src="${p.img}" class="w-16 h-16 rounded-lg object-cover bg-gray-200">
+                                <div>
+                                    <h4 class="font-bold text-blue-800">${p.title}</h4>
+                                    <p class="text-xs text-gray-500">${p.desc}</p>
+                                </div>
+                            </div>`;
+                    });
+                });
+
+                // Transactions
+                db.ref('transactions').orderByChild('uid').equalTo(user.uid).limitToLast(5).on('value', s => {
+                    const l = document.getElementById('tx-list'); l.innerHTML = '';
+                    const arr = []; s.forEach(d => arr.unshift(d.val()));
+                    if(arr.length===0) l.innerHTML='<p class="text-center text-gray-400">ยังไม่มีรายการ</p>';
+                    arr.forEach(t => {
+                        const color = t.status=='approved'?'text-green-600':(t.status=='rejected'?'text-red-500':'text-yellow-600');
+                        l.innerHTML += `<div class="flex justify-between bg-gray-50 p-2 rounded"><span>${t.type}</span><span class="${color} font-bold">${t.status} ฿${t.amount}</span></div>`;
+                    });
+                });
+            }
+        };
+
+        const Wallet = {
+            deposit: () => {
+                Swal.fire({
+                    title: 'ฝากเงิน',
+                    html: `
+                        <div class="text-left bg-gray-100 p-3 rounded mb-3">
+                            <p class="text-sm font-bold">ช่องทางฝากเงิน</p>
+                            <p class="text-xs text-gray-600">กรุณาติดต่อแอดมินเพื่อขอเลขบัญชี</p>
+                            <a href="${config.contactLink||'#'}" target="_blank" class="block text-center bg-green-500 text-white py-2 rounded mt-2 text-sm font-bold">ติดต่อแอดมิน (LINE)</a>
+                        </div>
+                        <input id="dep-amt" type="number" class="swal2-input" placeholder="จำนวนเงินที่โอน">
+                        <input id="dep-time" type="text" class="swal2-input" placeholder="เวลาโอน (เช่น 12.30)">
+                    `,
+                    confirmButtonText: 'แจ้งฝาก',
+                    showCancelButton: true
+                }).then(r => {
+                    if(r.isConfirmed) {
+                        const amt = document.getElementById('dep-amt').value;
+                        const time = document.getElementById('dep-time').value;
+                        if(amt && time) {
+                            db.ref('transactions').push({
+                                uid: user.uid, type: 'deposit', amount: Number(amt), time: time, status: 'pending', timestamp: Date.now(), user_name: userData.name
+                            });
+                            Swal.fire('แจ้งฝากแล้ว','รอแอดมินตรวจสอบ','success');
+                        }
+                    }
+                });
+            },
+            withdraw: () => {
+                Swal.fire({
+                    title: 'ถอนเงิน',
+                    text: `เข้าบัญชี: ${userData.bank} (${userData.acc})`,
+                    input: 'number',
+                    inputPlaceholder: 'ระบุจำนวนเงิน',
+                    confirmButtonText: 'ยืนยันถอน',
+                    confirmButtonColor: '#ef4444',
+                    showCancelButton: true
+                }).then(r => {
+                    if(r.isConfirmed && r.value) {
+                        if(Number(r.value) > userData.balance) return Swal.fire('ยอดเงินไม่พอ','','error');
+                        db.ref('transactions').push({
+                            uid: user.uid, type: 'withdraw', amount: Number(r.value), status: 'pending', timestamp: Date.now(), user_name: userData.name, bank_info: `${userData.bank} ${userData.acc}`
+                        });
+                        db.ref('users/'+user.uid).update({balance: userData.balance - Number(r.value)});
+                        Swal.fire('แจ้งถอนสำเร็จ','','success');
+                    }
+                });
+            }
+        };
+    </script>
+</body>
+</html>
