@@ -350,4 +350,247 @@
                     userData = s.val() || {};
                     document.getElementById('u-balance').innerText = (userData.balance||0).toLocaleString(undefined,{minimumFractionDigits:2});
                     document.getElementById('w-max-bal').innerText = (userData.balance||0).toLocaleString();
-                    document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?name=${userData.name}&background=D
+                    document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?name=${userData.name}&background=D4AF37&color=000&bold=true`;
+                    document.getElementById('p1-img').src = `https://ui-avatars.com/api/?name=${userData.name}&background=D4AF37&color=000&bold=true`;
+                    // Profile Fill
+                    document.getElementById('pf-name').value = userData.name;
+                    document.getElementById('pf-fb').value = userData.fb_link;
+                    document.getElementById('pf-bank').value = userData.bank;
+                    document.getElementById('pf-acc').value = userData.acc;
+                    document.getElementById('w-user-bank').innerText = `${userData.bank} - ${userData.acc}`;
+                });
+
+                db.ref('settings').on('value', s => {
+                    config = s.val() || {};
+                    document.getElementById('sys-ann').innerText = config.announcement || 'Arena Online';
+                    const bl = document.getElementById('admin-banks'); bl.innerHTML = '';
+                    if(config.banks) Object.values(config.banks).forEach(b => {
+                        bl.innerHTML += `<div class="bg-black/40 p-2 rounded border border-white/5 flex justify-between text-xs"><span>${b.name}</span><span class="text-[#D4AF37] font-bold cursor-pointer" onclick="UI.copy('${b.acc}')">${b.acc} 📋</span></div>`;
+                    });
+                });
+
+                db.ref('rooms').on('value', s => {
+                    const l = document.getElementById('room-list'); l.innerHTML = '';
+                    let count = 0;
+                    s.forEach(d => {
+                        const r = d.val();
+                        if(r.status === 'open' || r.status === 'waiting_ready') {
+                            count++;
+                            const type = r.type==='pokdeng'?'🎴 ป๊อกเด้ง':'✊ เป่ายิ้งฉุบ';
+                            const amIIn = r.p1?.uid===user.uid || r.p2?.uid===user.uid;
+                            l.innerHTML += `
+                                <div class="glass p-4 flex justify-between items-center hover:border-[#D4AF37] transition animate__animated animate__fadeInUp">
+                                    <div class="flex items-center gap-4">
+                                        <div class="w-12 h-12 bg-[#18181b] rounded-xl flex items-center justify-center text-xl border border-white/5 shadow-inner">${r.type==='pokdeng'?'🎴':'✊'}</div>
+                                        <div>
+                                            <h4 class="font-bold text-white text-sm">${r.name}</h4>
+                                            <p class="text-[10px] text-[#D4AF37] font-bold">${type} | ฿${r.bet.toLocaleString()}</p>
+                                        </div>
+                                    </div>
+                                    <button onclick="${amIIn ? `Game.enter('${d.key}')` : `Game.join('${d.key}',${r.bet})`}" class="btn-gold px-6 py-2 text-xs shadow-lg">${amIIn ? 'กลับเข้าห้อง' : 'เข้าร่วม'}</button>
+                                </div>`;
+                        }
+                    });
+                    document.getElementById('room-count').innerText = count + ' ห้อง';
+                    if(count===0) l.innerHTML = '<div class="text-center py-10 text-gray-600 border-2 border-dashed border-gray-800 rounded-xl">ไม่มีห้องว่าง</div>';
+                });
+
+                db.ref('transactions').orderByChild('uid').equalTo(user.uid).limitToLast(10).on('value', s => {
+                    const l = document.getElementById('tx-history'); l.innerHTML = '';
+                    const arr = []; s.forEach(d => arr.unshift(d.val()));
+                    arr.forEach(t => {
+                        let c = t.status=='approved'?'text-green-400':(t.status=='rejected'?'text-red-400':'text-yellow-400');
+                        l.innerHTML += `<div class="bg-white/5 p-2 rounded flex justify-between text-xs items-center"><div><b class="text-gray-300 uppercase">${t.type}</b><br><span class="text-[9px] text-gray-500">${moment(t.timestamp).fromNow()}</span></div><div class="text-right"><span class="font-bold text-white">฿${t.amount}</span><br><span class="${c} text-[9px] uppercase">${t.status}</span></div></div>`;
+                    });
+                });
+            }
+        };
+
+        const Game = {
+            join: (rid, bet) => {
+                if(userData.balance < bet) return Swal.fire('Error','ยอดเงินไม่พอ','error');
+                db.ref('rooms/'+rid).transaction(r => {
+                    if(r) {
+                        const empty = { uid:user.uid, name:userData.name, ready:false, score:0, move:'', hand:[], status:'thinking' };
+                        if(!r.p1) { r.p1=empty; r.status='waiting_ready'; return r; }
+                        else if(!r.p2 && r.p1.uid!==user.uid) { r.p2=empty; r.status='waiting_ready'; return r; }
+                    }
+                }, (e,c) => {
+                    if(c) { db.ref('users/'+user.uid).update({balance:userData.balance-bet}); Game.enter(rid); }
+                    else Swal.fire('Full','ห้องเต็มแล้ว','warning');
+                });
+            },
+            enter: (rid) => {
+                curRoom = rid; UI.page('game');
+                
+                // Chat Listener
+                if(chatUnsub) chatUnsub();
+                chatUnsub = db.ref('rooms/'+rid+'/chat').limitToLast(20).on('child_added', s => {
+                    const m = s.val();
+                    const box = document.getElementById('chat-box');
+                    const isMe = m.uid === user.uid;
+                    box.innerHTML += `<div class="${isMe?'text-right':'text-left'} mb-1"><span class="${isMe?'text-[#D4AF37]':'text-gray-400'} font-bold">${m.name}:</span> ${m.msg}</div>`;
+                    box.scrollTop = box.scrollHeight;
+                });
+
+                db.ref('rooms/'+rid).on('value', s => {
+                    const r = s.val();
+                    if(!r) { Game.quit(true); return; }
+
+                    document.getElementById('g-room-name').innerText = r.name;
+                    document.getElementById('g-pot').innerText = `฿${(r.bet*2).toLocaleString()}`;
+                    
+                    const amIP1 = r.p1?.uid === user.uid;
+                    const me = amIP1 ? r.p1 : r.p2;
+                    const opp = amIP1 ? r.p2 : r.p1;
+                    
+                    if(!me) return;
+
+                    // Opponent UI
+                    if(opp) {
+                        document.getElementById('p2-name').innerText = opp.name;
+                        document.getElementById('p2-img').src = `https://ui-avatars.com/api/?name=${opp.name}&background=1a1f2e&color=fff`;
+                        document.getElementById('p2-status').className = `absolute -right-1 -bottom-1 w-4 h-4 rounded-full border-2 border-black ${opp.ready?'bg-green-500':'bg-gray-500'}`;
+                    } else {
+                        document.getElementById('p2-name').innerText = 'Waiting...';
+                        document.getElementById('p2-img').src = '';
+                    }
+
+                    // Game States
+                    const st = document.getElementById('g-status-text');
+                    const btnRdy = document.getElementById('btn-ready');
+                    const ctrlRPS = document.getElementById('ctrl-rps');
+                    const ctrlPok = document.getElementById('ctrl-pok');
+                    const timerUI = document.getElementById('g-timer');
+
+                    // Reset
+                    ctrlRPS.classList.add('hidden'); ctrlPok.classList.add('hidden');
+                    document.getElementById('p1-rps-move').classList.add('hidden');
+                    document.getElementById('p2-rps-move').classList.add('hidden');
+                    document.getElementById('p1-cards').classList.add('hidden');
+                    document.getElementById('p2-cards').classList.add('hidden');
+
+                    if(r.status === 'waiting_ready') {
+                        st.innerText = me.ready ? "รออีกฝ่าย..." : "กดพร้อมเพื่อเริ่ม!";
+                        btnRdy.classList.toggle('hidden', me.ready);
+                        timerUI.classList.add('hidden');
+                    }
+                    else if(r.status === 'playing') {
+                        btnRdy.classList.add('hidden');
+                        timerUI.classList.remove('hidden');
+                        
+                        // Countdown
+                        const elap = Math.floor((Date.now() - r.turnStartTime)/1000);
+                        const left = Math.max(0, 10 - elap);
+                        timerUI.innerText = left;
+
+                        if(r.type === 'rps') {
+                            ctrlRPS.classList.remove('hidden');
+                            st.innerText = me.move ? "รอคู่แข่ง..." : "เลือกอาวุธ!";
+                            ctrlRPS.style.opacity = me.move ? 0.3 : 1;
+                            ctrlRPS.style.pointerEvents = me.move ? 'none' : 'auto';
+                        }
+                        else if(r.type === 'pokdeng') {
+                            document.getElementById('p1-cards').classList.remove('hidden');
+                            UI.renderCards('p1', r[me.uid===r.p1.uid?'p1':'p2'].hand, true);
+                            
+                            if(r.stage === 'deal') st.innerText = "กำลังแจกไพ่...";
+                            else if(r.stage === 'action') {
+                                // Pokdeng Action Logic
+                                const isMyTurn = (r.turn === 'p1' && amIP1) || (r.turn === 'p2' && !amIP1);
+                                if(isMyTurn && !me.move) {
+                                    st.innerText = "ตาของคุณ: จั่ว หรือ ผ่าน?";
+                                    ctrlPok.classList.remove('hidden');
+                                } else {
+                                    st.innerText = "รออีกฝ่าย...";
+                                }
+                            }
+                        }
+                    }
+                    else if(r.status === 'calculating') {
+                        st.innerText = "ประมวลผล..."; timerUI.classList.add('hidden');
+                        if(r.type === 'rps') {
+                            const m = {rock:'✊', paper:'✋', scissors:'✌️'};
+                            document.getElementById('p1-rps-move').innerText = m[me.move];
+                            document.getElementById('p2-rps-move').innerText = m[opp.move];
+                            document.getElementById('p1-rps-move').classList.remove('hidden');
+                            document.getElementById('p2-rps-move').classList.remove('hidden');
+                        } else {
+                            // Show Cards
+                            document.getElementById('p1-cards').classList.remove('hidden');
+                            document.getElementById('p2-cards').classList.remove('hidden');
+                            UI.renderCards('p1', r[me.uid===r.p1.uid?'p1':'p2'].hand, true);
+                            UI.renderCards('p2', r[me.uid===r.p1.uid?'p2':'p1'].hand, true);
+                        }
+                    }
+                    else if(r.status === 'finished') {
+                        let res = r.winner === 'draw' ? 'เสมอ! คืนเงิน' : (r.winner === user.uid ? '🎉 ชนะ! รับเงิน' : 'แพ้!');
+                        Swal.fire({title:'GAME OVER', text:res, background:'#111', color:'#fff', confirmButtonColor:'#D4AF37'}).then(()=>Game.quit());
+                    }
+                });
+            },
+            ready: () => db.ref(`rooms/${curRoom}/${db.ref(`rooms/${curRoom}/p1/uid`).toString().includes(user.uid)?'p1':'p2'}/ready`).set(true),
+            moveRPS: (m) => {
+                document.querySelectorAll('.rps-item').forEach(e=>e.classList.remove('selected'));
+                document.getElementById('btn-'+m).classList.add('selected');
+                const me = db.ref(`rooms/${curRoom}/p1/uid`).toString().includes(user.uid)?'p1':'p2';
+                db.ref(`rooms/${curRoom}/${me}/move`).set(m);
+            },
+            movePok: (act) => {
+                // Send action to actions list, Admin handles logic
+                db.ref(`rooms/${curRoom}/actions`).push({uid:user.uid, action:act, timestamp:Date.now()});
+                // Optimistic UI
+                document.getElementById('ctrl-pok').classList.add('hidden');
+            },
+            sendChat: () => {
+                const i = document.getElementById('chat-input');
+                if(i.value.trim()) { db.ref('rooms/'+curRoom+'/chat').push({uid:user.uid, name:userData.name, msg:i.value.trim()}); i.value=''; }
+            },
+            quit: (f) => {
+                if(curRoom) db.ref('rooms/'+curRoom).off();
+                if(chatUnsub) chatUnsub();
+                curRoom=null; UI.page('lobby');
+                if(f) Swal.fire('Room Closed','','info');
+            },
+            leave: () => Swal.fire({title:'ออก?',text:'จะถูกปรับแพ้ทันที',icon:'warning',showCancelButton:true}).then(r=>{if(r.isConfirmed) Game.quit()})
+        };
+
+        const Wallet = {
+            redeem: () => {
+                const c=document.getElementById('gift-code').value;
+                if(!c) return;
+                db.ref('codes/'+c).transaction(d=>{ if(d&&!d.used){d.used=true; d.by=user.uid; return d;} }).then(s=>{
+                    if(s.committed) { db.ref('users/'+user.uid).update({balance:userData.balance+s.snapshot.val().amount}); Swal.fire('Success',`+${s.snapshot.val().amount}`,'success'); }
+                    else Swal.fire('Invalid','','error');
+                });
+            },
+            submit: (t) => {
+                const a=Number(document.getElementById(t=='deposit'?'d-amt':'w-amt').value);
+                if(a<1) return;
+                db.ref('requests').push({uid:user.uid, name:userData.name, type:t, amount:a, time:t=='deposit'?document.getElementById('d-time').value:'', status:'pending', timestamp:Date.now(), bank:t=='withdraw'?`${userData.bank} ${userData.acc}`:''});
+                if(t=='withdraw') db.ref('users/'+user.uid).update({balance:userData.balance-a});
+                Swal.fire('Sent','','success'); UI.page('lobby');
+            }
+        };
+
+        const User = { save: () => db.ref('users/'+user.uid).update({name:document.getElementById('pf-name').value, fb_link:document.getElementById('pf-fb').value, bank:document.getElementById('pf-bank').value, acc:document.getElementById('pf-acc').value}).then(()=>Swal.fire('Saved')) };
+
+        const UI = {
+            toggleAuth: (m) => { document.getElementById('form-login').classList.toggle('hidden',m=='reg'); document.getElementById('form-reg').classList.toggle('hidden',m=='log'); },
+            page: (p) => { ['lobby','game','wallet','profile'].forEach(id=>{ document.getElementById('p-'+id).classList.add('hidden'); if(document.getElementById('nav-'+id))document.getElementById('nav-'+id).classList.remove('text-[#D4AF37]'); }); document.getElementById('p-'+p).classList.remove('hidden'); if(document.getElementById('nav-'+p))document.getElementById('nav-'+p).classList.add('text-[#D4AF37]'); },
+            tab: (m) => { document.getElementById('view-dep').classList.toggle('hidden',m=='wit'); document.getElementById('view-wit').classList.toggle('hidden',m=='dep'); document.getElementById('t-dep').className=m=='dep'?'flex-1 py-3 rounded-lg font-bold text-xs bg-[#D4AF37] text-black':'flex-1 py-3 rounded-lg font-bold text-xs text-gray-500'; document.getElementById('t-wit').className=m=='wit'?'flex-1 py-3 rounded-lg font-bold text-xs bg-[#D4AF37] text-black':'flex-1 py-3 rounded-lg font-bold text-xs text-gray-500'; },
+            copy: (t) => navigator.clipboard.writeText(t).then(()=>Swal.fire({toast:true,title:'Copied',position:'top',timer:1000,showConfirmButton:false})),
+            contact: () => window.open(config.contactLink||'#'),
+            renderCards: (pid, cards, show) => {
+                const el = document.getElementById(pid+'-cards'); el.innerHTML='';
+                if(!cards) return;
+                cards.forEach(c => {
+                    const suit = c.suit=='H'?'♥':(c.suit=='D'?'♦':(c.suit=='S'?'♠':'♣'));
+                    const color = (c.suit=='H'||c.suit=='D')?'text-red-600':'text-black';
+                    el.innerHTML += `<div class="card-slot ${show?'flipped':''}"><div class="card-inner"><div class="card-front ${color}"><div class="text-xl">${c.rank}</div><div class="text-2xl">${suit}</div></div><div class="card-back"></div></div></div>`;
+                });
+            }
+        };
+    </script>
+</body>
+</html>
