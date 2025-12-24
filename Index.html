@@ -104,7 +104,6 @@
         }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* Animation Classes */
         .fade-enter { animation: fadeIn 0.4s ease-out forwards; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -226,19 +225,13 @@
                 </div>
 
                 <div id="deposit-form-area">
-                    <div class="bg-[#1a1a1a] p-5 rounded-xl border border-[#333] mb-6 flex items-center gap-4 relative overflow-hidden">
-                        <div class="absolute right-0 top-0 p-4 opacity-5"><i class="fa-solid fa-building-columns text-6xl text-white"></i></div>
-                        <div class="w-12 h-12 bg-green-600 rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-lg shadow-green-500/20">K</div>
-                        <div class="flex-1 z-10">
-                            <p class="text-gray-400 text-xs mb-1">โอนเงินเข้าบัญชี</p>
-                            <p id="adm-bank-name" class="font-bold text-white text-sm">ธนาคารกสิกรไทย</p>
-                            <p id="adm-bank-acc" class="font-mono text-xl text-[#D4AF37] font-bold my-1 tracking-wider">...</p>
-                            <p id="adm-bank-owner" class="text-xs text-gray-500">...</p>
-                        </div>
-                        <button onclick="Wallet.copyBank()" class="text-gray-400 hover:text-white z-10"><i class="fa-regular fa-copy"></i></button>
+                    <p class="text-xs text-gray-400 mb-3 font-bold uppercase">1. เลือกบัญชีเพื่อโอนเงิน</p>
+                    <div id="bank-list-display" class="space-y-3 mb-6">
+                        <div class="text-center text-gray-500 text-xs py-4 border border-[#333] rounded-xl">กำลังโหลดข้อมูลธนาคาร...</div>
                     </div>
 
-                    <div class="space-y-5">
+                    <div class="space-y-5 pt-4 border-t border-[#333]">
+                        <p class="text-xs text-gray-400 font-bold uppercase">2. กรอกรายละเอียดการโอน</p>
                         <div>
                             <label class="text-xs text-gray-500 ml-1 mb-2 block">เลือกโปรโมชั่น (รับได้ครั้งเดียว)</label>
                             <select id="dep-promo" class="input-dark text-sm cursor-pointer" onchange="Wallet.checkPromo()">
@@ -280,16 +273,13 @@
                 </div>
 
                 <div id="withdraw-form-area">
-                    <div class="glass-card p-6 rounded-2xl mb-6 text-center">
-                        <p class="text-gray-400 text-xs mb-2">ยอดเงินที่ถอนได้</p>
-                        <h2 class="text-4xl font-bold text-white mb-6" id="w-avail-bal">฿0.00</h2>
-                        
-                        <div class="bg-[#000]/50 p-3 rounded-lg border border-[#333] text-left flex items-center gap-3">
-                            <div class="w-10 h-10 bg-[#222] rounded flex items-center justify-center text-gray-400"><i class="fa-solid fa-building-columns"></i></div>
-                            <div>
-                                <p class="text-[10px] text-gray-500">โอนเข้าบัญชี</p>
-                                <p id="w-bank-info" class="text-sm font-bold text-[#D4AF37]">...</p>
-                            </div>
+                    <div class="gold-gradient rounded-2xl p-6 text-black mb-6 relative overflow-hidden shadow-lg shadow-[#D4AF37]/20">
+                        <div class="absolute -right-6 -top-6 w-24 h-24 bg-white/20 rounded-full blur-xl"></div>
+                        <p class="text-xs font-bold opacity-70 mb-1">ยอดเงินที่ถอนได้</p>
+                        <h2 class="text-4xl font-bold mb-4" id="w-avail-bal">฿0.00</h2>
+                        <div class="flex items-center gap-2 text-xs font-bold border-t border-black/10 pt-3">
+                            <i class="fa-solid fa-building-columns opacity-50"></i>
+                            <span id="w-bank-info">Loading...</span>
                         </div>
                     </div>
 
@@ -400,13 +390,6 @@
                     document.getElementById('auth-title').innerText = config.siteName || 'ARENA';
                     document.getElementById('min-w-txt').innerText = `* ถอนขั้นต่ำ ${config.minWithdraw||100} บาท`;
                     
-                    // Admin Bank
-                    if(config.adminBank) {
-                        document.getElementById('adm-bank-name').innerText = config.adminBank.bankName || 'ธนาคารกสิกรไทย';
-                        document.getElementById('adm-bank-acc').innerText = config.adminBank.accNo || '000-000-0000';
-                        document.getElementById('adm-bank-owner').innerText = config.adminBank.accName || 'บัญชีบริษัท';
-                    }
-
                     // Toggle Systems
                     if(config.isDepositActive === false) {
                         document.getElementById('deposit-form-area').classList.add('hidden');
@@ -423,6 +406,35 @@
                         document.getElementById('withdraw-form-area').classList.remove('hidden');
                         document.getElementById('withdraw-closed-msg').classList.add('hidden');
                     }
+                });
+
+                // Load Admin Banks (Multi-Bank System)
+                db.ref('admin_banks').on('value', s => {
+                    const l = document.getElementById('bank-list-display'); l.innerHTML='';
+                    if(!s.exists()) {
+                        l.innerHTML='<div class="text-center text-gray-500 text-xs py-4 border border-[#333] rounded-xl">ยังไม่มีธนาคาร (ติดต่อแอดมิน)</div>';
+                        return;
+                    }
+                    s.forEach(d => {
+                        const b = d.val();
+                        let icon='K'; let color='bg-green-600';
+                        if(b.bankName.includes('SCB')) { icon='S'; color='bg-purple-600'; }
+                        else if(b.bankName.includes('BBL')) { icon='B'; color='bg-blue-600'; }
+                        else if(b.bankName.includes('WALLET')) { icon='W'; color='bg-orange-500'; }
+                        
+                        l.innerHTML += `
+                            <div class="bg-[#1a1a1a] p-4 rounded-xl border border-[#333] flex items-center gap-4 relative overflow-hidden transition hover:border-[#D4AF37]">
+                                <div class="w-12 h-12 ${color} rounded-lg flex items-center justify-center text-white text-xl font-bold shadow-lg">${icon}</div>
+                                <div class="flex-1 z-10">
+                                    <p class="font-bold text-white text-sm">${b.bankName}</p>
+                                    <p class="font-mono text-lg text-[#D4AF37] font-bold tracking-wider">${b.accNo}</p>
+                                    <p class="text-xs text-gray-500">${b.accName}</p>
+                                </div>
+                                <button onclick="UI.copy('${b.accNo}')" class="bg-[#222] hover:bg-[#D4AF37] hover:text-black text-gray-400 p-2 rounded-lg transition z-10">
+                                    <i class="fa-regular fa-copy"></i>
+                                </button>
+                            </div>`;
+                    });
                 });
 
                 // 2. User Data
@@ -619,9 +631,9 @@
                 document.getElementById('w-amt').value = '';
             },
             copyBank: () => {
-                const acc = document.getElementById('adm-bank-acc').innerText;
-                navigator.clipboard.writeText(acc);
-                Swal.fire({icon:'success',title:'คัดลอกเลขบัญชีแล้ว',timer:1000,showConfirmButton:false,background:'#222',color:'#fff'});
+                // Copy the first bank in list for simplicity in this button
+                // Or user can click copy on individual bank card
+                Swal.fire('Tip','กดปุ่มคัดลอกที่การ์ดธนาคารได้เลยครับ','info');
             }
         };
 
@@ -643,7 +655,15 @@
                 document.getElementById('p-'+p).classList.add('fade-enter');
                 if(document.getElementById('nav-'+p)) document.getElementById('nav-'+p).classList.add('active');
             },
-            contact: () => window.open(config.contactLink || '#')
+            contact: () => window.open(config.contactLink || '#'),
+            copy: (t) => {
+                navigator.clipboard.writeText(t);
+                Swal.fire({
+                    toast: true, position: 'top', icon: 'success', 
+                    title: 'คัดลอกเลขบัญชีแล้ว', showConfirmButton: false, timer: 1500,
+                    background: '#222', color: '#fff'
+                });
+            }
         };
     </script>
 </body>
