@@ -2,15 +2,14 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>ROYAL ARENA - CASINO ONLINE</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TITANIUM WALLET</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.2.3/howler.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;800&family=Teko:wght@600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -18,304 +17,123 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root {
-            --primary: #D4AF37; /* Gold */
-            --primary-dark: #8a6d1c;
-            --bg-dark: #09090b;
-            --card-bg: #18181b;
-            --border: #27272a;
-        }
-        
-        body { font-family: 'Sarabun', sans-serif; background-color: var(--bg-dark); color: #e4e4e7; user-select: none; -webkit-tap-highlight-color: transparent; }
-        .font-teko { font-family: 'Teko', sans-serif; }
-        
-        /* Glassmorphism */
-        .glass {
-            background: rgba(24, 24, 27, 0.85);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-
-        /* Buttons & Inputs */
-        .btn-gold {
-            background: linear-gradient(135deg, #D4AF37 0%, #aa8a2e 100%);
-            color: #000;
-            font-weight: 800;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-gold:active { transform: scale(0.95); }
-        .btn-gold::after {
-            content: ''; position: absolute; top: 0; left: -100%; width: 100%; height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-            transition: 0.5s;
-        }
-        .btn-gold:hover::after { left: 100%; }
-
-        .input-dark {
-            background: #09090b;
-            border: 1px solid var(--border);
-            color: #fff;
-            padding: 12px 16px;
-            border-radius: 12px;
-            width: 100%;
-            outline: none;
-            transition: 0.3s;
-        }
-        .input-dark:focus { border-color: var(--primary); box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.2); }
-
-        /* Card Animation (Pokdeng) */
-        .card-slot { width: 70px; height: 96px; perspective: 1000px; display: inline-block; margin: 0 4px; position: relative; }
-        .card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.5); }
-        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 8px; border: 1px solid #444; }
-        .card-front { background: white; color: black; transform: rotateY(180deg); display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .card-back { background: repeating-linear-gradient(45deg, #1f2937, #1f2937 10px, #111827 10px, #111827 20px); border: 2px solid #d4af37; }
-        .flipped .card-inner { transform: rotateY(180deg); }
-        
-        /* RPS Buttons */
-        .rps-item {
-            width: 80px; height: 80px;
-            background: #18181b; border: 2px solid var(--border);
-            border-radius: 50%; display: flex; justify-content: center; align-items: center;
-            font-size: 2.5rem; cursor: pointer; transition: 0.2s;
-        }
-        .rps-item.selected {
-            background: var(--primary); border-color: #fff;
-            box-shadow: 0 0 20px var(--primary); transform: scale(1.1) translateY(-10px);
-        }
-
-        /* Utility */
-        .nav-item { color: #71717a; transition: 0.3s; }
-        .nav-item.active { color: var(--primary); transform: translateY(-2px); }
-        .hidden { display: none !important; }
-        .fade-in { animation: fadeIn 0.4s ease-out; }
-        
-        #loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        body { font-family: 'Prompt', sans-serif; background: #020617; color: #fff; }
+        .glass { background: #0f172a; border: 1px solid #1e293b; border-radius: 16px; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .input-box { background: #020617; border: 1px solid #334155; color: #fff; padding: 14px; border-radius: 12px; width: 100%; outline: none; transition: 0.3s; }
+        .input-box:focus { border-color: #10b981; }
+        .btn-main { background: #10b981; color: #000; font-weight: bold; padding: 14px; border-radius: 12px; width: 100%; transition: 0.2s; }
+        .btn-main:hover { background: #059669; }
+        .card-bal { background: linear-gradient(135deg, #059669 0%, #047857 100%); border-radius: 20px; padding: 25px; position: relative; overflow: hidden; }
+        .card-bal::after { content: '฿'; position: absolute; right: -20px; bottom: -30px; font-size: 150px; opacity: 0.1; transform: rotate(-20deg); }
     </style>
 </head>
 <body class="pb-24">
 
-    <div id="loader">
-        <div class="relative">
-            <div class="w-16 h-16 border-4 border-gray-800 border-t-[#D4AF37] rounded-full animate-spin"></div>
-            <i class="fa-solid fa-crown absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-[#D4AF37]"></i>
-        </div>
-        <p class="mt-4 text-[#D4AF37] font-bold tracking-[0.3em] text-xs animate-pulse">CONNECTING TO SERVER</p>
-    </div>
-
-    <div id="view-auth" class="fixed inset-0 z-50 flex items-center justify-center p-6 bg-[#09090b] hidden">
-        <div class="w-full max-w-sm glass p-8 rounded-2xl animate__animated animate__zoomIn">
-            <div class="text-center mb-8">
-                <h1 class="text-6xl font-teko text-transparent bg-clip-text bg-gradient-to-b from-[#D4AF37] to-[#8a6d1c] drop-shadow-lg">ROYAL</h1>
-                <p class="text-xs text-gray-500 tracking-[0.6em] uppercase">Premium Casino</p>
+    <div id="auth-view" class="fixed inset-0 z-50 flex items-center justify-center bg-black hidden">
+        <div class="glass w-80 text-center animate__animated animate__fadeIn">
+            <h1 class="text-3xl font-bold text-emerald-500 mb-2">WALLET PRO</h1>
+            <p class="text-xs text-gray-500 mb-6">ระบบฝากถอนอัจฉริยะ</p>
+            <div id="login-form">
+                <input id="l-email" class="input-box mb-3 text-center" placeholder="อีเมล">
+                <input id="l-pass" type="password" class="input-box mb-4 text-center" placeholder="รหัสผ่าน">
+                <button onclick="Auth.login()" class="btn-main">เข้าสู่ระบบ</button>
+                <p class="text-xs text-gray-500 mt-4 cursor-pointer" onclick="UI.toggleAuth('reg')">สมัครสมาชิกใหม่</p>
             </div>
-
-            <div id="form-login" class="space-y-4">
-                <div class="relative">
-                    <i class="fa-solid fa-user absolute left-4 top-4 text-gray-500"></i>
-                    <input id="l-email" class="input-dark pl-12" placeholder="อีเมล / ชื่อผู้ใช้">
-                </div>
-                <div class="relative">
-                    <i class="fa-solid fa-lock absolute left-4 top-4 text-gray-500"></i>
-                    <input id="l-pass" type="password" class="input-dark pl-12" placeholder="รหัสผ่าน">
-                </div>
-                <button onclick="Auth.login()" class="btn-gold w-full py-4 rounded-xl text-lg shadow-lg">เข้าสู่ระบบ</button>
-                <div class="text-center mt-4">
-                    <span class="text-gray-500 text-xs">ยังไม่มีบัญชี?</span>
-                    <button onclick="UI.toggleAuth('reg')" class="text-[#D4AF37] text-xs font-bold ml-1 hover:underline">สมัครสมาชิก</button>
-                </div>
-            </div>
-
-            <div id="form-reg" class="hidden space-y-4">
-                <input id="r-name" class="input-dark" placeholder="ชื่อเล่น (Display Name)">
-                <input id="r-email" class="input-dark" placeholder="อีเมล (สำหรับล็อกอิน)">
-                <input id="r-pass" type="password" class="input-dark" placeholder="รหัสผ่าน (6 ตัวขึ้นไป)">
-                <button onclick="Auth.reg()" class="btn-gold w-full py-4 rounded-xl text-lg">ยืนยันการสมัคร</button>
-                <button onclick="UI.toggleAuth('log')" class="w-full text-gray-500 text-xs hover:text-white">กลับไปหน้าล็อกอิน</button>
+            <div id="reg-form" class="hidden">
+                <input id="r-name" class="input-box mb-2" placeholder="ชื่อเล่น">
+                <input id="r-email" class="input-box mb-2" placeholder="อีเมล">
+                <input id="r-pass" type="password" class="input-box mb-2" placeholder="รหัสผ่าน">
+                <button onclick="Auth.reg()" class="btn-main mt-2">ยืนยันการสมัคร</button>
+                <p class="text-xs text-gray-500 mt-4 cursor-pointer" onclick="UI.toggleAuth('login')">กลับไปหน้าล็อกอิน</p>
             </div>
         </div>
     </div>
 
-    <div id="view-app" class="hidden max-w-md mx-auto min-h-screen relative shadow-2xl bg-[url('https://www.transparenttextures.com/patterns/black-felt.png')]">
-        
-        <header class="p-5 flex justify-between items-center bg-[#09090b]/90 backdrop-blur-md sticky top-0 z-40 border-b border-white/5">
+    <div id="app-view" class="hidden max-w-md mx-auto min-h-screen relative shadow-2xl border-x border-slate-800">
+        <header class="p-5 flex justify-between items-center bg-[#0f172a]/90 backdrop-blur sticky top-0 z-40 border-b border-slate-800">
             <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-full p-[2px] bg-gradient-to-br from-[#D4AF37] to-[#8a6d1c]">
-                    <img id="u-avatar" class="w-full h-full rounded-full bg-black object-cover">
-                </div>
-                <div>
-                    <p class="text-[9px] text-[#D4AF37] font-bold uppercase tracking-wider">Total Balance</p>
-                    <div class="flex items-baseline gap-1">
-                        <span class="text-xs text-gray-400">฿</span>
-                        <span id="u-balance" class="text-2xl font-teko font-bold text-white leading-none">0.00</span>
-                    </div>
-                </div>
+                <div class="w-10 h-10 rounded-full bg-emerald-500 flex items-center justify-center text-black font-bold text-xl">W</div>
+                <div><p class="text-xs text-emerald-500 font-bold">สวัสดีคุณ</p><p id="u-name" class="text-sm font-bold">Loading...</p></div>
             </div>
-            <button onclick="UI.page('wallet')" class="w-10 h-10 rounded-xl bg-[#27272a] text-[#D4AF37] flex items-center justify-center border border-white/10 hover:bg-[#D4AF37] hover:text-black transition">
-                <i class="fa-solid fa-wallet"></i>
-            </button>
+            <button onclick="Auth.logout()" class="text-gray-500 hover:text-red-500"><i class="fa-solid fa-power-off text-xl"></i></button>
         </header>
 
-        <div class="bg-[#D4AF37]/10 border-b border-[#D4AF37]/20 py-2">
-            <marquee id="sys-ann" class="text-[11px] text-gray-300">Welcome to Royal Arena...</marquee>
-        </div>
+        <main class="p-5 space-y-6">
+            <div class="card-bal shadow-lg shadow-emerald-500/20 animate__animated animate__fadeInDown">
+                <p class="text-emerald-100 text-xs font-bold uppercase tracking-wider">ยอดเงินคงเหลือ</p>
+                <h1 class="text-4xl font-bold text-white mt-1">฿<span id="u-balance">0.00</span></h1>
+                <p class="text-[10px] text-emerald-200 mt-4 bg-black/20 inline-block px-2 py-1 rounded">บัญชี: <span id="u-acc-info">...</span></p>
+            </div>
 
-        <main class="p-5 pb-28 space-y-6">
-            
-            <section id="p-lobby" class="fade-in">
-                <div class="glass p-1 pl-4 rounded-xl flex items-center justify-between mb-6 border border-dashed border-[#D4AF37]/30">
-                    <input id="gift-code" class="bg-transparent w-full text-sm outline-none text-[#D4AF37] placeholder-gray-600 font-bold tracking-wider" placeholder="กรอกโค้ดรับเครดิตฟรี...">
-                    <button onclick="Wallet.redeem()" class="bg-[#D4AF37] text-black px-4 py-2 rounded-lg text-xs font-bold hover:bg-white transition">แลกรับ</button>
-                </div>
+            <div class="grid grid-cols-2 gap-4">
+                <button onclick="UI.tab('dep')" id="btn-dep" class="glass p-4 text-center border-emerald-500/50">
+                    <i class="fa-solid fa-circle-arrow-down text-2xl text-emerald-500 mb-2"></i>
+                    <p class="text-sm font-bold">ฝากเงิน</p>
+                </button>
+                <button onclick="UI.tab('wit')" id="btn-wit" class="glass p-4 text-center border-red-500/50">
+                    <i class="fa-solid fa-circle-arrow-up text-2xl text-red-500 mb-2"></i>
+                    <p class="text-sm font-bold">ถอนเงิน</p>
+                </button>
+            </div>
 
-                <div class="grid grid-cols-2 gap-3 mb-6">
-                    <button onclick="UI.page('wallet')" class="glass p-4 flex flex-col items-center justify-center gap-2 hover:border-green-500/50 transition group">
-                        <div class="w-10 h-10 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center text-xl group-hover:scale-110 transition"><i class="fa-solid fa-circle-arrow-down"></i></div>
-                        <span class="text-xs font-bold text-gray-400">ฝากเงิน</span>
-                    </button>
-                    <button onclick="UI.page('wallet')" class="glass p-4 flex flex-col items-center justify-center gap-2 hover:border-red-500/50 transition group">
-                        <div class="w-10 h-10 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-xl group-hover:scale-110 transition"><i class="fa-solid fa-circle-arrow-up"></i></div>
-                        <span class="text-xs font-bold text-gray-400">ถอนเงิน</span>
-                    </button>
-                </div>
-
-                <div>
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="text-lg font-bold text-white flex items-center gap-2"><span class="w-1 h-5 bg-[#D4AF37]"></span> ห้องเดิมพัน (Live)</h3>
-                        <span id="room-count" class="text-[10px] bg-gray-800 px-2 py-1 rounded text-gray-400 border border-white/5">0 Rooms</span>
-                    </div>
-                    <div id="room-list" class="space-y-3">
-                        <div class="text-center py-10 text-gray-600 border-2 border-dashed border-gray-800 rounded-xl">กำลังค้นหาห้อง...</div>
+            <section id="sec-dep" class="animate__animated animate__fadeIn">
+                <div class="glass">
+                    <h3 class="font-bold text-emerald-500 mb-4 border-b border-slate-700 pb-2">แจ้งฝากเงิน</h3>
+                    <div id="admin-banks" class="mb-4 space-y-2"></div>
+                    <div class="space-y-3">
+                        <div><label class="text-xs text-gray-400">จำนวนเงิน</label><input id="d-amt" type="number" class="input-box text-emerald-400 font-bold text-lg" placeholder="0.00"></div>
+                        <div><label class="text-xs text-gray-400">วันเวลาที่โอน</label><input id="d-time" class="input-box" placeholder="เช่น 14.30"></div>
+                        <button onclick="Wallet.deposit()" class="btn-main mt-2">ยืนยันการฝาก</button>
                     </div>
                 </div>
             </section>
 
-            <section id="p-game" class="hidden min-h-[70vh] flex flex-col relative fade-in">
-                <div class="flex justify-between items-center glass p-3 rounded-xl mb-4 bg-black/60">
-                    <div>
-                        <div class="text-[10px] text-gray-500 font-bold">ROOM ID</div>
-                        <div id="g-room-name" class="text-xs text-white font-bold">...</div>
+            <section id="sec-wit" class="hidden animate__animated animate__fadeIn">
+                <div class="glass border-red-900/30">
+                    <h3 class="font-bold text-red-500 mb-4 border-b border-slate-700 pb-2">แจ้งถอนเงิน</h3>
+                    <div class="bg-slate-900 p-3 rounded-lg text-center mb-4 border border-slate-700">
+                        <p class="text-xs text-gray-400">ค่าธรรมเนียมถอน</p>
+                        <p class="text-xl font-bold text-yellow-500" id="fee-percent">0%</p>
                     </div>
-                    <div class="text-center">
-                        <div class="text-[9px] text-[#D4AF37] font-bold">POT SIZE</div>
-                        <div id="g-pot" class="text-xl font-teko font-bold text-white">0</div>
-                    </div>
-                    <button onclick="Game.leave()" class="bg-red-500/10 text-red-500 px-3 py-1 rounded-lg text-[10px] border border-red-500/20 hover:bg-red-500 hover:text-white transition">LEAVE</button>
-                </div>
-
-                <div class="flex-1 relative flex flex-col">
-                    
-                    <div class="flex flex-col items-center transition-all duration-500 opacity-80" id="area-p2">
-                        <div class="relative">
-                            <div class="w-14 h-14 rounded-full border-2 border-red-500 p-0.5"><img id="p2-img" class="w-full h-full rounded-full bg-gray-800 object-cover"></div>
-                            <div id="p2-status" class="absolute -right-1 -bottom-1 w-4 h-4 bg-gray-600 border-2 border-black rounded-full"></div>
+                    <div class="space-y-3">
+                        <div>
+                            <label class="text-xs text-gray-400">จำนวนเงินที่ต้องการถอน</label>
+                            <input id="w-amt" type="number" class="input-box text-red-400 font-bold text-lg" placeholder="0.00" onkeyup="Wallet.calcFee()">
                         </div>
-                        <p id="p2-name" class="text-[10px] mt-1 text-gray-400 font-bold">Waiting...</p>
                         
-                        <div id="p2-rps-move" class="text-4xl mt-2 hidden animate__animated animate__bounceIn">✊</div>
-                        <div id="p2-cards" class="flex justify-center gap-1 mt-2 h-24 hidden"></div>
-                    </div>
-
-                    <div class="flex-1 flex flex-col justify-center items-center z-20 my-2">
-                        <div id="g-status-text" class="text-xl font-bold text-[#D4AF37] animate-pulse text-center">WAITING...</div>
-                        <div id="g-timer" class="text-5xl font-teko text-red-500 drop-shadow-md hidden">10</div>
-                        
-                        <div id="g-score-board" class="hidden text-center mt-2">
-                            <div class="text-3xl font-teko text-white tracking-widest" id="g-score-txt">0 - 0</div>
-                            <div class="text-[10px] text-gray-500">ROUND SCORE</div>
+                        <div class="bg-black/40 p-3 rounded-lg text-xs space-y-1">
+                            <div class="flex justify-between"><span>ยอดถอน:</span><span id="calc-amt">0</span></div>
+                            <div class="flex justify-between text-red-400"><span>หักค่าธรรมเนียม:</span><span id="calc-fee">-0</span></div>
+                            <div class="flex justify-between text-emerald-400 font-bold border-t border-slate-700 pt-1 mt-1"><span>รับเงินสุทธิ:</span><span id="calc-net">0</span></div>
                         </div>
 
-                        <button id="btn-ready" onclick="Game.ready()" class="btn-gold px-8 py-3 rounded-full text-sm shadow-xl mt-4 hidden animate__animated animate__pulse animate__infinite">I'M READY</button>
+                        <button onclick="Wallet.withdraw()" class="btn-main bg-red-600 hover:bg-red-700 text-white mt-2">ยืนยันการถอน</button>
                     </div>
-
-                    <div class="flex flex-col items-center transition-all duration-500" id="area-p1">
-                        <div id="p1-rps-move" class="text-4xl mb-2 hidden animate__animated animate__bounceIn">✊</div>
-                        <div id="p1-cards" class="flex justify-center gap-1 mb-2 h-24 hidden"></div>
-
-                        <div class="relative">
-                            <div class="w-16 h-16 rounded-full border-2 border-green-500 p-0.5"><img id="p1-img" class="w-full h-full rounded-full bg-gray-800 object-cover"></div>
-                            <div class="absolute -right-1 -bottom-1 w-5 h-5 bg-green-500 border-2 border-black rounded-full flex items-center justify-center text-[10px] text-black font-bold">ME</div>
-                        </div>
-                        <p id="p1-name" class="text-xs mt-1 text-white font-bold">You</p>
-                    </div>
-                </div>
-
-                <div id="g-controls" class="mt-4 bg-[#111] p-4 rounded-t-2xl border-t border-white/5 hidden">
-                    
-                    <div id="ctrl-rps" class="flex justify-center gap-6">
-                        <div onclick="Game.moveRPS('rock')" id="btn-rock" class="rps-item text-blue-400">✊</div>
-                        <div onclick="Game.moveRPS('paper')" id="btn-paper" class="rps-item text-yellow-400">✋</div>
-                        <div onclick="Game.moveRPS('scissors')" id="btn-scissors" class="rps-item text-pink-400">✌️</div>
-                    </div>
-
-                    <div id="ctrl-pok" class="flex gap-3">
-                        <button onclick="Game.movePok('hit')" class="flex-1 bg-green-600 hover:bg-green-500 text-white py-3 rounded-xl font-bold border-b-4 border-green-800 active:border-b-0 active:translate-y-1 transition">จั่วไพ่ (HIT)</button>
-                        <button onclick="Game.movePok('stand')" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-3 rounded-xl font-bold border-b-4 border-red-800 active:border-b-0 active:translate-y-1 transition">พอแล้ว (STAND)</button>
-                    </div>
-
-                    <div class="mt-4 flex gap-2 border-t border-white/5 pt-3">
-                        <input id="chat-input" class="bg-[#09090b] w-full text-xs text-white px-3 py-2 rounded-lg border border-white/10 outline-none focus:border-[#D4AF37]" placeholder="พิมพ์ข้อความ...">
-                        <button onclick="Game.sendChat()" class="bg-[#D4AF37] text-black px-3 py-2 rounded-lg text-xs font-bold"><i class="fa-solid fa-paper-plane"></i></button>
-                    </div>
-                    <div id="chat-box" class="h-20 overflow-y-auto mt-2 text-[10px] space-y-1 text-gray-400"></div>
                 </div>
             </section>
 
-            <section id="p-wallet" class="hidden fade-in space-y-6">
-                <div class="flex gap-2 p-1 bg-[#111] rounded-xl border border-white/5">
-                    <button onclick="UI.tab('dep')" id="t-dep" class="flex-1 py-3 rounded-lg font-bold text-xs bg-[#D4AF37] text-black">ฝากเงิน</button>
-                    <button onclick="UI.tab('wit')" id="t-wit" class="flex-1 py-3 rounded-lg font-bold text-xs text-gray-500 hover:text-white">ถอนเงิน</button>
-                </div>
-
-                <div id="view-dep" class="space-y-4">
-                    <div class="glass p-5 border border-dashed border-gray-700">
-                        <p class="text-[10px] text-gray-500 font-bold uppercase mb-2">บัญชีแอดมิน (โอนเข้า)</p>
-                        <div id="admin-banks" class="space-y-2"></div>
-                    </div>
-                    <div class="glass p-6 space-y-4">
-                        <div><label class="text-[10px] text-gray-500 ml-1">จำนวนเงิน</label><input id="d-amt" type="number" class="input-dark text-center text-xl font-bold text-[#D4AF37]" placeholder="0.00"></div>
-                        <div><label class="text-[10px] text-gray-500 ml-1">เวลาโอน</label><input id="d-time" class="input-dark text-center" placeholder="เช่น 12.30"></div>
-                        <button onclick="Wallet.deposit()" class="btn-gold w-full py-3 mt-2">แจ้งฝาก</button>
-                    </div>
-                </div>
-
-                <div id="view-wit" class="hidden glass p-8 text-center space-y-4">
-                    <p class="text-xs text-gray-500 uppercase tracking-widest">ยอดเงินที่ถอนได้</p>
-                    <h2 class="text-4xl font-teko text-white font-bold" id="w-max-bal">0.00</h2>
-                    <div class="bg-black/30 p-2 rounded text-[10px] text-gray-400 border border-white/5" id="w-user-bank">ยังไม่ผูกบัญชี</div>
-                    <input id="w-amt" type="number" class="input-dark text-center text-2xl font-bold mt-4" placeholder="ระบุจำนวนเงิน">
-                    <button onclick="Wallet.withdraw()" class="btn-gold w-full py-3">ยืนยันการถอน</button>
-                </div>
-
-                <div>
-                    <h3 class="text-xs font-bold text-gray-500 uppercase mb-3 ml-1">ประวัติธุรกรรม</h3>
-                    <div id="tx-history" class="space-y-2 pb-20"></div>
-                </div>
-            </section>
-
-            <section id="p-profile" class="hidden fade-in space-y-6">
-                <div class="glass p-6 space-y-4">
-                    <h3 class="text-lg font-bold text-[#D4AF37] border-b border-white/10 pb-3">ข้อมูลส่วนตัว</h3>
-                    <div><label class="text-[10px] text-gray-500 ml-1">ชื่อในเกม</label><input id="pf-name" class="input-dark"></div>
-                    <div><label class="text-[10px] text-gray-500 ml-1">Facebook</label><input id="pf-fb" class="input-dark" placeholder="ลิ้งก์เฟสบุ๊ค"></div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-[10px] text-gray-500 ml-1">ธนาคาร</label><input id="pf-bank" class="input-dark" placeholder="KBANK"></div>
-                        <div><label class="text-[10px] text-gray-500 ml-1">เลขบัญชี</label><input id="pf-acc" class="input-dark" placeholder="xxx-xxxx"></div>
-                    </div>
-                    <button onclick="User.save()" class="btn-gold w-full py-3 mt-2">บันทึกการเปลี่ยนแปลง</button>
-                </div>
-                <button onclick="Auth.logout()" class="w-full py-3 bg-red-900/10 text-red-500 rounded-xl border border-red-900/30 text-xs font-bold">ออกจากระบบ</button>
-            </section>
-
+            <div>
+                <h3 class="text-sm font-bold text-gray-500 mb-3">ประวัติล่าสุด</h3>
+                <div id="tx-list" class="space-y-2 pb-20"></div>
+            </div>
         </main>
 
-        <nav class="fixed bottom-0 w-full h-[70px] bg-[#09090b]/95 border-t border-white/5 flex justify-around items-center z-50 max-w-md backdrop-blur-md">
-            <button onclick="UI.page('lobby')" id="nav-lobby" class="nav-item active"><i class="fa-solid fa-gamepad text-xl"></i><span>Lobby</span></button>
-            <button onclick="UI.page('wallet')" id="nav-wallet" class="nav-item"><i class="fa-solid fa-wallet text-xl"></i><span>Wallet</span></button>
-            <button onclick="UI.page('profile')" id="nav-profile" class="nav-item"><i class="fa-solid fa-user-circle text-xl"></i><span>Profile</span></button>
-            <button onclick="UI.contact()" class="nav-item"><i class="fa-brands fa-line text-xl"></i><span>Contact</span></button>
+        <div id="modal-profile" class="fixed inset-0 z-50 bg-black/90 hidden items-center justify-center p-6">
+            <div class="glass w-full max-w-sm relative">
+                <button onclick="document.getElementById('modal-profile').style.display='none'" class="absolute top-4 right-4 text-gray-500"><i class="fa-solid fa-times"></i></button>
+                <h3 class="font-bold text-xl mb-4 text-white">แก้ไขข้อมูลบัญชี</h3>
+                <div class="space-y-3">
+                    <input id="pf-name" class="input-box" placeholder="ชื่อเล่น">
+                    <input id="pf-bank" class="input-box" placeholder="ชื่อธนาคาร (เช่น กสิกร)">
+                    <input id="pf-acc" class="input-box" placeholder="เลขบัญชี">
+                    <button onclick="User.save()" class="btn-main">บันทึกข้อมูล</button>
+                </div>
+            </div>
+        </div>
+
+        <nav class="fixed bottom-0 w-full bg-[#0f172a] border-t border-slate-800 h-16 flex justify-around items-center z-40 max-w-md">
+            <button class="text-emerald-500 flex flex-col items-center text-xs" onclick="UI.tab('dep')"><i class="fa-solid fa-home text-xl mb-1"></i>หน้าหลัก</button>
+            <button class="text-gray-500 flex flex-col items-center text-xs" onclick="document.getElementById('modal-profile').style.display='flex'"><i class="fa-solid fa-user-gear text-xl mb-1"></i>ข้อมูลส่วนตัว</button>
         </nav>
     </div>
 
@@ -324,271 +142,94 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database(), auth = firebase.auth();
 
-        let user=null, userData={}, config={}, curRoom=null, chatUnsub=null;
+        let user=null, userData={}, config={fee:0};
 
-        // AUTH
         auth.onAuthStateChanged(u => {
-            document.getElementById('loader').style.display = 'none';
-            if(u) { user=u; document.getElementById('view-auth').style.display='none'; document.getElementById('view-app').classList.remove('hidden'); App.init(); }
-            else { document.getElementById('view-auth').style.display='flex'; document.getElementById('view-app').classList.add('hidden'); }
+            if(u) { user=u; document.getElementById('auth-view').style.display='none'; document.getElementById('app-view').classList.remove('hidden'); App.init(); }
+            else { document.getElementById('auth-view').style.display='flex'; }
         });
 
         const Auth = {
-            login: () => auth.signInWithEmailAndPassword(document.getElementById('l-email').value, document.getElementById('l-pass').value).catch(e=>Swal.fire('Error', e.message, 'error')),
-            reg: () => {
-                const n=document.getElementById('r-name').value, e=document.getElementById('r-email').value, p=document.getElementById('r-pass').value;
-                if(!n||!e||p.length<6) return Swal.fire('Error','กรอกข้อมูลให้ครบ','warning');
-                auth.createUserWithEmailAndPassword(e,p).then(c => db.ref('users/'+c.user.uid).set({name:n, email:e, balance:0, bank:'-', acc:'-', fb_link:'', created:Date.now()})).catch(e=>Swal.fire('Error',e.message,'error'));
-            },
-            logout: () => auth.signOut().then(()=>location.reload())
+            login: () => auth.signInWithEmailAndPassword(document.getElementById('l-email').value, document.getElementById('l-pass').value).catch(e=>Swal.fire('Error',e.message,'error')),
+            reg: () => auth.createUserWithEmailAndPassword(document.getElementById('r-email').value, document.getElementById('r-pass').value).then(c=>db.ref('users/'+c.user.uid).set({name:document.getElementById('r-name').value, balance:0})),
+            logout: () => auth.signOut()
         };
 
-        // SYSTEM CORE
         const App = {
             init: () => {
                 db.ref('users/'+user.uid).on('value', s => {
-                    userData = s.val() || {};
+                    userData = s.val()||{};
                     document.getElementById('u-balance').innerText = (userData.balance||0).toLocaleString(undefined,{minimumFractionDigits:2});
-                    document.getElementById('w-max-bal').innerText = (userData.balance||0).toLocaleString();
-                    document.getElementById('u-avatar').src = `https://ui-avatars.com/api/?name=${userData.name}&background=D4AF37&color=000&bold=true`;
-                    document.getElementById('p1-img').src = `https://ui-avatars.com/api/?name=${userData.name}&background=D4AF37&color=000&bold=true`;
-                    // Profile Fill
+                    document.getElementById('u-name').innerText = userData.name;
+                    document.getElementById('u-acc-info').innerText = `${userData.bank||'-'} : ${userData.acc||'-'}`;
                     document.getElementById('pf-name').value = userData.name;
-                    document.getElementById('pf-fb').value = userData.fb_link;
-                    document.getElementById('pf-bank').value = userData.bank;
-                    document.getElementById('pf-acc').value = userData.acc;
-                    document.getElementById('w-user-bank').innerText = `${userData.bank} - ${userData.acc}`;
+                    document.getElementById('pf-bank').value = userData.bank||'';
+                    document.getElementById('pf-acc').value = userData.acc||'';
                 });
-
                 db.ref('settings').on('value', s => {
-                    config = s.val() || {};
-                    document.getElementById('sys-ann').innerText = config.announcement || 'Arena Online';
-                    const bl = document.getElementById('admin-banks'); bl.innerHTML = '';
-                    if(config.banks) Object.values(config.banks).forEach(b => {
-                        bl.innerHTML += `<div class="bg-black/40 p-2 rounded border border-white/5 flex justify-between text-xs"><span>${b.name}</span><span class="text-[#D4AF37] font-bold cursor-pointer" onclick="UI.copy('${b.acc}')">${b.acc} 📋</span></div>`;
-                    });
+                    config = s.val()||{fee:0};
+                    document.getElementById('fee-percent').innerText = `${config.fee}%`;
+                    const bl = document.getElementById('admin-banks'); bl.innerHTML='';
+                    if(config.banks) Object.values(config.banks).forEach(b => bl.innerHTML+=`<div class="bg-slate-800 p-2 rounded text-xs flex justify-between border border-slate-700"><span>${b.name}</span><span class="text-emerald-400 font-bold">${b.acc}</span></div>`);
                 });
-
-                db.ref('rooms').on('value', s => {
-                    const l = document.getElementById('room-list'); l.innerHTML = '';
-                    let count = 0;
-                    s.forEach(d => {
-                        const r = d.val();
-                        if(r.status === 'open' || r.status === 'waiting_ready') {
-                            count++;
-                            const type = r.type==='pokdeng'?'🎴 ป๊อกเด้ง':'✊ เป่ายิ้งฉุบ';
-                            const amIIn = r.p1?.uid===user.uid || r.p2?.uid===user.uid;
-                            l.innerHTML += `
-                                <div class="glass p-4 flex justify-between items-center hover:border-[#D4AF37] transition animate__animated animate__fadeInUp">
-                                    <div class="flex items-center gap-4">
-                                        <div class="w-12 h-12 bg-[#18181b] rounded-xl flex items-center justify-center text-xl border border-white/5 shadow-inner">${r.type==='pokdeng'?'🎴':'✊'}</div>
-                                        <div>
-                                            <h4 class="font-bold text-white text-sm">${r.name}</h4>
-                                            <p class="text-[10px] text-[#D4AF37] font-bold">${type} | ฿${r.bet.toLocaleString()}</p>
-                                        </div>
-                                    </div>
-                                    <button onclick="${amIIn ? `Game.enter('${d.key}')` : `Game.join('${d.key}',${r.bet})`}" class="btn-gold px-6 py-2 text-xs shadow-lg">${amIIn ? 'กลับเข้าห้อง' : 'เข้าร่วม'}</button>
-                                </div>`;
-                        }
-                    });
-                    document.getElementById('room-count').innerText = count + ' ห้อง';
-                    if(count===0) l.innerHTML = '<div class="text-center py-10 text-gray-600 border-2 border-dashed border-gray-800 rounded-xl">ไม่มีห้องว่าง</div>';
-                });
-
                 db.ref('transactions').orderByChild('uid').equalTo(user.uid).limitToLast(10).on('value', s => {
-                    const l = document.getElementById('tx-history'); l.innerHTML = '';
-                    const arr = []; s.forEach(d => arr.unshift(d.val()));
+                    const l=document.getElementById('tx-list'); l.innerHTML='';
+                    const arr=[]; s.forEach(d=>arr.unshift(d.val()));
                     arr.forEach(t => {
-                        let c = t.status=='approved'?'text-green-400':(t.status=='rejected'?'text-red-400':'text-yellow-400');
-                        l.innerHTML += `<div class="bg-white/5 p-2 rounded flex justify-between text-xs items-center"><div><b class="text-gray-300 uppercase">${t.type}</b><br><span class="text-[9px] text-gray-500">${moment(t.timestamp).fromNow()}</span></div><div class="text-right"><span class="font-bold text-white">฿${t.amount}</span><br><span class="${c} text-[9px] uppercase">${t.status}</span></div></div>`;
+                        let c = t.status=='approved'?'text-emerald-400':(t.status=='rejected'?'text-red-400':'text-yellow-400');
+                        l.innerHTML += `<div class="glass p-3 flex justify-between items-center text-xs mb-2"><div><b class="uppercase">${t.type}</b><br><span class="text-gray-500">${moment(t.timestamp).format('DD/MM HH:mm')}</span></div><div class="text-right"><span class="font-bold text-white">฿${t.amount}</span><br><span class="${c} uppercase font-bold">${t.status}</span></div></div>`;
                     });
                 });
             }
-        };
-
-        const Game = {
-            join: (rid, bet) => {
-                if(userData.balance < bet) return Swal.fire('Error','ยอดเงินไม่พอ','error');
-                db.ref('rooms/'+rid).transaction(r => {
-                    if(r) {
-                        const empty = { uid:user.uid, name:userData.name, ready:false, score:0, move:'', hand:[], status:'thinking' };
-                        if(!r.p1) { r.p1=empty; r.status='waiting_ready'; return r; }
-                        else if(!r.p2 && r.p1.uid!==user.uid) { r.p2=empty; r.status='waiting_ready'; return r; }
-                    }
-                }, (e,c) => {
-                    if(c) { db.ref('users/'+user.uid).update({balance:userData.balance-bet}); Game.enter(rid); }
-                    else Swal.fire('Full','ห้องเต็มแล้ว','warning');
-                });
-            },
-            enter: (rid) => {
-                curRoom = rid; UI.page('game');
-                
-                // Chat Listener
-                if(chatUnsub) chatUnsub();
-                chatUnsub = db.ref('rooms/'+rid+'/chat').limitToLast(20).on('child_added', s => {
-                    const m = s.val();
-                    const box = document.getElementById('chat-box');
-                    const isMe = m.uid === user.uid;
-                    box.innerHTML += `<div class="${isMe?'text-right':'text-left'} mb-1"><span class="${isMe?'text-[#D4AF37]':'text-gray-400'} font-bold">${m.name}:</span> ${m.msg}</div>`;
-                    box.scrollTop = box.scrollHeight;
-                });
-
-                db.ref('rooms/'+rid).on('value', s => {
-                    const r = s.val();
-                    if(!r) { Game.quit(true); return; }
-
-                    document.getElementById('g-room-name').innerText = r.name;
-                    document.getElementById('g-pot').innerText = `฿${(r.bet*2).toLocaleString()}`;
-                    
-                    const amIP1 = r.p1?.uid === user.uid;
-                    const me = amIP1 ? r.p1 : r.p2;
-                    const opp = amIP1 ? r.p2 : r.p1;
-                    
-                    if(!me) return;
-
-                    // Opponent UI
-                    if(opp) {
-                        document.getElementById('p2-name').innerText = opp.name;
-                        document.getElementById('p2-img').src = `https://ui-avatars.com/api/?name=${opp.name}&background=1a1f2e&color=fff`;
-                        document.getElementById('p2-status').className = `absolute -right-1 -bottom-1 w-4 h-4 rounded-full border-2 border-black ${opp.ready?'bg-green-500':'bg-gray-500'}`;
-                    } else {
-                        document.getElementById('p2-name').innerText = 'Waiting...';
-                        document.getElementById('p2-img').src = '';
-                    }
-
-                    // Game States
-                    const st = document.getElementById('g-status-text');
-                    const btnRdy = document.getElementById('btn-ready');
-                    const ctrlRPS = document.getElementById('ctrl-rps');
-                    const ctrlPok = document.getElementById('ctrl-pok');
-                    const timerUI = document.getElementById('g-timer');
-
-                    // Reset
-                    ctrlRPS.classList.add('hidden'); ctrlPok.classList.add('hidden');
-                    document.getElementById('p1-rps-move').classList.add('hidden');
-                    document.getElementById('p2-rps-move').classList.add('hidden');
-                    document.getElementById('p1-cards').classList.add('hidden');
-                    document.getElementById('p2-cards').classList.add('hidden');
-
-                    if(r.status === 'waiting_ready') {
-                        st.innerText = me.ready ? "รออีกฝ่าย..." : "กดพร้อมเพื่อเริ่ม!";
-                        btnRdy.classList.toggle('hidden', me.ready);
-                        timerUI.classList.add('hidden');
-                    }
-                    else if(r.status === 'playing') {
-                        btnRdy.classList.add('hidden');
-                        timerUI.classList.remove('hidden');
-                        
-                        // Countdown
-                        const elap = Math.floor((Date.now() - r.turnStartTime)/1000);
-                        const left = Math.max(0, 10 - elap);
-                        timerUI.innerText = left;
-
-                        if(r.type === 'rps') {
-                            ctrlRPS.classList.remove('hidden');
-                            st.innerText = me.move ? "รอคู่แข่ง..." : "เลือกอาวุธ!";
-                            ctrlRPS.style.opacity = me.move ? 0.3 : 1;
-                            ctrlRPS.style.pointerEvents = me.move ? 'none' : 'auto';
-                        }
-                        else if(r.type === 'pokdeng') {
-                            document.getElementById('p1-cards').classList.remove('hidden');
-                            UI.renderCards('p1', r[me.uid===r.p1.uid?'p1':'p2'].hand, true);
-                            
-                            if(r.stage === 'deal') st.innerText = "กำลังแจกไพ่...";
-                            else if(r.stage === 'action') {
-                                // Pokdeng Action Logic
-                                const isMyTurn = (r.turn === 'p1' && amIP1) || (r.turn === 'p2' && !amIP1);
-                                if(isMyTurn && !me.move) {
-                                    st.innerText = "ตาของคุณ: จั่ว หรือ ผ่าน?";
-                                    ctrlPok.classList.remove('hidden');
-                                } else {
-                                    st.innerText = "รออีกฝ่าย...";
-                                }
-                            }
-                        }
-                    }
-                    else if(r.status === 'calculating') {
-                        st.innerText = "ประมวลผล..."; timerUI.classList.add('hidden');
-                        if(r.type === 'rps') {
-                            const m = {rock:'✊', paper:'✋', scissors:'✌️'};
-                            document.getElementById('p1-rps-move').innerText = m[me.move];
-                            document.getElementById('p2-rps-move').innerText = m[opp.move];
-                            document.getElementById('p1-rps-move').classList.remove('hidden');
-                            document.getElementById('p2-rps-move').classList.remove('hidden');
-                        } else {
-                            // Show Cards
-                            document.getElementById('p1-cards').classList.remove('hidden');
-                            document.getElementById('p2-cards').classList.remove('hidden');
-                            UI.renderCards('p1', r[me.uid===r.p1.uid?'p1':'p2'].hand, true);
-                            UI.renderCards('p2', r[me.uid===r.p1.uid?'p2':'p1'].hand, true);
-                        }
-                    }
-                    else if(r.status === 'finished') {
-                        let res = r.winner === 'draw' ? 'เสมอ! คืนเงิน' : (r.winner === user.uid ? '🎉 ชนะ! รับเงิน' : 'แพ้!');
-                        Swal.fire({title:'GAME OVER', text:res, background:'#111', color:'#fff', confirmButtonColor:'#D4AF37'}).then(()=>Game.quit());
-                    }
-                });
-            },
-            ready: () => db.ref(`rooms/${curRoom}/${db.ref(`rooms/${curRoom}/p1/uid`).toString().includes(user.uid)?'p1':'p2'}/ready`).set(true),
-            moveRPS: (m) => {
-                document.querySelectorAll('.rps-item').forEach(e=>e.classList.remove('selected'));
-                document.getElementById('btn-'+m).classList.add('selected');
-                const me = db.ref(`rooms/${curRoom}/p1/uid`).toString().includes(user.uid)?'p1':'p2';
-                db.ref(`rooms/${curRoom}/${me}/move`).set(m);
-            },
-            movePok: (act) => {
-                // Send action to actions list, Admin handles logic
-                db.ref(`rooms/${curRoom}/actions`).push({uid:user.uid, action:act, timestamp:Date.now()});
-                // Optimistic UI
-                document.getElementById('ctrl-pok').classList.add('hidden');
-            },
-            sendChat: () => {
-                const i = document.getElementById('chat-input');
-                if(i.value.trim()) { db.ref('rooms/'+curRoom+'/chat').push({uid:user.uid, name:userData.name, msg:i.value.trim()}); i.value=''; }
-            },
-            quit: (f) => {
-                if(curRoom) db.ref('rooms/'+curRoom).off();
-                if(chatUnsub) chatUnsub();
-                curRoom=null; UI.page('lobby');
-                if(f) Swal.fire('Room Closed','','info');
-            },
-            leave: () => Swal.fire({title:'ออก?',text:'จะถูกปรับแพ้ทันที',icon:'warning',showCancelButton:true}).then(r=>{if(r.isConfirmed) Game.quit()})
         };
 
         const Wallet = {
-            redeem: () => {
-                const c=document.getElementById('gift-code').value;
-                if(!c) return;
-                db.ref('codes/'+c).transaction(d=>{ if(d&&!d.used){d.used=true; d.by=user.uid; return d;} }).then(s=>{
-                    if(s.committed) { db.ref('users/'+user.uid).update({balance:userData.balance+s.snapshot.val().amount}); Swal.fire('Success',`+${s.snapshot.val().amount}`,'success'); }
-                    else Swal.fire('Invalid','','error');
-                });
+            calcFee: () => {
+                const amt = Number(document.getElementById('w-amt').value);
+                const fee = amt * (config.fee / 100);
+                document.getElementById('calc-amt').innerText = amt.toLocaleString();
+                document.getElementById('calc-fee').innerText = fee.toLocaleString();
+                document.getElementById('calc-net').innerText = (amt - fee).toLocaleString();
             },
-            submit: (t) => {
-                const a=Number(document.getElementById(t=='deposit'?'d-amt':'w-amt').value);
-                if(a<1) return;
-                db.ref('requests').push({uid:user.uid, name:userData.name, type:t, amount:a, time:t=='deposit'?document.getElementById('d-time').value:'', status:'pending', timestamp:Date.now(), bank:t=='withdraw'?`${userData.bank} ${userData.acc}`:''});
-                if(t=='withdraw') db.ref('users/'+user.uid).update({balance:userData.balance-a});
-                Swal.fire('Sent','','success'); UI.page('lobby');
+            deposit: () => {
+                const amt=Number(document.getElementById('d-amt').value);
+                if(amt<1) return Swal.fire('ระบุยอดเงิน','','warning');
+                db.ref('transactions').push({uid:user.uid, name:userData.name, type:'deposit', amount:amt, time:document.getElementById('d-time').value, status:'pending', timestamp:Date.now()});
+                Swal.fire('แจ้งฝากแล้ว','รอตรวจสอบ','success');
+                document.getElementById('d-amt').value='';
+            },
+            withdraw: () => {
+                const amt=Number(document.getElementById('w-amt').value);
+                if(amt > userData.balance || amt < 100) return Swal.fire('ถอนไม่ได้','ยอดเงินไม่พอหรือต่ำกว่าขั้นต่ำ','error');
+                
+                const fee = amt * (config.fee / 100);
+                const net = amt - fee;
+
+                db.ref('transactions').push({
+                    uid:user.uid, name:userData.name, type:'withdraw', 
+                    amount:amt, fee:fee, net_amount:net, 
+                    bank_info:`${userData.bank} ${userData.acc}`, 
+                    status:'pending', timestamp:Date.now()
+                });
+                
+                // Cut balance immediately
+                db.ref('users/'+user.uid).update({balance: userData.balance - amt});
+                Swal.fire('แจ้งถอนแล้ว',`ยอดเข้าบัญชี ${net} บาท`,'success');
+                document.getElementById('w-amt').value=''; Wallet.calcFee();
             }
         };
 
-        const User = { save: () => db.ref('users/'+user.uid).update({name:document.getElementById('pf-name').value, fb_link:document.getElementById('pf-fb').value, bank:document.getElementById('pf-bank').value, acc:document.getElementById('pf-acc').value}).then(()=>Swal.fire('Saved')) };
+        const User = {
+            save: () => db.ref('users/'+user.uid).update({name:document.getElementById('pf-name').value, bank:document.getElementById('pf-bank').value, acc:document.getElementById('pf-acc').value}).then(()=>Swal.fire('Saved!','','success'))
+        };
 
         const UI = {
-            toggleAuth: (m) => { document.getElementById('form-login').classList.toggle('hidden',m=='reg'); document.getElementById('form-reg').classList.toggle('hidden',m=='log'); },
-            page: (p) => { ['lobby','game','wallet','profile'].forEach(id=>{ document.getElementById('p-'+id).classList.add('hidden'); if(document.getElementById('nav-'+id))document.getElementById('nav-'+id).classList.remove('text-[#D4AF37]'); }); document.getElementById('p-'+p).classList.remove('hidden'); if(document.getElementById('nav-'+p))document.getElementById('nav-'+p).classList.add('text-[#D4AF37]'); },
-            tab: (m) => { document.getElementById('view-dep').classList.toggle('hidden',m=='wit'); document.getElementById('view-wit').classList.toggle('hidden',m=='dep'); document.getElementById('t-dep').className=m=='dep'?'flex-1 py-3 rounded-lg font-bold text-xs bg-[#D4AF37] text-black':'flex-1 py-3 rounded-lg font-bold text-xs text-gray-500'; document.getElementById('t-wit').className=m=='wit'?'flex-1 py-3 rounded-lg font-bold text-xs bg-[#D4AF37] text-black':'flex-1 py-3 rounded-lg font-bold text-xs text-gray-500'; },
-            copy: (t) => navigator.clipboard.writeText(t).then(()=>Swal.fire({toast:true,title:'Copied',position:'top',timer:1000,showConfirmButton:false})),
-            contact: () => window.open(config.contactLink||'#'),
-            renderCards: (pid, cards, show) => {
-                const el = document.getElementById(pid+'-cards'); el.innerHTML='';
-                if(!cards) return;
-                cards.forEach(c => {
-                    const suit = c.suit=='H'?'♥':(c.suit=='D'?'♦':(c.suit=='S'?'♠':'♣'));
-                    const color = (c.suit=='H'||c.suit=='D')?'text-red-600':'text-black';
-                    el.innerHTML += `<div class="card-slot ${show?'flipped':''}"><div class="card-inner"><div class="card-front ${color}"><div class="text-xl">${c.rank}</div><div class="text-2xl">${suit}</div></div><div class="card-back"></div></div></div>`;
-                });
+            toggleAuth: (m) => { document.getElementById('login-form').classList.toggle('hidden', m=='reg'); document.getElementById('reg-form').classList.toggle('hidden', m=='login'); },
+            tab: (m) => { 
+                document.getElementById('sec-dep').classList.toggle('hidden', m=='wit');
+                document.getElementById('sec-wit').classList.toggle('hidden', m=='dep');
+                document.getElementById('btn-dep').className = m=='dep' ? 'glass p-4 text-center border-emerald-500 border-2 bg-emerald-900/20' : 'glass p-4 text-center border-emerald-500/50 opacity-50';
+                document.getElementById('btn-wit').className = m=='wit' ? 'glass p-4 text-center border-red-500 border-2 bg-red-900/20' : 'glass p-4 text-center border-red-500/50 opacity-50';
             }
         };
     </script>
