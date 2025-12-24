@@ -129,16 +129,16 @@
     </div>
 
     <script>
-        // --- ⚠️ NEW CONFIG ---
+        // --- ⚠️ NEW CONFIG (Updated) ---
         const firebaseConfig = {
-            apiKey: "AIzaSyAochx_FIKbXLrbhhcLdVrpaurjjk4aQYc",
-            authDomain: "paoshuv-c260d.firebaseapp.com",
-            databaseURL: "https://paoshuv-c260d-default-rtdb.asia-southeast1.firebasedatabase.app",
-            projectId: "paoshuv-c260d",
-            storageBucket: "paoshuv-c260d.firebasestorage.app",
-            messagingSenderId: "198839309382",
-            appId: "1:198839309382:web:927ec8ce1282f217ac2647",
-            measurementId: "G-8B5BT43HWK"
+            apiKey: "AIzaSyA2NTzJKFK3GtULDl-l2EvEH3VamDh-VZI",
+            authDomain: "chat-27f96.firebaseapp.com",
+            databaseURL: "https://chat-27f96-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "chat-27f96",
+            storageBucket: "chat-27f96.firebasestorage.app",
+            messagingSenderId: "336686938010",
+            appId: "1:336686938010:web:9ea0e0ddd8d93e8358ec23",
+            measurementId: "G-GR38B5JHZZ"
         };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database();
@@ -175,7 +175,7 @@
                             const b = d.val();
                             l.innerHTML += `<div class="bg-[#111] p-3 rounded-xl border border-[#222] flex justify-between items-center"><div class="flex items-center gap-3"><div class="w-10 h-10 bg-gray-800 rounded flex items-center justify-center text-white font-bold">${b.bankName[0]}</div><div><p class="font-bold text-sm">${b.bankName}</p><p class="text-[#D4AF37] font-mono">${b.accNo}</p><p class="text-[10px] text-gray-500">${b.accName}</p></div></div><button onclick="navigator.clipboard.writeText('${b.accNo}'); Swal.fire({toast:true,position:'top',icon:'success',title:'คัดลอก',showConfirmButton:false,timer:1000})" class="text-xs bg-[#222] px-3 py-1 rounded text-gray-400 border border-[#333]">คัดลอก</button></div>`;
                         });
-                    } else l.innerHTML='<div class="text-center text-gray-500 text-xs py-2">ไม่พบธนาคาร</div>';
+                    } else l.innerHTML='<div class="text-center text-gray-500 text-xs py-2">กรุณาติดต่อแอดมิน</div>';
                 });
 
                 // User
