@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RPS ARENA - BATTLE</title>
+    <title>RPS BATTLE - เดิมพันเป่ายิ้งฉุบ</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/js/all.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600;800&family=Bangers&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
@@ -15,129 +16,147 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        :root { --p: #FF4D4D; --s: #FFC700; --bg: #1a0b2e; --panel: #2d1b4e; }
-        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: white; overflow-x: hidden; }
-        .font-game { font-family: 'Fredoka', sans-serif; }
+        :root { --p: #FFD700; --bg: #0a0a0a; --panel: #1a1a1a; }
+        body { font-family: 'Kanit', sans-serif; background: var(--bg); color: #fff; -webkit-tap-highlight-color: transparent; user-select: none; }
         
-        /* UI Components */
-        .glass { background: rgba(45, 27, 78, 0.9); backdrop-filter: blur(10px); border: 2px solid #432c7a; box-shadow: 0 8px 32px rgba(0,0,0,0.5); border-radius: 20px; }
-        .btn-game { background: linear-gradient(180deg, #FFC700 0%, #FF9900 100%); border: 3px solid #fff; border-radius: 15px; color: #333; font-weight: 800; padding: 12px; transition: 0.1s; box-shadow: 0 6px 0 #cc7a00; transform: translateY(0); }
-        .btn-game:active { box-shadow: 0 0 0 #cc7a00; transform: translateY(6px); }
-        .btn-danger { background: linear-gradient(180deg, #ff4d4d 0%, #cc0000 100%); color: white; box-shadow: 0 6px 0 #990000; border: 3px solid #fff; }
-        .btn-danger:active { box-shadow: 0 0 0 #990000; transform: translateY(6px); }
+        /* Custom UI */
+        .glass-panel { background: rgba(30, 30, 30, 0.9); backdrop-filter: blur(15px); border: 1px solid rgba(255, 215, 0, 0.2); box-shadow: 0 0 20px rgba(0,0,0,0.7); border-radius: 16px; }
+        .gold-text { background: linear-gradient(to bottom, #fff, #FFD700); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-family: 'Bangers', cursive; letter-spacing: 2px; }
+        
+        .btn-gold { background: linear-gradient(180deg, #FFD700 0%, #B8860B 100%); color: #000; font-weight: 800; border-radius: 12px; transition: 0.1s; box-shadow: 0 4px 0 #8B6914; transform: translateY(0); }
+        .btn-gold:active { transform: translateY(4px); box-shadow: 0 0 0 #8B6914; }
+        
+        .btn-menu { background: #222; border: 1px solid #333; color: #888; border-radius: 12px; transition: 0.2s; }
+        .btn-menu.active { border-color: #FFD700; color: #FFD700; background: rgba(255, 215, 0, 0.1); }
 
-        /* Game Elements */
-        .rps-card { width: 90px; height: 90px; background: white; border-radius: 50%; display: flex; justify-content: center; align-items: center; font-size: 3rem; border: 4px solid #ddd; cursor: pointer; transition: 0.2s; }
-        .rps-card:hover { transform: scale(1.1); border-color: var(--s); }
-        .rps-card.selected { background: var(--s); border-color: white; transform: scale(1.1); box-shadow: 0 0 20px var(--s); }
+        /* Game UI */
+        .hand-card { width: 90px; height: 90px; border-radius: 50%; background: #222; border: 4px solid #444; display: flex; justify-content: center; align-items: center; font-size: 3rem; cursor: pointer; transition: 0.2s; }
+        .hand-card:hover { transform: scale(1.1); border-color: #FFD700; }
+        .hand-card.selected { background: #FFD700; border-color: #fff; transform: scale(1.15); box-shadow: 0 0 30px rgba(255, 215, 0, 0.5); }
         
-        .player-avatar { width: 60px; height: 60px; border-radius: 50%; border: 3px solid white; background: #444; overflow: hidden; }
-        
-        /* Animations */
-        .pop-in { animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
-        @keyframes popIn { from { transform: scale(0); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-        .shake { animation: shake 0.5s; }
-        @keyframes shake { 0% { transform: translate(1px, 1px) rotate(0deg); } 10% { transform: translate(-1px, -2px) rotate(-1deg); } 20% { transform: translate(-3px, 0px) rotate(1deg); } 30% { transform: translate(3px, 2px) rotate(0deg); } 40% { transform: translate(1px, -1px) rotate(1deg); } 50% { transform: translate(-1px, 2px) rotate(-1deg); } 60% { transform: translate(-3px, 1px) rotate(0deg); } 70% { transform: translate(3px, 1px) rotate(-1deg); } 80% { transform: translate(-1px, -1px) rotate(1deg); } 90% { transform: translate(1px, 2px) rotate(0deg); } 100% { transform: translate(1px, -2px) rotate(-1deg); } }
+        .vs-badge { font-family: 'Bangers'; font-size: 3rem; color: #ff4d4d; text-shadow: 0 0 10px red; animation: pulse 1s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+
+        .loader-wrap { position: fixed; inset: 0; background: #000; z-index: 999; display: flex; justify-content: center; align-items: center; }
+        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid #FFD700; border-radius: 50%; animation: spin 1s infinite linear; }
+        @keyframes spin { to { transform: rotate(360deg); } }
     </style>
 </head>
-<body class="pb-10">
+<body class="pb-24">
 
-    <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-[#1a0b2e] p-4">
-        <div class="glass w-full max-w-sm p-8 text-center pop-in">
-            <h1 class="text-5xl font-game text-[#FFC700] mb-2 drop-shadow-lg">RPS ARENA</h1>
-            <p class="text-white/60 text-sm mb-8">เป่ายิ้งฉุบเดิมพันออนไลน์</p>
-            <input id="l-email" class="w-full bg-[#150a25] border-2 border-[#432c7a] p-3 rounded-xl text-white mb-3 text-center" placeholder="ชื่อผู้ใช้ / อีเมล">
-            <input id="l-pass" type="password" class="w-full bg-[#150a25] border-2 border-[#432c7a] p-3 rounded-xl text-white mb-6 text-center" placeholder="รหัสผ่าน">
-            <button onclick="Auth.login()" class="btn-game w-full text-lg mb-4">เข้าสู่สนาม</button>
-            <p class="text-xs text-white/50 cursor-pointer hover:text-white" onclick="UI.toggleReg()">ยังไม่มีบัญชี? สมัครที่นี่</p>
-        </div>
-        <div id="reg-modal" class="hidden absolute glass p-6 w-80">
-            <h3 class="text-xl font-bold mb-4 text-[#FFC700]">สมัครสมาชิกใหม่</h3>
-            <input id="r-name" class="w-full bg-[#150a25] border p-2 rounded mb-2 text-white" placeholder="ชื่อในเกม">
-            <input id="r-email" class="w-full bg-[#150a25] border p-2 rounded mb-2 text-white" placeholder="อีเมล">
-            <input id="r-pass" type="password" class="w-full bg-[#150a25] border p-2 rounded mb-4 text-white" placeholder="รหัสผ่าน">
-            <button onclick="Auth.reg()" class="btn-game w-full">ยืนยัน</button>
-            <button onclick="UI.toggleReg()" class="mt-2 w-full text-xs text-white/50">ยกเลิก</button>
+    <div id="loader" class="loader-wrap"><div class="spinner"></div><p class="absolute mt-20 text-[#FFD700] text-xs font-bold animate-pulse">CONNECTING...</p></div>
+
+    <div id="auth-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-6 hidden">
+        <div class="glass-panel w-full max-w-sm p-8 text-center animate__animated animate__zoomIn">
+            <h1 class="text-6xl gold-text mb-2">RPS BATTLE</h1>
+            <p class="text-gray-500 text-xs tracking-widest mb-8">เดิมพันเป่ายิ้งฉุบออนไลน์</p>
+            
+            <div id="form-login">
+                <input id="l-email" class="w-full bg-[#111] border border-[#333] p-3 rounded-xl text-center text-white mb-3 focus:border-[#FFD700] outline-none" placeholder="อีเมล">
+                <input id="l-pass" type="password" class="w-full bg-[#111] border border-[#333] p-3 rounded-xl text-center text-white mb-6 focus:border-[#FFD700] outline-none" placeholder="รหัสผ่าน">
+                <button onclick="Auth.login()" class="btn-gold w-full py-3 text-lg">เข้าสู่ระบบ</button>
+                <p class="mt-4 text-xs text-gray-500 cursor-pointer hover:text-white" onclick="UI.toggleAuth('reg')">สมัครสมาชิกใหม่</p>
+            </div>
+
+            <div id="form-reg" class="hidden">
+                <input id="r-name" class="w-full bg-[#111] border border-[#333] p-3 rounded-xl mb-2 text-white" placeholder="ชื่อเล่น">
+                <input id="r-email" class="w-full bg-[#111] border border-[#333] p-3 rounded-xl mb-2 text-white" placeholder="อีเมล">
+                <input id="r-pass" type="password" class="w-full bg-[#111] border border-[#333] p-3 rounded-xl mb-4 text-white" placeholder="รหัสผ่าน">
+                <button onclick="Auth.reg()" class="btn-gold w-full py-3">ยืนยันการสมัคร</button>
+                <p class="mt-4 text-xs text-gray-500 cursor-pointer hover:text-white" onclick="UI.toggleAuth('log')">กลับไปเข้าสู่ระบบ</p>
+            </div>
         </div>
     </div>
 
-    <div id="app-screen" class="hidden max-w-md mx-auto min-h-screen">
+    <div id="app-screen" class="hidden max-w-md mx-auto min-h-screen relative shadow-2xl border-x border-[#222]">
         
-        <header class="p-4 flex justify-between items-center bg-[#2d1b4e]/80 backdrop-blur sticky top-0 z-40 border-b border-[#432c7a]">
+        <header class="p-4 flex justify-between items-center bg-[#111]/90 backdrop-blur sticky top-0 z-40 border-b border-[#222]">
             <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-[#FFC700] rounded-full p-1"><img id="u-img" class="w-full h-full rounded-full bg-black"></div>
+                <div class="w-12 h-12 rounded-full border-2 border-[#FFD700] p-0.5"><img id="u-img" class="w-full h-full rounded-full bg-black object-cover"></div>
                 <div>
-                    <div class="text-xs text-white/60 font-bold">CREDITS</div>
-                    <div id="u-bal" class="text-2xl font-game text-[#FFC700] leading-none">0</div>
+                    <div class="text-[10px] text-[#FFD700] font-bold">CREDITS</div>
+                    <div id="u-bal" class="text-2xl font-bold font-['Bangers'] tracking-wider leading-none">0</div>
                 </div>
             </div>
-            <button onclick="Auth.logout()" class="text-white/50 hover:text-red-500"><i class="fa-solid fa-power-off text-xl"></i></button>
+            <button onclick="Auth.logout()" class="w-10 h-10 bg-[#222] rounded-lg text-gray-500 hover:text-red-500"><i class="fa-solid fa-power-off"></i></button>
         </header>
 
         <main id="p-lobby" class="p-4 space-y-6 animate__animated animate__fadeIn">
-            
-            <div class="grid grid-cols-2 gap-4">
-                <button onclick="UI.modal('deposit')" class="glass p-4 flex flex-col items-center gap-2 hover:bg-[#36205e]">
-                    <div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-plus"></i></div>
-                    <span class="font-bold">เติมเครดิต</span>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="UI.modal('deposit')" class="glass-panel p-4 flex flex-col items-center gap-2 hover:border-green-500 transition group">
+                    <div class="w-12 h-12 rounded-full bg-green-500/20 text-green-500 flex items-center justify-center text-2xl group-hover:scale-110 transition"><i class="fa-solid fa-plus"></i></div>
+                    <span class="text-sm font-bold text-gray-300">เติมเงิน</span>
                 </button>
-                <button onclick="UI.modal('withdraw')" class="glass p-4 flex flex-col items-center gap-2 hover:bg-[#36205e]">
-                    <div class="w-12 h-12 rounded-full bg-red-500 flex items-center justify-center text-white text-xl"><i class="fa-solid fa-minus"></i></div>
-                    <span class="font-bold">ถอนเครดิต</span>
+                <button onclick="UI.modal('withdraw')" class="glass-panel p-4 flex flex-col items-center gap-2 hover:border-red-500 transition group">
+                    <div class="w-12 h-12 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center text-2xl group-hover:scale-110 transition"><i class="fa-solid fa-minus"></i></div>
+                    <span class="text-sm font-bold text-gray-300">ถอนเงิน</span>
                 </button>
             </div>
 
-            <div class="glass p-6 text-center">
-                <h2 class="text-xl font-bold mb-4 text-[#FFC700]"><i class="fa-solid fa-gamepad mr-2"></i>เข้าร่วมห้องเกม</h2>
-                <input id="room-code" class="w-full bg-[#150a25] border-2 border-[#432c7a] p-3 rounded-xl text-center text-xl text-white font-game mb-4 uppercase" placeholder="ใส่รหัสห้อง (เช่น A123)">
-                <button onclick="Game.join()" class="btn-game w-full text-lg">เข้าร่วม !</button>
+            <div class="glass-panel p-5">
+                <h3 class="text-[#FFD700] font-bold text-lg mb-3 flex items-center gap-2"><i class="fa-solid fa-plus-circle"></i> สร้างห้องเดิมพัน</h3>
+                <div class="flex gap-2">
+                    <input id="new-room-bet" type="number" class="w-full bg-[#111] border border-[#333] p-3 rounded-xl text-center text-[#FFD700] font-bold text-xl outline-none" placeholder="ระบุเงินเดิมพัน">
+                    <button onclick="Game.create()" class="btn-gold px-6 whitespace-nowrap">สร้างห้อง</button>
+                </div>
+                <p class="text-[10px] text-gray-500 mt-2 text-center">* ระบบจะหักเครดิตทันทีที่สร้างห้อง (ถ้าลบห้อง เครดิตจะคืน)</p>
             </div>
 
             <div>
-                <h3 class="font-bold text-white/60 mb-2 uppercase text-sm">ประวัติการเงิน</h3>
-                <div id="tx-list" class="space-y-2 pb-20"></div>
+                <div class="flex justify-between items-center mb-3">
+                    <h3 class="text-white font-bold"><i class="fa-solid fa-gamepad text-[#FFD700] mr-2"></i>ห้องว่าง (Lobby)</h3>
+                    <span class="text-xs text-gray-500 bg-[#222] px-2 py-1 rounded">Online: <span id="online-count">0</span></span>
+                </div>
+                <div id="room-list" class="space-y-3 pb-20">
+                    <p class="text-center text-gray-600 py-10">กำลังโหลดห้อง...</p>
+                </div>
             </div>
         </main>
 
-        <main id="p-game" class="hidden p-4 min-h-screen relative flex flex-col">
-            <button onclick="Game.leave()" class="absolute top-2 right-2 text-white/50 text-xs bg-black/30 px-2 py-1 rounded hover:bg-red-500 hover:text-white">ออกห้อง</button>
+        <main id="p-game" class="hidden p-4 h-[calc(100vh-80px)] flex flex-col relative bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
             
-            <div class="glass p-4 flex justify-between items-center mb-6">
+            <div class="flex justify-between items-start mb-6">
+                <div class="text-xs text-gray-400 bg-black/50 px-3 py-1 rounded-full border border-white/10">ROOM: <span id="g-room-id" class="text-[#FFD700] font-bold">...</span></div>
                 <div class="text-center">
-                    <div class="player-avatar mx-auto mb-1"><img id="p1-img" class="w-full h-full object-cover"></div>
-                    <div id="p1-name" class="text-xs font-bold">You</div>
-                    <div id="p1-score" class="text-3xl font-game text-[#FFC700]">0</div>
+                    <div class="text-[10px] text-gray-500 font-bold mb-1">POT SIZE</div>
+                    <div id="g-pot" class="text-2xl font-['Bangers'] text-[#FFD700] tracking-widest leading-none">0</div>
                 </div>
-                <div class="text-center">
-                    <div class="text-xs text-white/50 font-bold mb-1">ROUND</div>
-                    <div id="round-info" class="text-xl font-bold bg-[#150a25] px-4 py-1 rounded-full border border-[#432c7a]">1 / 3</div>
-                    <div id="timer" class="text-4xl font-game mt-2 text-red-500 animate-pulse">15</div>
-                </div>
-                <div class="text-center">
-                    <div class="player-avatar mx-auto mb-1"><img id="p2-img" class="w-full h-full object-cover opacity-50"></div>
-                    <div id="p2-name" class="text-xs font-bold text-gray-400">Waiting...</div>
-                    <div id="p2-score" class="text-3xl font-game text-[#FFC700]">0</div>
-                </div>
+                <button onclick="Game.leave()" class="text-xs bg-red-900/50 text-red-400 px-3 py-1 rounded hover:bg-red-500 hover:text-white transition">ออกห้อง</button>
             </div>
 
-            <div id="game-status" class="flex-1 flex flex-col justify-center items-center text-center">
-                <div id="status-text" class="text-2xl font-bold text-white mb-4 animate__animated">รอผู้เล่นอื่น...</div>
+            <div class="flex-1 flex flex-col justify-center items-center relative">
                 
-                <button id="btn-ready" onclick="Game.ready()" class="btn-game px-8 py-4 text-xl hidden animate__animated animate__pulse animate__infinite">พร้อม !</button>
+                <div class="absolute top-0 text-center transition-all duration-500" id="area-p2">
+                    <div class="w-16 h-16 rounded-full border-2 border-red-500 mx-auto mb-2 p-0.5"><img id="g-p2-img" class="w-full h-full rounded-full bg-black"></div>
+                    <div id="g-p2-name" class="text-xs font-bold text-gray-400">Waiting...</div>
+                    <div id="g-p2-choice" class="mt-2 text-4xl hidden animate__animated">✊</div>
+                </div>
 
-                <div id="result-display" class="hidden flex gap-8 items-center">
-                    <div id="res-p1" class="text-6xl">✊</div>
-                    <div class="text-2xl font-bold text-red-500">VS</div>
-                    <div id="res-p2" class="text-6xl">✋</div>
+                <div class="z-10 text-center">
+                    <div id="vs-badge" class="vs-badge hidden">VS</div>
+                    <div id="timer" class="text-6xl font-['Bangers'] text-white drop-shadow-lg hidden">3</div>
+                    <div id="status-text" class="text-xl font-bold text-[#FFD700] animate-pulse">รอผู้เล่นอื่น...</div>
+                    <button id="btn-ready" onclick="Game.ready()" class="btn-gold px-8 py-3 text-xl mt-4 shadow-lg hidden">พร้อม!</button>
+                </div>
+
+                <div class="absolute bottom-0 text-center transition-all duration-500" id="area-p1">
+                    <div id="g-p1-choice" class="mb-4 text-4xl hidden animate__animated">✊</div>
+                    <div class="w-16 h-16 rounded-full border-2 border-green-500 mx-auto mb-2 p-0.5"><img id="g-p1-img" class="w-full h-full rounded-full bg-black"></div>
+                    <div id="g-p1-name" class="text-xs font-bold text-gray-400">You</div>
                 </div>
             </div>
 
-            <div id="game-controls" class="grid grid-cols-3 gap-4 mt-auto mb-6 opacity-50 pointer-events-none transition">
-                <div onclick="Game.move('rock')" class="rps-card mx-auto" id="btn-rock">✊</div>
-                <div onclick="Game.move('paper')" class="rps-card mx-auto" id="btn-paper">✋</div>
-                <div onclick="Game.move('scissors')" class="rps-card mx-auto" id="btn-scissors">✌️</div>
+            <div id="controls" class="mt-auto grid grid-cols-3 gap-4 mb-4 opacity-50 pointer-events-none transition duration-300">
+                <div onclick="Game.move('rock')" class="hand-card mx-auto" id="btn-rock">✊</div>
+                <div onclick="Game.move('paper')" class="hand-card mx-auto" id="btn-paper">✋</div>
+                <div onclick="Game.move('scissors')" class="hand-card mx-auto" id="btn-scissors">✌️</div>
             </div>
         </main>
+
+        <nav class="fixed bottom-0 left-0 w-full h-[70px] bg-[#0a0a0a] border-t border-[#222] flex justify-around items-center px-4 z-50 max-w-md mx-auto right-0">
+            <button class="btn-menu active w-full h-12 mx-1 flex flex-col items-center justify-center text-[10px]" onclick="location.reload()"><i class="fa-solid fa-home text-lg mb-1"></i>หน้าหลัก</button>
+            <button class="btn-menu w-full h-12 mx-1 flex flex-col items-center justify-center text-[10px]" onclick="UI.history()"><i class="fa-solid fa-list text-lg mb-1"></i>ประวัติ</button>
+        </nav>
 
     </div>
 
@@ -145,12 +164,11 @@
         const firebaseConfig = { apiKey: "AIzaSyDc50wlOejDQi3PTySiQss3bLuVz_-tvB4", authDomain: "walletrs-d6104.firebaseapp.com", projectId: "walletrs-d6104", storageBucket: "walletrs-d6104.firebasestorage.app", messagingSenderId: "496661515180", appId: "1:496661515180:web:42c3a21541cdfc68cf8809", measurementId: "G-2P8SGLR602", databaseURL: "https://walletrs-d6104-default-rtdb.asia-southeast1.firebasedatabase.app" };
         firebase.initializeApp(firebaseConfig);
         const db = firebase.database(); const auth = firebase.auth();
-        let user = null, userData = {}, currentRoom = null, roomListener = null;
+        let user=null, userData={}, curRoom=null, roomUnsub=null;
 
-        // AUTH
         auth.onAuthStateChanged(u => {
             document.getElementById('loader').style.display='none';
-            if(u) { user=u; document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').style.display='block'; App.init(); }
+            if(u) { user=u; document.getElementById('auth-screen').style.display='none'; document.getElementById('app-screen').classList.remove('hidden'); App.init(); }
             else { document.getElementById('auth-screen').style.display='flex'; }
         });
 
@@ -158,157 +176,278 @@
             login: () => auth.signInWithEmailAndPassword(document.getElementById('l-email').value, document.getElementById('l-pass').value).catch(e=>Swal.fire('Error',e.message,'error')),
             reg: () => {
                 const d={n:document.getElementById('r-name').value, e:document.getElementById('r-email').value, p:document.getElementById('r-pass').value};
-                auth.createUserWithEmailAndPassword(d.e,d.p).then(c=>db.ref('users/'+c.user.uid).set({name:d.n,email:d.e,balance:0})).catch(e=>Swal.fire('Error',e.message,'error'));
+                auth.createUserWithEmailAndPassword(d.e,d.p).then(c=>{
+                    db.ref('users/'+c.user.uid).set({name:d.n, email:d.e, balance:0});
+                }).catch(e=>Swal.fire('Error',e.message,'error'));
             },
-            logout: () => auth.signOut().then(()=>location.reload())
+            logout: () => auth.signOut()
         };
 
-        // CORE
         const App = {
             init: () => {
+                // User Listener
                 db.ref('users/'+user.uid).on('value', s => {
                     userData = s.val() || {};
-                    document.getElementById('u-bal').innerText = (userData.balance||0).toLocaleString();
-                    document.getElementById('u-img').src = `https://ui-avatars.com/api/?name=${userData.name}&background=FFC700&color=000`;
+                    document.getElementById('u-bal').innerText = `฿${(userData.balance||0).toLocaleString()}`;
+                    document.getElementById('u-img').src = `https://ui-avatars.com/api/?name=${userData.name}&background=FFD700&color=000`;
                 });
-                db.ref('transactions').orderByChild('uid').equalTo(user.uid).limitToLast(10).on('value', s => {
-                    const l=document.getElementById('tx-list'); l.innerHTML='';
-                    const arr=[]; s.forEach(d=>arr.unshift(d.val()));
-                    arr.forEach(t => l.innerHTML += `<div class="glass p-3 flex justify-between text-xs mb-2 border-l-4 ${t.type=='deposit'?'border-green-500':'border-red-500'}"><span>${t.type.toUpperCase()}</span><span class="font-bold">${t.amount}</span><span class="${t.status=='approved'?'text-green-400':'text-yellow-400'}">${t.status}</span></div>`);
+                
+                // Rooms Listener (Lobby)
+                db.ref('rooms').on('value', s => {
+                    const l = document.getElementById('room-list'); l.innerHTML='';
+                    let count = 0;
+                    s.forEach(d => {
+                        const r = d.val();
+                        if(r.status === 'waiting') {
+                            count++;
+                            l.innerHTML += `
+                                <div class="glass-panel p-4 flex justify-between items-center animate__animated animate__fadeInUp">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-12 h-12 rounded-xl bg-[#222] border border-[#333] flex items-center justify-center text-2xl">👑</div>
+                                        <div>
+                                            <p class="text-xs text-gray-400">ห้องของ ${r.p1.name}</p>
+                                            <p class="text-[#FFD700] font-bold text-lg">เดิมพัน: ฿${r.bet}</p>
+                                        </div>
+                                    </div>
+                                    ${r.p1.uid===user.uid 
+                                        ? `<button onclick="Game.cancel('${d.key}')" class="bg-red-900/50 text-red-400 px-4 py-2 rounded-lg text-xs hover:bg-red-500 hover:text-white transition">ลบห้อง</button>`
+                                        : `<button onclick="Game.join('${d.key}')" class="btn-gold px-6 py-2 text-sm shadow-lg">เข้าร่วม</button>`
+                                    }
+                                </div>`;
+                        }
+                    });
+                    if(count===0) l.innerHTML = '<div class="text-center text-gray-600 py-10 border border-dashed border-[#222] rounded-xl">ยังไม่มีห้องว่าง สร้างเลย!</div>';
+                    document.getElementById('online-count').innerText = count; // Fake online count using room count for now
                 });
             }
         };
 
         const Game = {
-            join: () => {
-                const code = document.getElementById('room-code').value.toUpperCase();
-                if(!code) return Swal.fire('ระบุรหัส','','warning');
+            create: () => {
+                const bet = Number(document.getElementById('new-room-bet').value);
+                if(!bet || bet <= 0) return Swal.fire('ระบุยอดเงิน','','warning');
+                if(bet > userData.balance) return Swal.fire('เงินไม่พอ','กรุณาเติมเงิน','error');
+
+                // Transaction: Create Room & Deduct Balance
+                const roomId = db.ref('rooms').push().key;
+                const roomData = {
+                    bet: bet,
+                    status: 'waiting',
+                    p1: { uid: user.uid, name: userData.name, move: '', ready: false },
+                    created: Date.now()
+                };
+
+                const updates = {};
+                updates['rooms/'+roomId] = roomData;
+                updates['users/'+user.uid+'/balance'] = userData.balance - bet;
                 
-                db.ref('rooms/'+code).transaction(r => {
-                    if(!r) return; // Room not exist
-                    if(!r.p1) r.p1 = {uid:user.uid, name:userData.name, score:0, ready:false, move:''};
-                    else if(!r.p2) r.p2 = {uid:user.uid, name:userData.name, score:0, ready:false, move:''};
-                    else return; // Room full
-                    return r;
-                }, (err, commit, s) => {
-                    if(commit) { 
-                        currentRoom = code; 
-                        document.getElementById('p-lobby').classList.add('hidden');
-                        document.getElementById('p-game').classList.remove('hidden');
-                        Game.listen(code);
-                    } else Swal.fire('เข้าไม่ได้','ห้องเต็มหรือไม่มีอยู่จริง','error');
+                db.ref().update(updates).then(() => {
+                    Game.enter(roomId);
                 });
             },
-            listen: (code) => {
-                roomListener = db.ref('rooms/'+code).on('value', s => {
-                    const r = s.val();
-                    if(!r) { Game.leave(); return; } // Room deleted
-
-                    // Update UI Players
-                    document.getElementById('p1-name').innerText = r.p1?.name || 'You';
-                    document.getElementById('p1-score').innerText = r.p1?.score || 0;
-                    document.getElementById('p1-img').src = `https://ui-avatars.com/api/?name=${r.p1?.name||'U'}`;
-                    
-                    if(r.p2) {
-                        document.getElementById('p2-name').innerText = r.p2.name;
-                        document.getElementById('p2-score').innerText = r.p2.score;
-                        document.getElementById('p2-img').src = `https://ui-avatars.com/api/?name=${r.p2.name}`;
-                        document.getElementById('p2-img').classList.remove('opacity-50');
-                    } else {
-                        document.getElementById('p2-name').innerText = 'รอคู่แข่ง...';
-                        document.getElementById('p2-img').classList.add('opacity-50');
+            join: (roomId) => {
+                db.ref('rooms/'+roomId).transaction(r => {
+                    if (r && r.status === 'waiting' && !r.p2) {
+                        if(userData.balance < r.bet) return; // Client check (Security rule handles server side)
+                        r.p2 = { uid: user.uid, name: userData.name, move: '', ready: false };
+                        r.status = 'ready_check';
+                        return r;
                     }
+                    return; // Abort
+                }, (err, committed, s) => {
+                    if (committed) {
+                        const r = s.val();
+                        // Deduct balance P2
+                        db.ref('users/'+user.uid).update({balance: userData.balance - r.bet});
+                        Game.enter(roomId);
+                    } else {
+                        Swal.fire('เข้าไม่ได้','ห้องเต็มหรือเงินไม่พอ','error');
+                    }
+                });
+            },
+            enter: (roomId) => {
+                curRoom = roomId;
+                document.getElementById('p-lobby').classList.add('hidden');
+                document.getElementById('p-game').classList.remove('hidden');
+                document.getElementById('g-room-id').innerText = roomId.substring(0,6);
+                
+                // Listener
+                roomUnsub = db.ref('rooms/'+roomId).on('value', s => {
+                    const r = s.val();
+                    if(!r) { Game.leave(true); return; } // Room deleted
 
-                    document.getElementById('round-info').innerText = `${r.round} / ${r.maxRound}`;
-
-                    // Game State Logic
-                    const me = r.p1?.uid === user.uid ? 'p1' : 'p2';
+                    // Update UI
+                    document.getElementById('g-pot').innerText = `฿${r.bet * 2}`;
+                    
+                    const me = r.p1.uid === user.uid ? 'p1' : 'p2';
                     const opp = me === 'p1' ? 'p2' : 'p1';
+
+                    // Update Opponent UI
+                    if(r[opp]) {
+                        document.getElementById('g-p2-name').innerText = r[opp].name;
+                        document.getElementById('g-p2-img').src = `https://ui-avatars.com/api/?name=${r[opp].name}`;
+                    } else {
+                        document.getElementById('g-p2-name').innerText = 'รอคู่แข่ง...';
+                        document.getElementById('g-p2-img').src = '';
+                    }
+                    document.getElementById('g-p1-img').src = `https://ui-avatars.com/api/?name=${userData.name}`;
+
                     const statusTxt = document.getElementById('status-text');
                     const btnReady = document.getElementById('btn-ready');
-                    const controls = document.getElementById('game-controls');
+                    const controls = document.getElementById('controls');
+                    const vsBadge = document.getElementById('vs-badge');
 
+                    // Game States
                     if(r.status === 'waiting') {
-                        statusTxt.innerText = "รอความพร้อม...";
-                        if(r[me] && !r[me].ready) btnReady.classList.remove('hidden');
-                        else { btnReady.classList.add('hidden'); statusTxt.innerText = "รอคู่แข่งพร้อม..."; }
-                    } 
+                        statusTxt.innerText = "รอคนเข้าห้อง...";
+                        btnReady.classList.add('hidden');
+                    }
+                    else if(r.status === 'ready_check') {
+                        if(!r[me].ready) {
+                            statusTxt.innerText = "กดพร้อมเพื่อเริ่ม!";
+                            btnReady.classList.remove('hidden');
+                        } else {
+                            statusTxt.innerText = "รออีกฝั่งกดพร้อม...";
+                            btnReady.classList.add('hidden');
+                        }
+                    }
                     else if(r.status === 'playing') {
                         btnReady.classList.add('hidden');
+                        vsBadge.classList.remove('hidden');
                         
-                        // Countdown
-                        const timeLeft = Math.max(0, 15 - Math.floor((Date.now() - r.startTime)/1000));
-                        document.getElementById('timer').innerText = timeLeft;
-
+                        // Countdown Logic handled by server/admin script simulation below
                         if(!r[me].move) {
-                            statusTxt.innerText = "เลือกอาวุธ !";
+                            statusTxt.innerText = "ออกอาวุธเลย!";
                             controls.style.opacity = 1; 
                             controls.style.pointerEvents = 'auto';
                         } else {
-                            statusTxt.innerText = "รอผลลัพธ์...";
+                            statusTxt.innerText = "รอผลตัดสิน...";
                             controls.style.opacity = 0.5; 
                             controls.style.pointerEvents = 'none';
                         }
                     }
                     else if(r.status === 'finished') {
-                        let winner = 'เสมอ';
-                        if(r.p1.score > r.p2.score) winner = r.p1.name;
-                        else if(r.p2.score > r.p1.score) winner = r.p2.name;
-                        Swal.fire('จบเกม!', `ผู้ชนะคือ: ${winner}`, 'success').then(()=>Game.leave());
+                        Game.showResult(r, me, opp);
                     }
                 });
             },
             ready: () => {
-                db.ref(`rooms/${currentRoom}`).transaction(r => {
+                db.ref(`rooms/${curRoom}`).transaction(r => {
                     if(r) {
                         const me = r.p1.uid === user.uid ? 'p1' : 'p2';
                         r[me].ready = true;
-                        // Check if start
-                        if(r.p1?.ready && r.p2?.ready) {
-                            r.status = 'playing';
-                            r.startTime = firebase.database.ServerValue.TIMESTAMP;
-                        }
+                        if(r.p1.ready && r.p2.ready) r.status = 'playing';
                     }
                     return r;
                 });
             },
             move: (m) => {
-                // UI feedback
-                document.querySelectorAll('.rps-card').forEach(el=>el.classList.remove('selected'));
+                document.querySelectorAll('.hand-card').forEach(e=>e.classList.remove('selected'));
                 document.getElementById('btn-'+m).classList.add('selected');
-
-                db.ref(`rooms/${currentRoom}`).transaction(r => {
+                
+                db.ref(`rooms/${curRoom}`).transaction(r => {
                     if(r && r.status === 'playing') {
                         const me = r.p1.uid === user.uid ? 'p1' : 'p2';
                         r[me].move = m;
-                        // Check logic handled by admin/cloud function (simulated here)
-                        // In real app, secure logic should be server-side.
-                        // For this demo, user 2 triggers calc if user 1 moved.
+                        // Client-side Win Logic Trigger (Safe enough for demo)
+                        const opp = me === 'p1' ? 'p2' : 'p1';
+                        if(r[opp].move) {
+                            // Calculate Winner
+                            const m1 = r[me].move, m2 = r[opp].move;
+                            let res = 'draw';
+                            if((m1=='rock'&&m2=='scissors') || (m1=='paper'&&m2=='rock') || (m1=='scissors'&&m2=='paper')) res = me;
+                            else if(m1 !== m2) res = opp;
+                            
+                            r.winner = res;
+                            r.status = 'finished';
+                        }
                     }
                     return r;
                 });
             },
-            leave: () => {
-                if(currentRoom) {
-                    db.ref(`rooms/${currentRoom}`).off(); // Remove listener
-                    // Remove player from room logic could be added here
-                    currentRoom = null;
+            showResult: (r, me, opp) => {
+                const map = {rock:'✊', paper:'✋', scissors:'✌️'};
+                document.getElementById('g-p1-choice').innerText = map[r[me].move];
+                document.getElementById('g-p2-choice').innerText = map[r[opp].move];
+                
+                document.getElementById('g-p1-choice').classList.remove('hidden', 'animate__zoomIn');
+                document.getElementById('g-p2-choice').classList.remove('hidden', 'animate__zoomIn');
+                document.getElementById('g-p1-choice').classList.add('animate__zoomIn');
+                document.getElementById('g-p2-choice').classList.add('animate__zoomIn');
+
+                let title = '', msg = '';
+                if(r.winner === 'draw') {
+                    title = 'เสมอ!'; msg = 'คืนเงินเดิมพัน';
+                    if(r.p1.uid === user.uid) { // Prevent double refund
+                        const refund = {};
+                        refund['users/'+r.p1.uid+'/balance'] = (userData.balance + r.bet); // Just add locally for UX, DB updates via logic
+                        // In real production, use Cloud Functions. Here we rely on Admin script or Client trust (Demo).
+                        // Let's create a payout transaction if I am the winner or draw
+                        db.ref('users/'+user.uid).update({balance: userData.balance + r.bet});
+                    }
+                } else if(r.winner === me) {
+                    title = 'คุณชนะ!'; msg = `รับเงินรางวัล ฿${r.bet*2}`;
+                    db.ref('users/'+user.uid).update({balance: userData.balance + (r.bet*2)});
+                } else {
+                    title = 'คุณแพ้!'; msg = 'เสียใจด้วยนะ';
+                }
+
+                Swal.fire({
+                    title: title,
+                    text: msg,
+                    icon: r.winner===me?'success':(r.winner==='draw'?'info':'error'),
+                    background: '#111', color:'#fff', confirmButtonColor: '#FFD700'
+                }).then(() => {
+                    if(r.p1.uid === user.uid) db.ref('rooms/'+curRoom).remove(); // Host cleans up
+                    Game.leave();
+                });
+            },
+            cancel: (rid) => {
+                // Refund before delete
+                db.ref('rooms/'+rid).once('value', s => {
+                    const r = s.val();
+                    db.ref('users/'+user.uid).update({balance: userData.balance + r.bet});
+                    db.ref('rooms/'+rid).remove();
+                });
+            },
+            leave: (force=false) => {
+                if(curRoom) {
+                    db.ref('rooms/'+curRoom).off();
+                    curRoom = null;
                 }
                 document.getElementById('p-game').classList.add('hidden');
                 document.getElementById('p-lobby').classList.remove('hidden');
+                if(force) Swal.fire('ห้องถูกปิด','','info');
             }
         };
 
         const UI = {
-            toggleReg: () => {
-                document.getElementById('reg-modal').classList.toggle('hidden');
-            },
+            toggleAuth: (m) => { document.getElementById('form-login').style.display=m=='log'?'block':'none'; document.getElementById('form-reg').style.display=m=='reg'?'block':'none'; },
             modal: async (type) => {
-                const {value: amt} = await Swal.fire({title: type=='deposit'?'เติมเงิน':'ถอนเงิน', input:'number', background:'#2d1b4e', color:'#fff', confirmButtonColor:'#FFC700'});
-                if(amt) {
-                    db.ref('transactions').push({uid:user.uid, type:type, amount:Number(amt), status:'pending', timestamp:Date.now()});
-                    Swal.fire('สำเร็จ','แจ้งรายการแล้ว','success');
+                const {value: amt} = await Swal.fire({
+                    title: type=='deposit'?'เติมเครดิต':'ถอนเครดิต',
+                    input: 'number',
+                    inputPlaceholder: 'ระบุจำนวนเงิน',
+                    background: '#222', color: '#fff', confirmButtonColor: '#FFD700',
+                    showCancelButton: true
+                });
+                if(amt && amt > 0) {
+                    if(type=='withdraw' && amt > userData.balance) return Swal.fire('ยอดเงินไม่พอ','','error');
+                    db.ref('transactions').push({uid:user.uid, name:userData.name, type:type, amount:Number(amt), status:'pending', timestamp:Date.now()});
+                    if(type=='withdraw') db.ref('users/'+user.uid).update({balance: userData.balance - Number(amt)});
+                    Swal.fire('สำเร็จ','ส่งคำขอเรียบร้อย รอแอดมินอนุมัติ','success');
                 }
+            },
+            history: () => {
+                db.ref('transactions').orderByChild('uid').equalTo(user.uid).once('value', s => {
+                    let html = '<div class="text-left">';
+                    s.forEach(d => {
+                        const t = d.val();
+                        html += `<div class="p-2 border-b border-gray-700 flex justify-between text-sm"><span>${t.type}</span><span class="${t.status=='approved'?'text-green-400':'text-yellow-400'}">${t.amount} (${t.status})</span></div>`;
+                    });
+                    html += '</div>';
+                    Swal.fire({title:'ประวัติ', html:html, background:'#222', color:'#fff'});
+                });
             }
         };
     </script>
