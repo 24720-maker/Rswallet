@@ -3,118 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAFADA - ลูกค้า</title>
+    <title>FAFADA - กระเป๋าเงินออนไลน์</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style> body { font-family: 'Prompt', sans-serif; background-color: #f8fafc; } </style>
+    <style> body { font-family: 'Prompt', sans-serif; background-color: #f0f4f8; } </style>
 </head>
-<body class="text-slate-800 antialiased">
+<body class="text-gray-800">
 
-    <div id="loader" class="fixed inset-0 bg-white z-[99] flex flex-col items-center justify-center">
-        <div class="animate-spin rounded-full h-12 w-12 border-4 border-blue-600 border-t-transparent mb-4"></div>
-        <p class="text-blue-600 font-bold animate-pulse">กำลังเชื่อมต่อ...</p>
+    <div id="loader" class="fixed inset-0 bg-white z-[999] flex flex-col items-center justify-center transition-opacity duration-300">
+        <div class="animate-spin rounded-full h-16 w-16 border-4 border-blue-600 border-t-transparent mb-4"></div>
+        <p class="text-blue-600 font-bold animate-pulse">กำลังโหลดระบบ...</p>
     </div>
 
-    <div id="authScreen" class="min-h-screen flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl overflow-hidden">
-            <div class="bg-blue-600 p-8 text-center">
-                <h1 class="text-3xl font-bold text-white tracking-widest">FAFADA</h1>
-                <p class="text-blue-100 text-sm">ระบบฝากถอนอัตโนมัติ</p>
+    <div id="authScreen" class="min-h-screen flex items-center justify-center p-4 hidden bg-gradient-to-br from-blue-100 to-indigo-200">
+        <div class="bg-white w-full max-w-md rounded-3xl shadow-2xl overflow-hidden transform hover:scale-[1.01] transition duration-300">
+            <div class="bg-blue-600 p-8 text-center relative">
+                <div class="absolute inset-0 bg-pattern opacity-10"></div>
+                <h1 class="text-4xl font-bold text-white tracking-widest relative z-10">FAFADA</h1>
+                <p class="text-blue-100 text-sm mt-1 relative z-10">Secure Wallet System</p>
             </div>
+            
+            <div class="flex border-b">
+                <button onclick="toggleAuth('login')" id="tabLogin" class="flex-1 py-4 font-bold text-blue-600 border-b-2 border-blue-600 bg-blue-50 transition">เข้าสู่ระบบ</button>
+                <button onclick="toggleAuth('register')" id="tabRegister" class="flex-1 py-4 font-bold text-gray-400 hover:bg-gray-50 transition">สมัครสมาชิก</button>
+            </div>
+
             <div class="p-8">
-                <button onclick="loginGoogle()" class="w-full bg-white border border-gray-300 py-3 rounded-xl mb-4 flex items-center justify-center gap-2 font-bold text-gray-700 hover:bg-gray-50 transition">
-                    <img src="https://www.svgrepo.com/show/475656/google-color.svg" class="w-5 h-5"> เข้าสู่ระบบด้วย Google
-                </button>
-                <div class="relative flex py-4 items-center">
-                    <div class="flex-grow border-t border-gray-300"></div>
-                    <span class="flex-shrink-0 mx-4 text-gray-400 text-xs">หรือใช้อีเมล</span>
-                    <div class="flex-grow border-t border-gray-300"></div>
-                </div>
-                <form onsubmit="handleLogin(event)">
-                    <input type="email" id="lEmail" class="w-full px-4 py-3 border rounded-xl mb-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="อีเมล" required>
-                    <input type="password" id="lPass" class="w-full px-4 py-3 border rounded-xl mb-4 outline-none focus:ring-2 focus:ring-blue-500" placeholder="รหัสผ่าน" required>
-                    <button class="w-full bg-blue-600 text-white py-3 rounded-xl font-bold hover:bg-blue-700 transition">เข้าสู่ระบบ</button>
+                <form id="loginForm" onsubmit="handleLogin(event)">
+                    <div class="mb-4">
+                        <label class="text-xs text-gray-500 font-bold ml-1">อีเมล</label>
+                        <input type="email" id="lEmail" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" required>
+                    </div>
+                    <div class="mb-6">
+                        <label class="text-xs text-gray-500 font-bold ml-1">รหัสผ่าน</label>
+                        <input type="password" id="lPass" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-blue-500 outline-none bg-gray-50" required>
+                    </div>
+                    <button class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition">เข้าสู่ระบบ</button>
                 </form>
-                <p class="text-center mt-4 text-sm text-gray-500">ยังไม่มีบัญชี? <a href="#" onclick="toggleReg()" class="text-blue-600 font-bold">สมัครสมาชิก</a></p>
+
+                <form id="registerForm" onsubmit="handleRegister(event)" class="hidden">
+                    <div class="mb-3">
+                        <label class="text-xs text-gray-500 font-bold ml-1">ชื่อที่แสดง</label>
+                        <input type="text" id="rName" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none bg-gray-50" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="text-xs text-gray-500 font-bold ml-1">อีเมล</label>
+                        <input type="email" id="rEmail" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none bg-gray-50" required>
+                    </div>
+                    <div class="mb-5">
+                        <label class="text-xs text-gray-500 font-bold ml-1">รหัสผ่าน</label>
+                        <input type="password" id="rPass" class="w-full px-4 py-3 border rounded-xl focus:ring-2 focus:ring-green-500 outline-none bg-gray-50" required>
+                    </div>
+                    <button class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition">สมัครสมาชิก</button>
+                </form>
             </div>
         </div>
     </div>
 
-    <div id="regScreen" class="min-h-screen flex items-center justify-center p-4 hidden">
-        <div class="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
-            <h2 class="text-2xl font-bold mb-6 text-center text-blue-900">สมัครสมาชิกใหม่</h2>
-            <form onsubmit="handleRegister(event)">
-                <input type="text" id="rName" class="w-full px-4 py-3 border rounded-xl mb-3" placeholder="ชื่อที่แสดง" required>
-                <input type="email" id="rEmail" class="w-full px-4 py-3 border rounded-xl mb-3" placeholder="อีเมล" required>
-                <input type="password" id="rPass" class="w-full px-4 py-3 border rounded-xl mb-4" placeholder="รหัสผ่าน" required>
-                <button class="w-full bg-green-600 text-white py-3 rounded-xl font-bold hover:bg-green-700">ยืนยันการสมัคร</button>
-            </form>
-            <button onclick="toggleReg()" class="w-full mt-4 text-gray-500 text-sm">ยกเลิก</button>
-        </div>
-    </div>
-
-    <div id="dashScreen" class="min-h-screen hidden pb-20">
-        <nav class="bg-white shadow-sm sticky top-0 z-40 border-b">
-            <div class="max-w-5xl mx-auto px-4 h-16 flex justify-between items-center">
-                <span class="text-xl font-bold text-blue-900">FAFADA</span>
-                <div class="flex items-center gap-3">
+    <div id="dashScreen" class="min-h-screen hidden pb-10">
+        <nav class="bg-white/90 backdrop-blur sticky top-0 z-40 shadow-sm border-b">
+            <div class="max-w-6xl mx-auto px-4 h-16 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <span class="text-2xl font-bold text-blue-800">FAFADA</span>
+                </div>
+                <div class="flex items-center gap-4">
                     <div class="text-right hidden sm:block">
-                        <div id="uName" class="font-bold text-sm">...</div>
-                        <div id="uEmail" class="text-xs text-gray-500">...</div>
+                        <div id="uName" class="font-bold text-sm text-gray-800">User</div>
+                        <div id="uEmail" class="text-xs text-gray-500">email@example.com</div>
                     </div>
-                    <button onclick="doLogout()" class="text-gray-400 hover:text-red-500"><i class="fas fa-sign-out-alt fa-lg"></i></button>
+                    <button onclick="doLogout()" class="text-gray-400 hover:text-red-500 transition"><i class="fas fa-sign-out-alt fa-lg"></i></button>
                 </div>
             </div>
         </nav>
 
-        <div class="max-w-5xl mx-auto px-4 py-6">
-            <div id="newsBox" class="hidden mb-6 bg-yellow-50 border-l-4 border-yellow-400 p-4 rounded shadow-sm">
-                <h3 id="newsTitle" class="font-bold text-yellow-800"></h3>
-                <p id="newsContent" class="text-sm text-yellow-700"></p>
+        <div class="max-w-6xl mx-auto px-4 py-8">
+            <div id="newsBox" class="hidden mb-8 bg-white border-l-4 border-amber-400 p-4 rounded-r-xl shadow-sm flex items-start gap-4 animate-fade-in-up">
+                <div class="bg-amber-100 p-2 rounded-full text-amber-600"><i class="fas fa-bullhorn"></i></div>
+                <div>
+                    <h3 id="newsTitle" class="font-bold text-gray-800"></h3>
+                    <p id="newsContent" class="text-sm text-gray-600 mt-1"></p>
+                </div>
             </div>
 
-            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-xl mb-8 relative overflow-hidden">
-                <div class="absolute right-0 top-0 opacity-10 w-40 h-40 bg-white rounded-full blur-2xl"></div>
-                <p class="text-blue-200 text-sm mb-1">ยอดเงินคงเหลือ</p>
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 text-white shadow-2xl mb-8 relative overflow-hidden transform hover:scale-[1.005] transition duration-500">
+                <div class="absolute right-0 top-0 opacity-20 w-64 h-64 bg-white rounded-full blur-3xl -translate-y-1/2 translate-x-1/4"></div>
+                <p class="text-blue-200 text-sm font-medium mb-1">ยอดเงินคงเหลือสุทธิ</p>
                 <h1 class="text-5xl font-bold mb-4 tracking-tight">฿ <span id="uBal">0.00</span></h1>
-                <div class="inline-block bg-white/20 px-3 py-1 rounded-full text-xs backdrop-blur-md">ID: <span id="uID">...</span></div>
+                <div class="inline-flex items-center gap-2 bg-white/20 px-3 py-1 rounded-full text-xs backdrop-blur-md border border-white/20">
+                    <i class="fas fa-id-card"></i> ID: <span id="uID">...</span>
+                </div>
             </div>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div class="lg:col-span-5 bg-white p-6 rounded-2xl shadow-lg border border-gray-100 h-fit">
-                    <h3 class="font-bold text-lg mb-6 text-gray-800">ทำรายการฝาก-ถอน</h3>
+                <div class="lg:col-span-4 bg-white p-6 rounded-2xl shadow-lg border border-gray-100 h-fit">
+                    <h3 class="font-bold text-lg mb-6 text-gray-800 flex items-center gap-2"><i class="fas fa-coins text-blue-600"></i> ทำรายการ</h3>
                     
                     <div class="flex bg-gray-100 p-1.5 rounded-xl mb-6">
-                        <button onclick="setType('deposit')" id="bD" class="flex-1 py-3 text-sm font-bold bg-white text-green-600 shadow rounded-lg transition">ฝากเงิน</button>
-                        <button onclick="setType('withdraw')" id="bW" class="flex-1 py-3 text-sm font-bold text-gray-500 transition">ถอนเงิน</button>
+                        <button onclick="setType('deposit')" id="bD" class="flex-1 py-3 text-sm font-bold bg-white text-green-600 shadow rounded-lg transition-all">ฝากเงิน</button>
+                        <button onclick="setType('withdraw')" id="bW" class="flex-1 py-3 text-sm font-bold text-gray-500 hover:text-red-500 transition-all">ถอนเงิน</button>
                     </div>
 
                     <form onsubmit="subTxn(event)">
-                        <label class="text-xs font-bold text-gray-500 ml-1 mb-1 block">จำนวนเงิน</label>
-                        <input type="number" id="amt" class="w-full px-4 py-3 border rounded-xl text-lg mb-4 font-bold text-gray-700 outline-none focus:ring-2 focus:ring-blue-500" placeholder="0.00" step="0.01" min="1" required>
-                        <button class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold shadow-lg transition">ยืนยันทำรายการ</button>
+                        <label class="text-xs font-bold text-gray-500 ml-1 mb-1 block">ระบุจำนวนเงิน</label>
+                        <div class="relative mb-4 group">
+                            <span class="absolute left-4 top-3.5 text-gray-400 group-focus-within:text-blue-500 transition">฿</span>
+                            <input type="number" id="amt" class="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-xl text-lg outline-none focus:ring-2 focus:ring-blue-500 font-bold text-gray-700 bg-gray-50 focus:bg-white transition" placeholder="0.00" step="0.01" min="1" required oninput="calc()">
+                        </div>
+                        
+                        <div id="fee" class="hidden mb-6 bg-red-50 p-4 rounded-xl border border-red-100 text-sm space-y-2">
+                            <div class="flex justify-between text-red-500"><span>ค่าธรรมเนียม (5%)</span><span id="txtF">0.00</span></div>
+                            <div class="border-t border-red-200"></div>
+                            <div class="flex justify-between font-bold text-gray-800 pt-1"><span>ได้รับจริง</span><span id="txtN">0.00</span></div>
+                        </div>
+                        
+                        <button id="bS" class="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold shadow-lg transition flex justify-center items-center gap-2"><i class="fas fa-check-circle"></i> ยืนยันรายการ</button>
                     </form>
                 </div>
 
-                <div class="lg:col-span-7 bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
-                    <div class="flex justify-between items-center mb-4">
-                        <h3 class="font-bold text-lg text-gray-800">ประวัติการทำรายการ</h3>
-                        <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">Real-time</span>
+                <div class="lg:col-span-8 bg-white p-6 rounded-2xl shadow-lg border border-gray-100">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-lg text-gray-800 flex items-center gap-2"><i class="fas fa-history text-indigo-500"></i> ประวัติการทำรายการ</h3>
+                        <span class="text-xs bg-gray-100 text-gray-500 px-3 py-1 rounded-full">Real-time</span>
                     </div>
-                    <div class="overflow-y-auto max-h-[500px]">
-                        <table class="w-full text-left text-sm">
-                            <thead class="bg-gray-50 text-gray-500 text-xs uppercase sticky top-0">
+                    <div class="overflow-auto max-h-[500px] custom-scrollbar pr-2">
+                        <table class="w-full text-left text-sm border-collapse">
+                            <thead class="bg-gray-50 text-gray-500 text-xs uppercase sticky top-0 z-10">
                                 <tr>
-                                    <th class="p-3 rounded-l">รายการ</th>
-                                    <th class="p-3 text-right">ยอดเงิน</th>
-                                    <th class="p-3 text-center rounded-r">สถานะ</th>
+                                    <th class="p-4 rounded-l-lg">รายการ</th>
+                                    <th class="p-4">เวลา</th>
+                                    <th class="p-4 text-right">ยอดเงิน</th>
+                                    <th class="p-4 text-center rounded-r-lg">สถานะ</th>
                                 </tr>
                             </thead>
                             <tbody id="hist" class="divide-y divide-gray-100"></tbody>
                         </table>
-                        <div id="noHist" class="py-10 text-center text-gray-400 hidden">ไม่มีประวัติ</div>
+                        <div id="noHist" class="py-12 text-center text-gray-400 hidden">
+                            <i class="fas fa-inbox text-4xl mb-2 opacity-50"></i>
+                            <p>ยังไม่มีประวัติรายการ</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -123,7 +151,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut, GoogleAuthProvider, signInWithPopup } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -141,7 +169,7 @@
         const db = getFirestore(app);
         let user, userData, type='deposit';
 
-        // AUTH LISTENER
+        // 1. AUTH & REALTIME
         onAuthStateChanged(auth, (u) => {
             document.getElementById('loader').classList.add('hidden');
             if(u) {
@@ -149,12 +177,7 @@
                 onSnapshot(doc(db, "users", u.uid), (s) => {
                     if(s.exists()) {
                         userData = s.data();
-                        renderUI();
-                    } else {
-                        // Create user doc if not exists (for Google Login)
-                        setDoc(doc(db, "users", u.uid), {
-                            uid: u.uid, email: u.email, displayName: u.displayName || 'User', role: 'user', balance: 0, createdAt: new Date()
-                        });
+                        initUI();
                     }
                 });
             } else {
@@ -163,7 +186,7 @@
             }
         });
 
-        function renderUI() {
+        function initUI() {
             document.getElementById('authScreen').classList.add('hidden');
             document.getElementById('dashScreen').classList.remove('hidden');
             document.getElementById('uName').innerText = userData.displayName;
@@ -173,112 +196,129 @@
             loadHist(); loadNews();
         }
 
-        // AUTH ACTIONS
-        window.toggleReg = () => {
-            const auth = document.getElementById('authScreen');
-            const reg = document.getElementById('regScreen');
-            if(reg.classList.contains('hidden')) {
-                auth.classList.add('hidden'); reg.classList.remove('hidden');
+        // 2. AUTH FUNCTIONS
+        window.toggleAuth = (m) => {
+            if(m==='login') {
+                document.getElementById('loginForm').classList.remove('hidden');
+                document.getElementById('registerForm').classList.add('hidden');
+                document.getElementById('tabLogin').className = "flex-1 py-4 font-bold text-blue-600 border-b-2 border-blue-600 bg-blue-50 transition";
+                document.getElementById('tabRegister').className = "flex-1 py-4 font-bold text-gray-400 hover:bg-gray-50 transition";
             } else {
-                reg.classList.add('hidden'); auth.classList.remove('hidden');
+                document.getElementById('loginForm').classList.add('hidden');
+                document.getElementById('registerForm').classList.remove('hidden');
+                document.getElementById('tabRegister').className = "flex-1 py-4 font-bold text-green-600 border-b-2 border-green-600 bg-green-50 transition";
+                document.getElementById('tabLogin').className = "flex-1 py-4 font-bold text-gray-400 hover:bg-gray-50 transition";
             }
         };
 
         window.handleLogin = async(e) => {
             e.preventDefault();
             try { await signInWithEmailAndPassword(auth, document.getElementById('lEmail').value, document.getElementById('lPass').value); }
-            catch(e) { Swal.fire('ผิดพลาด', 'อีเมลหรือรหัสผ่านไม่ถูกต้อง', 'error'); }
+            catch(e) { Swal.fire('Error', 'อีเมลหรือรหัสผ่านผิด', 'error'); }
         };
 
         window.handleRegister = async(e) => {
             e.preventDefault();
-            const em = document.getElementById('rEmail').value, pw = document.getElementById('rPass').value, nm = document.getElementById('rName').value;
+            const em=document.getElementById('rEmail').value, pw=document.getElementById('rPass').value, nm=document.getElementById('rName').value;
             try {
                 const r = await createUserWithEmailAndPassword(auth, em, pw);
                 await setDoc(doc(db, "users", r.user.uid), {
                     uid: r.user.uid, email: em, displayName: nm, role: em==='farisxuma1@gmail.com'?'admin':'user', balance: 0, createdAt: new Date()
                 });
-                Swal.fire('สำเร็จ', 'สมัครสมาชิกเรียบร้อย', 'success');
-                window.location.reload();
+                Swal.fire('Success', 'สมัครสมาชิกสำเร็จ', 'success');
             } catch(e) { Swal.fire('Error', e.message, 'error'); }
-        };
-
-        window.loginGoogle = async() => {
-            try { await signInWithPopup(auth, new GoogleAuthProvider()); } catch(e) { console.error(e); }
         };
 
         window.doLogout = () => signOut(auth).then(() => location.reload());
 
-        // TRANSACTION
+        // 3. TRANSACTION LOGIC
         window.setType = (t) => {
             type=t;
-            const bD=document.getElementById('bD'), bW=document.getElementById('bW');
+            const bD=document.getElementById('bD'), bW=document.getElementById('bW'), bS=document.getElementById('bS');
             if(t==='deposit') {
-                bD.className="flex-1 py-3 text-sm font-bold bg-white text-green-600 shadow rounded-lg transition";
-                bW.className="flex-1 py-3 text-sm font-bold text-gray-500 hover:text-red-500 transition";
+                bD.className="flex-1 py-3 text-sm font-bold bg-white text-green-600 shadow rounded-lg transition-all transform scale-105";
+                bW.className="flex-1 py-3 text-sm font-bold text-gray-500 hover:text-red-500 transition-all opacity-70";
+                bS.className="w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-xl font-bold shadow-lg transition flex justify-center items-center gap-2";
+                bS.innerHTML='<i class="fas fa-arrow-circle-down"></i> ยืนยันฝากเงิน';
+                document.getElementById('fee').classList.add('hidden');
             } else {
-                bW.className="flex-1 py-3 text-sm font-bold bg-white text-red-600 shadow rounded-lg transition";
-                bD.className="flex-1 py-3 text-sm font-bold text-gray-500 hover:text-green-600 transition";
+                bW.className="flex-1 py-3 text-sm font-bold bg-white text-red-600 shadow rounded-lg transition-all transform scale-105";
+                bD.className="flex-1 py-3 text-sm font-bold text-gray-500 hover:text-green-600 transition-all opacity-70";
+                bS.className="w-full bg-red-600 hover:bg-red-700 text-white py-4 rounded-xl font-bold shadow-lg transition flex justify-center items-center gap-2";
+                bS.innerHTML='<i class="fas fa-paper-plane"></i> ยืนยันถอนเงิน';
+                document.getElementById('fee').classList.remove('hidden');
+            }
+            calc();
+        };
+
+        window.calc = () => {
+            const v = parseFloat(document.getElementById('amt').value)||0;
+            if(type==='withdraw') {
+                const f = v*0.05;
+                document.getElementById('txtF').innerText = f.toLocaleString();
+                document.getElementById('txtN').innerText = (v-f).toLocaleString();
             }
         };
 
         window.subTxn = async(e) => {
             e.preventDefault();
-            const val = parseFloat(document.getElementById('amt').value);
-            if(val<=0) return Swal.fire('เตือน','ใส่ยอดเงินให้ถูกต้อง','warning');
-            if(type==='withdraw' && val>userData.balance) return Swal.fire('เตือน','เงินไม่พอ','error');
-
+            const v = parseFloat(document.getElementById('amt').value);
+            if(v<=0) return Swal.fire('เตือน','ยอดเงินไม่ถูกต้อง','warning');
+            if(type==='withdraw' && v > userData.balance) return Swal.fire('เตือน','ยอดเงินไม่พอ','error');
+            
             try {
                 Swal.showLoading();
                 await addDoc(collection(db, "transactions"), {
-                    uid: user.uid, email: userData.email, userDisplayName: userData.displayName,
-                    type, amount: val, netAmount: type==='withdraw'?val*0.95:val,
+                    uid: user.uid, email: userData.email, userDisplayName: userData.displayName, type, amount: v,
+                    netAmount: type==='withdraw'?v*0.95:v, fee: type==='withdraw'?v*0.05:0,
                     status: 'pending', timestamp: new Date()
                 });
-                Swal.fire('สำเร็จ', 'ส่งรายการแล้ว รอแอดมินอนุมัติ', 'success');
-                document.getElementById('amt').value = '';
-            } catch(e) { Swal.fire('Error', e.message, 'error'); }
+                Swal.fire('สำเร็จ','ส่งคำขอแล้ว รอแอดมินอนุมัติ','success');
+                document.getElementById('amt').value=''; calc();
+            } catch(e) { Swal.fire('Error',e.message,'error'); }
         };
 
-        // LOAD DATA
+        // 4. LOAD HISTORY (Client-side Sort แก้ปัญหา Index)
         function loadHist() {
-            // **จุดแก้บั๊ก: ดึงเฉพาะของตัวเองแบบไม่ต้องใช้ Index**
-            // เราดึงมาก่อนแล้วค่อยกรองในหน้าเว็บ (Client-side Filtering) เพื่อแก้ปัญหา Firestore Indexing
-            const q = query(collection(db, "transactions"), orderBy("timestamp", "desc"));
-            onSnapshot(q, (snaps) => {
+            // ดึงเฉพาะ user.uid แต่ไม่ orderBy ใน query เพื่อเลี่ยง index error
+            const q = query(collection(db, "transactions"), where("uid","==",user.uid));
+            onSnapshot(q, (s) => {
                 const tb = document.getElementById('hist'); tb.innerHTML='';
-                let count = 0;
+                let list = [];
+                s.forEach(d => list.push({id: d.id, ...d.data()}));
                 
-                snaps.forEach(d => {
-                    const t = d.data();
-                    // กรองเฉพาะของตัวเองตรงนี้
-                    if(t.uid === user.uid) {
-                        count++;
-                        const isDep = t.type==='deposit';
-                        const st = t.status==='pending' ? '<span class="text-yellow-600 font-bold text-xs bg-yellow-100 px-2 py-1 rounded">รออนุมัติ</span>' : (t.status==='completed' ? '<span class="text-green-600 font-bold text-xs bg-green-100 px-2 py-1 rounded">สำเร็จ</span>' : '<span class="text-red-600 font-bold text-xs bg-red-100 px-2 py-1 rounded">ปฏิเสธ</span>');
-                        
-                        tb.innerHTML += `
-                            <tr class="hover:bg-blue-50 transition border-b border-gray-100 last:border-0">
-                                <td class="p-3">
-                                    <div class="font-bold ${isDep?'text-green-600':'text-red-600'}">${isDep?'ฝากเงิน':'ถอนเงิน'}</div>
-                                    <div class="text-[10px] text-gray-400">${new Date(t.timestamp.seconds*1000).toLocaleString('th-TH')}</div>
-                                </td>
-                                <td class="p-3 text-right font-mono font-bold text-gray-700">${t.amount.toLocaleString()}</td>
-                                <td class="p-3 text-center">${st}</td>
-                            </tr>
-                        `;
-                    }
+                // Sort ด้วย JS แทน
+                list.sort((a,b) => b.timestamp - a.timestamp);
+
+                if(list.length===0) { document.getElementById('noHist').classList.remove('hidden'); return; }
+                document.getElementById('noHist').classList.add('hidden');
+
+                list.forEach(x => {
+                    const isDep = x.type==='deposit';
+                    const c = isDep ? 'text-green-600' : 'text-red-600';
+                    let st = '';
+                    if(x.status==='pending') st='<span class="bg-yellow-100 text-yellow-800 px-2 py-1 rounded text-xs font-bold border border-yellow-200">รออนุมัติ</span>';
+                    else if(x.status==='completed') st='<span class="bg-green-100 text-green-800 px-2 py-1 rounded text-xs font-bold border border-green-200">สำเร็จ</span>';
+                    else st='<span class="bg-red-100 text-red-800 px-2 py-1 rounded text-xs font-bold border border-red-200">ปฏิเสธ</span>';
+
+                    tb.innerHTML += `
+                        <tr class="hover:bg-blue-50/50 transition border-b border-gray-100 last:border-0">
+                            <td class="p-4"><div class="font-bold ${c}">${isDep?'ฝากเงิน':'ถอนเงิน'}</div><div class="text-xs text-gray-400">${new Date(x.timestamp.seconds*1000).toLocaleString('th-TH')}</div></td>
+                            <td class="p-4 text-right font-bold text-gray-700 font-mono">${x.amount.toLocaleString()}</td>
+                            <td class="p-4 text-center">${st}</td>
+                        </tr>`;
                 });
-                
-                if(count === 0) document.getElementById('noHist').classList.remove('hidden');
-                else document.getElementById('noHist').classList.add('hidden');
             });
         }
 
         function loadNews() {
-            onSnapshot(query(collection(db, "announcements"), orderBy("createdAt","desc")), (s) => {
-                if(!s.empty) {
-                    const n = s.docs[0].data();
+            onSnapshot(collection(db, "announcements"), (s) => {
+                let list = [];
+                s.forEach(d => list.push(d.data()));
+                // Sort หาอันล่าสุด
+                if(list.length > 0) {
+                    list.sort((a,b) => b.createdAt - a.createdAt);
+                    const n = list[0];
                     document.getElementById('newsBox').classList.remove('hidden');
                     document.getElementById('newsTitle').innerText = n.title;
                     document.getElementById('newsContent').innerText = n.content;
