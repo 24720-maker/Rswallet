@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RS LUXURY | ศูนย์กลางเครดิตพรีเมียม</title>
+    <title>RS PRESTIGE | ระบบจัดการเครดิตพรีเมียม</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/th.min.js"></script>
@@ -17,7 +17,7 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Kanit', 'sans-serif'], title: ['Prompt', 'sans-serif'] },
-                    colors: { brand: '#0052FF', luxury: '#1E293B', bgSoft: '#F8F9FA', gold: '#C5A059' }
+                    colors: { brand: '#0052FF', success: '#10B981', danger: '#EF4444', facebook: '#1877F2', soft: '#F8F9FA', slate800: '#1E293B' }
                 }
             }
         }
@@ -28,61 +28,57 @@
         body { background-color: #FFFFFF; color: #1E293B; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
         .font-title { font-family: 'Prompt', sans-serif; }
 
-        /* 🏛️ Luxury UI Details */
+        /* 💎 Prestige Elements */
         .luxury-card {
             background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
-            box-shadow: 0 25px 50px -12px rgba(0, 82, 255, 0.2);
-            border-radius: 3.5rem;
+            box-shadow: 0 20px 40px -10px rgba(0, 82, 255, 0.2);
+            border-radius: 2.5rem;
         }
 
         .news-pill {
-            background: rgba(255, 255, 255, 0.8);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(226, 232, 240, 0.5);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.03);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #F1F5F9;
         }
 
         .marquee-txt { display: inline-block; animation: marquee-anim 20s linear infinite; }
         @keyframes marquee-anim { 0% { transform: translateX(100vw); } 100% { transform: translateX(-100%); } }
 
-        .loader-pulse { animation: loaderPulse 1.5s infinite ease-in-out; }
-        @keyframes loaderPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(0.92); } }
+        .btn-action { transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .btn-action:active { transform: scale(0.94); }
 
-        .btn-luxury { transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        .btn-luxury:hover { transform: translateY(-2px); }
-        .btn-luxury:active { transform: scale(0.95); }
-
-        .tx-item { transition: 0.3s; background: #FFFFFF; border: 1px solid #F1F5F9; border-radius: 2.2rem; }
+        .tx-item { transition: 0.3s; background: #FFFFFF; border-radius: 1.8rem; border: 1px solid #F8F9FA; cursor: pointer; }
         .tx-item:active { background: #F8F9FA; transform: scale(0.98); }
 
-        .step-indicator { width: 33.33%; height: 3px; border-radius: 2px; transition: 0.5s; background: #E2E8F0; }
-        .step-indicator.active { background: #0052FF; box-shadow: 0 0 10px rgba(0,82,255,0.3); }
+        .method-btn { border: 2px solid #F1F5F9; border-radius: 1.5rem; transition: 0.3s; background: white; }
+        .method-btn.active { border-color: #0052FF; background: #eff6ff; box-shadow: 0 8px 20px -8px rgba(0,82,255,0.2); }
 
-        .status-pill { padding: 4px 14px; border-radius: 1rem; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        .status-completed { background: #ECFDF5; color: #059669; }
-        .status-pending { background: #FFFBEB; color: #D97706; }
-        .status-rejected { background: #FEF2F2; color: #DC2626; }
-
+        .receipt-card { background: #F8F9FA; border-radius: 2rem; border: 1.5px dashed #E2E8F0; }
+        .status-pill { padding: 4px 12px; border-radius: 0.8rem; font-size: 10px; font-weight: 800; text-transform: uppercase; }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="flex flex-col">
 
     <div id="loader" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center transition-all duration-700">
-        <div class="w-24 h-24 luxury-card flex items-center justify-center loader-pulse shadow-2xl">
-            <span class="text-white font-black italic text-2xl font-title">RS</span>
+        <div class="relative w-16 h-16 mb-6">
+            <div class="absolute inset-0 border-[3px] border-slate-100 rounded-full"></div>
+            <div class="absolute inset-0 border-[3px] border-brand rounded-full border-t-transparent animate-spin"></div>
         </div>
-        <p class="mt-8 text-slate-400 font-bold tracking-[0.4em] text-[10px] uppercase">กำลังตรวจสอบความปลอดภัย...</p>
+        <p class="text-slate-400 font-bold tracking-[0.3em] text-[9px] uppercase animate-pulse">Checking Security Protocol</p>
     </div>
 
-    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-white flex flex-col justify-center items-center p-12">
+    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-white flex flex-col justify-center items-center p-10">
         <div class="w-full max-w-sm text-center fade-in">
-            <h1 class="text-4xl font-black text-luxury italic tracking-tighter uppercase mb-2 font-title">RS CENTRAL</h1>
-            <p class="text-slate-400 text-[11px] font-bold uppercase tracking-[0.3em] mb-12">Authenticating Service</p>
+            <h1 class="text-3xl font-black text-slate800 italic tracking-tighter uppercase mb-2 font-title">RS PRESTIGE</h1>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-12">Authorized Personnel Only</p>
             <form onsubmit="app.login(event)" class="space-y-4">
-                <input id="lEmail" type="email" required class="w-full px-8 py-5 bg-bgSoft border-none rounded-[2rem] font-bold outline-none focus:ring-2 focus:ring-brand/10 transition-all" placeholder="E-mail Address">
-                <input id="lPass" type="password" required class="w-full px-8 py-5 bg-bgSoft border-none rounded-[2rem] font-bold outline-none focus:ring-2 focus:ring-brand/10 transition-all" placeholder="Password">
-                <button class="w-full bg-luxury text-white py-6 rounded-[2rem] font-black uppercase tracking-widest text-sm shadow-2xl mt-6 btn-luxury">Sign In</button>
+                <input id="lEmail" type="email" required class="w-full px-7 py-4 bg-soft border-none rounded-2xl font-bold outline-none focus:ring-2 focus:ring-brand/10 transition-all" placeholder="E-mail Address">
+                <input id="lPass" type="password" required class="w-full px-7 py-4 bg-soft border-none rounded-2xl font-bold outline-none focus:ring-2 focus:ring-brand/10 transition-all" placeholder="Password">
+                <button class="w-full bg-slate800 text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-2xl mt-6 btn-action">Verify Access</button>
             </form>
         </div>
     </div>
@@ -90,137 +86,123 @@
     <div id="mainPage" class="hidden flex-1 flex flex-col overflow-hidden">
         
         <div id="newsBar" class="hidden px-6 pt-5 relative z-50">
-            <div class="news-pill h-12 rounded-full flex items-center px-5 overflow-hidden">
-                <div class="bg-luxury text-white text-[8px] px-3.5 py-1.5 rounded-full font-black uppercase mr-4 flex items-center gap-2">
-                    <i class="fas fa-bullhorn"></i> ข่าวสาร
+            <div class="news-pill h-10 rounded-full flex items-center px-4 overflow-hidden border border-white/50 shadow-sm">
+                <div class="bg-brand text-white text-[8px] px-2.5 py-1 rounded-full font-black uppercase mr-3 flex items-center gap-1.5 shadow-brand/20">
+                    <i class="fas fa-bolt-lightning text-[9px]"></i> NEWS
                 </div>
                 <div class="flex-1 overflow-hidden">
-                    <p id="newsText" class="marquee-txt text-[11px] font-medium text-slate-600">...</p>
+                    <p id="newsText" class="marquee-txt text-[11px] font-medium text-slate-500 italic">...</p>
                 </div>
             </div>
         </div>
 
-        <header class="bg-transparent px-8 pt-8 pb-4 flex justify-between items-center relative z-10">
-            <div class="flex items-center gap-4">
-                <div id="avatarBox" class="w-12 h-12 rounded-2xl flex items-center justify-center text-white text-xs font-black shadow-xl italic overflow-hidden">
-                    <img id="pImgNav" src="" class="w-full h-full object-cover">
-                </div>
+        <header class="bg-transparent px-7 pt-7 pb-3 flex justify-between items-center relative z-10">
+            <div class="flex items-center gap-3">
+                <div class="w-9 h-9 luxury-card rounded-xl flex items-center justify-center text-white text-[10px] font-black shadow-lg border border-white/10 italic">RS</div>
                 <div>
-                    <h2 id="navName" class="font-black text-luxury text-lg leading-none font-title italic">...</h2>
-                    <p class="text-[8px] font-bold text-slate-400 uppercase tracking-widest mt-1.5">Premium Client</p>
+                    <h2 class="font-black text-slate800 text-lg leading-none font-title italic tracking-tight uppercase">Prestige <span class="text-brand">Hub</span></h2>
                 </div>
             </div>
-            <button onclick="app.logout()" class="w-12 h-12 rounded-2xl bg-bgSoft text-slate-400 flex items-center justify-center btn-luxury"><i class="fas fa-power-off text-sm"></i></button>
+            <button onclick="app.logout()" class="w-9 h-9 rounded-xl bg-soft text-slate-400 flex items-center justify-center btn-action"><i class="fas fa-power-off text-xs"></i></button>
         </header>
 
-        <main id="view-home" class="flex-1 overflow-y-auto px-6 py-6 space-y-10 no-scrollbar pb-40">
+        <main id="view-home" class="flex-1 overflow-y-auto px-6 py-4 space-y-9 no-scrollbar pb-40">
             
-            <div class="luxury-card p-10 text-white flex flex-col justify-between h-64 border border-white/5 relative overflow-hidden fade-in">
+            <div class="luxury-card p-9 text-white flex flex-col justify-between h-60 border border-white/5 relative overflow-hidden fade-in">
                 <div class="absolute -top-10 -right-10 w-64 h-64 bg-brand rounded-full blur-[110px] opacity-20"></div>
                 <div>
-                    <p class="text-[10px] text-white/40 font-bold uppercase mb-2 tracking-[0.4em] font-title">Total Credit</p>
-                    <h1 id="uBal" class="text-6xl font-black italic tracking-tighter leading-tight drop-shadow-2xl font-title">฿ 0.00</h1>
+                    <p class="text-[9px] text-white/30 font-bold uppercase mb-2 tracking-[0.4em] font-title">Total Available Credit</p>
+                    <h1 id="uBal" class="text-5xl font-black italic tracking-tighter leading-tight drop-shadow-2xl font-title">฿ 0.00</h1>
                 </div>
                 <div class="flex justify-between items-center relative z-10">
-                    <div class="flex items-center gap-2">
-                        <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
-                        <p class="text-[9px] text-white/60 font-bold uppercase tracking-widest">Secured by RS Engine</p>
+                    <div>
+                        <p id="navName" class="font-bold text-white text-sm italic tracking-tight leading-none uppercase">...</p>
                     </div>
-                    <i class="fab fa-cc-visa text-2xl opacity-20"></i>
+                    <div class="w-10 h-10 rounded-full border border-white/10 bg-white/5 backdrop-blur-md flex items-center justify-center text-[10px] font-black italic">RS</div>
                 </div>
             </div>
 
-            <div class="grid grid-cols-4 gap-4 px-2">
-                <button onclick="app.openModal('deposit')" class="flex flex-col items-center gap-3 btn-luxury group">
-                    <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-brand shadow-sm border border-slate-100 group-hover:bg-brand group-hover:text-white"><i class="fas fa-plus text-2xl"></i></div>
-                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">ฝากเงิน</span>
+            <div class="grid grid-cols-4 gap-4 px-1">
+                <button onclick="app.openModal('deposit')" class="flex flex-col items-center gap-2.5 btn-action group">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-brand shadow-sm border border-slate-100 group-hover:bg-brand group-hover:text-white transition-all"><i class="fas fa-plus text-xl"></i></div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">ฝากเงิน</span>
                 </button>
-                <button onclick="app.openModal('withdraw')" class="flex flex-col items-center gap-3 btn-luxury group">
-                    <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-indigo-500 shadow-sm border border-slate-100 group-hover:bg-indigo-500 group-hover:text-white"><i class="fas fa-arrow-up-from-bracket text-2xl"></i></div>
-                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">ถอนเงิน</span>
+                <button onclick="app.openModal('withdraw')" class="flex flex-col items-center gap-2.5 btn-action group">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-indigo-500 shadow-sm border border-slate-100 group-hover:bg-indigo-500 group-hover:text-white transition-all"><i class="fas fa-arrow-right-from-bracket text-lg"></i></div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">ถอนเงิน</span>
                 </button>
-                <button onclick="ui.changeView('profile')" class="flex flex-col items-center gap-3 btn-luxury group">
-                    <div class="w-16 h-16 bg-white rounded-3xl flex items-center justify-center text-slate-600 shadow-sm border border-slate-100 group-hover:bg-luxury group-hover:text-white"><i class="fas fa-user-gear text-2xl"></i></div>
-                    <span class="text-[11px] font-bold text-slate-500 uppercase tracking-tighter">บัญชี</span>
+                <button onclick="ui.changeView('profile')" class="flex flex-col items-center gap-2.5 btn-action group">
+                    <div class="w-14 h-14 bg-white rounded-2xl flex items-center justify-center text-slate-600 shadow-sm border border-slate-100 group-hover:bg-slate-800 group-hover:text-white transition-all"><i class="fas fa-user-shield text-xl"></i></div>
+                    <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tighter leading-none">ข้อมูล</span>
                 </button>
-                <a id="supportBtn" href="#" target="_blank" class="flex flex-col items-center gap-3 btn-luxury group">
-                    <div class="w-16 h-16 bg-facebook text-white rounded-3xl flex items-center justify-center shadow-lg"><i class="fab fa-facebook-messenger text-2xl"></i></div>
-                    <span class="text-[11px] font-bold text-facebook uppercase tracking-tighter">ช่วยเหลือ</span>
+                <a id="supportBtn" href="#" target="_blank" class="flex flex-col items-center gap-2.5 btn-action group">
+                    <div class="w-14 h-14 bg-facebook text-white rounded-2xl flex items-center justify-center shadow-lg"><i class="fab fa-facebook-messenger text-xl"></i></div>
+                    <span class="text-[10px] font-bold text-facebook uppercase tracking-tighter leading-none">ช่วยเหลือ</span>
                 </a>
             </div>
 
             <div class="space-y-6">
                 <div class="flex justify-between items-center px-2">
-                    <h3 class="font-black text-luxury text-xl tracking-tighter border-l-4 border-brand pl-4 italic font-title">ประวัติธุรกรรม</h3>
-                    <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest">Real-time sync</p>
+                    <h3 class="font-black text-slate800 text-lg tracking-tighter border-l-4 border-brand pl-4 italic font-title">ประวัติรายการ</h3>
+                    <div class="flex items-center gap-1.5 opacity-40">
+                        <span class="w-1 h-1 bg-brand rounded-full"></span>
+                        <span class="text-[8px] font-black uppercase tracking-widest leading-none">Secure Sync</span>
+                    </div>
                 </div>
-                <div id="txList" class="space-y-4 pb-20"></div>
-                <div id="noData" class="hidden py-24 text-center opacity-20 fade-in">
-                    <i class="fas fa-receipt text-6xl mb-5"></i>
-                    <p class="text-[11px] font-bold uppercase tracking-[0.4em]">ยังไม่พบรายการล่าสุด</p>
+                <div id="txList" class="space-y-3 pb-20"></div>
+                <div id="noData" class="hidden py-20 text-center opacity-10">
+                    <i class="fas fa-file-invoice text-5xl mb-4"></i>
+                    <p class="text-[10px] font-bold uppercase tracking-[0.4em]">Empty History</p>
                 </div>
             </div>
         </main>
 
         <main id="view-profile" class="hidden flex-1 overflow-y-auto px-8 py-8 space-y-8 no-scrollbar pb-40 fade-in">
-            <div class="bg-bgSoft p-12 rounded-[4rem] text-center relative overflow-hidden">
-                <div class="w-32 h-32 bg-white rounded-[3.5rem] mx-auto mb-6 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden">
+            <div class="bg-soft p-10 rounded-[3rem] text-center relative overflow-hidden">
+                <div class="w-28 h-28 bg-white rounded-[2.5rem] mx-auto mb-5 border-4 border-white shadow-xl flex items-center justify-center overflow-hidden">
                     <img id="pImg" src="" class="w-full h-full object-cover">
                 </div>
-                <h2 id="pName" class="text-2xl font-black text-luxury italic uppercase">...</h2>
-                <div class="mt-6 flex flex-col items-center">
-                    <div class="bg-white px-6 py-3 rounded-2xl border border-slate-100 flex items-center gap-4">
-                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Member UID</span>
+                <h2 id="pName" class="text-xl font-black text-slate800 italic uppercase">...</h2>
+                <div class="mt-5 flex flex-col items-center gap-2">
+                    <div class="bg-white px-5 py-2 rounded-xl border border-slate-100 flex items-center gap-4">
+                        <span class="text-[9px] font-bold text-slate-400 uppercase">UID</span>
                         <p id="pID" class="text-xs font-mono font-black text-slate-600">...</p>
-                        <button onclick="app.copyID()" class="text-brand text-sm hover:scale-125 transition-all"><i class="fas fa-copy"></i></button>
+                        <button onclick="app.copyID()" class="text-brand text-xs active:scale-125 transition-all"><i class="fas fa-copy"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div class="space-y-8">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.3em] italic border-l-2 border-brand pl-4">ข้อมูลบัญชีสำหรับการรับเงิน</h3>
-                <div class="space-y-5">
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-slate-400 ml-4 uppercase">ธนาคาร / แอปพลิเคชัน</label>
-                        <input id="pB" class="w-full p-5 bg-bgSoft border-none rounded-[1.8rem] font-bold focus:ring-2 focus:ring-brand/10 transition-all" placeholder="ธนาคาร หรือ ทรูวอเล็ต">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-slate-400 ml-4 uppercase">เลขบัญชีปลายทาง</label>
-                        <input id="pA" class="w-full p-5 bg-bgSoft border-none rounded-[1.8rem] font-bold tracking-widest focus:ring-2 focus:ring-brand/10 transition-all" placeholder="000-0-00000-0">
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-[10px] font-bold text-slate-400 ml-4 uppercase">Messenger / FB Link</label>
-                        <input id="pF" class="w-full p-5 bg-bgSoft border-none rounded-[1.8rem] font-bold text-facebook focus:ring-2 focus:ring-brand/10 transition-all" placeholder="facebook.com/username">
-                    </div>
-                    <button onclick="app.savePF()" class="w-full luxury-card text-white py-6 rounded-[2.5rem] font-black shadow-2xl btn-luxury border border-white/5 tracking-widest text-[11px] uppercase italic mt-4">Save Information</button>
+            <div class="space-y-6">
+                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-[0.3em] border-l-2 border-brand pl-4">ข้อมูลบัญชีสำหรับการรับโอน</h3>
+                <div class="space-y-4">
+                    <input id="pB" class="w-full p-4 bg-soft border-none rounded-2xl font-bold focus:ring-1 focus:ring-brand/20 transition-all" placeholder="ธนาคาร / แอปพลิเคชัน">
+                    <input id="pA" class="w-full p-4 bg-soft border-none rounded-2xl font-bold tracking-widest focus:ring-1 focus:ring-brand/20 transition-all" placeholder="เลขบัญชี / เบอร์วอเลท">
+                    <input id="pF" class="w-full p-4 bg-soft border-none rounded-2xl font-bold text-facebook focus:ring-1 focus:ring-brand/20 transition-all" placeholder="FB Profile Link">
+                    <button onclick="app.savePF()" class="w-full luxury-card text-white py-5 rounded-2xl font-black shadow-xl btn-action border border-white/5 tracking-widest text-[10px] uppercase italic mt-2">Update Account</button>
                 </div>
             </div>
         </main>
         
-        <nav class="bg-white/90 backdrop-blur-xl fixed bottom-0 w-full px-12 py-5 pb-14 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-15px_50px_rgba(0,0,0,0.04)]">
-            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active flex flex-col items-center gap-2 transition-all opacity-100">
-                <i class="fas fa-shapes text-2xl"></i><span class="text-[10px] font-bold uppercase">หน้าหลัก</span>
+        <nav class="bg-white/80 backdrop-blur-lg fixed bottom-0 w-full px-12 py-5 pb-12 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[3.5rem] shadow-[0_-10px_40px_rgba(0,0,0,0.03)]">
+            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active flex flex-col items-center gap-1.5 transition-all opacity-100">
+                <i class="fas fa-house-chimney text-xl"></i><span class="text-[9px] font-bold uppercase tracking-tighter">หน้าแรก</span>
             </button>
-            <button onclick="app.openModal('deposit')" class="w-20 h-20 luxury-card text-white rounded-[2.8rem] -mt-24 border-8 border-white flex items-center justify-center shadow-2xl active:scale-90 transition-all duration-500">
-                <i class="fas fa-add text-2xl"></i>
+            <button onclick="app.openModal('deposit')" class="w-16 h-16 luxury-card text-white rounded-[1.8rem] -mt-20 border-[6px] border-white flex items-center justify-center shadow-2xl active:scale-90 transition-all">
+                <i class="fas fa-add text-xl"></i>
             </button>
-            <button onclick="ui.changeView('profile')" id="n-profile" class="nav-link flex flex-col items-center gap-2 opacity-30 transition-all">
-                <i class="fas fa-circle-user text-2xl"></i><span class="text-[10px] font-bold uppercase">บัญชี</span>
+            <button onclick="ui.changeView('profile')" id="n-profile" class="nav-link flex flex-col items-center gap-1.5 opacity-30 transition-all">
+                <i class="fas fa-circle-user text-xl"></i><span class="text-[9px] font-bold uppercase tracking-tighter">บัญชี</span>
             </button>
         </nav>
     </div>
 
-    <div id="modal" class="hidden fixed inset-0 z-[1000] bg-luxury/80 backdrop-blur-md flex items-end justify-center transition-all duration-500">
-        <div class="bg-white w-full rounded-t-[5.5rem] p-10 pb-24 shadow-2xl fade-in relative border-t border-slate-100 max-w-2xl mx-auto">
-            <button onclick="ui.closeModal()" class="absolute top-12 right-14 w-12 h-12 bg-bgSoft rounded-full flex items-center justify-center text-slate-400 btn-luxury border border-white">
-                <i class="fas fa-times text-xl"></i>
+    <div id="modal" class="hidden fixed inset-0 z-[1000] bg-slate-900/80 backdrop-blur-md flex items-end justify-center transition-all duration-500">
+        <div class="bg-white w-full rounded-t-[4.5rem] p-10 pb-20 shadow-2xl fade-in relative border-t border-slate-100 max-w-2xl mx-auto">
+            <button onclick="ui.closeModal()" class="absolute top-10 right-12 w-10 h-10 bg-soft rounded-full flex items-center justify-center text-slate-400 active:bg-rose-50 active:text-danger border border-white">
+                <i class="fas fa-times text-sm"></i>
             </button>
-            <div id="stepHeader" class="flex justify-center gap-3 w-48 mx-auto mb-14">
-                <div id="step1" class="step-indicator active"></div>
-                <div id="step2" class="step-indicator"></div>
-                <div id="step3" class="step-indicator"></div>
-            </div>
-            <div id="modalContent" class="max-h-[75vh] overflow-y-auto no-scrollbar text-center px-4"></div>
+            <div class="w-16 h-1.5 bg-slate-100 rounded-full mx-auto mb-12"></div>
+            <div id="modalContent" class="max-h-[80vh] overflow-y-auto no-scrollbar text-center"></div>
         </div>
     </div>
 
@@ -229,13 +211,13 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, updateDoc, onSnapshot, collection, addDoc, query, where, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 🔥 CONFIG
+        // 🔥 FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0", authDomain: "fafada-d9899.firebaseapp.com", projectId: "fafada-d9899", storageBucket: "fafada-d9899.firebasestorage.app", messagingSenderId: "484777586908", appId: "1:484777586908:web:16a8f0367ad15737364419", measurementId: "G-Q73X8Q841W" };
-        const fb = initializeApp(firebaseConfig);
-        const auth = getAuth(fb);
-        const db = getFirestore(fb);
+        const fb_app = initializeApp(firebaseConfig);
+        const auth = getAuth(fb_app);
+        const db = getFirestore(fb_app);
 
-        let user = null, userData = null, sysConfig = {}, allTx = [], currentStep = 1, selectedMethod = 'bank', lastBalance = 0;
+        let user = null, userData = null, sysConfig = {}, allTx = [], selectedMethod = 'bank', lastBal = 0;
 
         window.ui = {
             changeView: (v) => {
@@ -252,32 +234,42 @@
                 document.getElementById('loader').classList.add('opacity-0');
                 setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 700);
             },
-            updateSteps: (step) => {
-                document.getElementById('step1').classList.toggle('active', step >= 1);
-                document.getElementById('step2').classList.toggle('active', step >= 2);
-                document.getElementById('step3').classList.toggle('active', step >= 3);
-            },
             animateBalance: (target) => {
                 const el = document.getElementById('uBal');
-                let start = lastBalance;
+                let start = lastBal;
                 let duration = 800;
                 let startTime = null;
-
-                const animate = (timestamp) => {
-                    if (!startTime) startTime = timestamp;
-                    let progress = Math.min((timestamp - startTime) / duration, 1);
-                    let current = start + (target - start) * progress;
-                    el.innerText = `฿ ${current.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
-                    if (progress < 1) requestAnimationFrame(animate);
-                    else lastBalance = target;
+                const anim = (time) => {
+                    if (!startTime) startTime = time;
+                    let prog = Math.min((time - startTime) / duration, 1);
+                    let curr = start + (target - start) * prog;
+                    el.innerText = `฿ ${curr.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
+                    if (prog < 1) requestAnimationFrame(anim);
+                    else lastBal = target;
                 };
-                requestAnimationFrame(animate);
+                requestAnimationFrame(anim);
+            },
+            showTxDetail: (txId) => {
+                const tx = allTx.find(i => i.id === txId);
+                if(!tx) return;
+                const isD = tx.type === 'deposit' || (tx.type === 'adjustment' && tx.amount > 0);
+                Swal.fire({
+                    title: `<p class="text-[10px] font-black text-slate-300 uppercase italic">ธุรกรรมฉบับเต็ม</p>`,
+                    html: `<div class="text-left space-y-4 mt-4 bg-soft p-8 rounded-[2.5rem] border border-slate-100">
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-slate-400 uppercase">ประเภท</span><span class="text-xs font-black uppercase italic">${tx.type}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-slate-400 uppercase">จำนวนเงิน</span><span class="text-2xl font-black ${isD?'text-brand':'text-danger'} font-title">฿${tx.amount.toLocaleString()}</span></div>
+                        <div class="flex justify-between items-center border-t border-slate-200 pt-4"><span class="text-[10px] font-bold text-slate-400 uppercase">สถานะรายการ</span><span class="status-pill ${tx.status==='completed'?'bg-emerald-50 text-success':'bg-amber-50 text-amber-500'}">${tx.status}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-slate-400 uppercase">วันเวลา</span><span class="text-[11px] font-black">${moment(tx.timestamp?.seconds*1000).format('LLL')}</span></div>
+                        ${tx.reason ? `<div class="mt-4 bg-white p-5 rounded-2xl border border-slate-50"><p class="text-[9px] font-black text-brand mb-1">หมายเหตุ:</p><p class="text-xs font-medium text-slate-600 leading-relaxed">${tx.reason}</p></div>` : ''}
+                    </div>`,
+                    showConfirmButton: false, showCloseButton: true, customClass: { popup: 'rounded-[3.5rem]' }
+                });
             }
         };
 
         window.app = {
             logout: ()=>signOut(auth).then(()=>location.reload()),
-            copyID: () => { navigator.clipboard.writeText(user.uid); Swal.fire({ icon:'success', title:'คัดลอก UID แล้ว', toast:true, position:'top', showConfirmButton:false, timer:1500 }); },
+            copyID: () => { navigator.clipboard.writeText(user.uid); Swal.fire({ icon:'success', title:'UID Copied', toast:true, position:'top', showConfirmButton:false, timer:1500 }); },
             login: async (e) => {
                 e.preventDefault();
                 Swal.showLoading();
@@ -285,97 +277,89 @@
                 catch(err) { Swal.fire('Error', 'ไม่พบข้อมูลสมาชิก หรือรหัสผ่านผิด', 'error'); }
             },
             openModal: (type) => {
-                // Check Pending
                 if (allTx.some(t => t.status === 'pending')) {
-                    Swal.fire({ title: 'ระงับรายการใหม่', text: 'คุณยังมีรายการที่รอดำเนินการอยู่ กรุณารอสักครู่ครับ', icon: 'warning', confirmButtonColor: '#1E293B', customClass: { popup: 'rounded-[3rem]' } });
+                    Swal.fire({ title: 'ระงับรายการใหม่', text: 'กรุณารอเจ้าหน้าที่ตรวจสอบรายการค้างก่อนครับ', icon: 'warning', confirmButtonColor: '#1E293B', customClass: { popup: 'rounded-[3rem]' } });
                     return;
                 }
                 document.getElementById('modal').classList.remove('hidden');
-                if(type==='deposit') app.showDepStep1();
-                else app.showWithdraw();
+                if(type==='deposit') app.showDep1(); else app.showWithdraw();
             },
-            showDepStep1: () => {
-                currentStep = 1; ui.updateSteps(1);
+            showDep1: () => {
                 document.getElementById('modalContent').innerHTML = `
-                    <h2 class="text-3xl font-black text-luxury mb-4 italic tracking-tighter uppercase font-title">Select Method</h2>
-                    <p class="text-[11px] font-bold text-slate-400 mb-12 uppercase tracking-widest leading-none">กรุณาเลือกช่องทางการเติมเงิน</p>
-                    <div class="grid grid-cols-2 gap-5 mb-10">
-                        <button onclick="app.setMethod('bank')" class="method-btn p-8 flex flex-col items-center gap-4 ${selectedMethod==='bank'?'active':''}">
-                            <i class="fas fa-university text-3xl text-brand"></i>
-                            <span class="text-[13px] font-black uppercase">ธนาคาร</span>
+                    <h2 class="text-3xl font-black text-slate800 mb-2 italic tracking-tighter uppercase font-title">Deposit</h2>
+                    <p class="text-[10px] font-bold text-slate-400 mb-10 uppercase tracking-widest">เลือกช่องทางการเติมเงิน</p>
+                    <div class="grid grid-cols-2 gap-4 mb-8">
+                        <button onclick="app.setMethod('bank')" class="method-btn p-7 flex flex-col items-center gap-3 ${selectedMethod==='bank'?'active':''}">
+                            <i class="fas fa-building-columns text-2xl text-brand"></i>
+                            <span class="text-[12px] font-black uppercase">ธนาคาร</span>
                         </button>
-                        <button onclick="app.setMethod('wallet')" class="method-btn p-8 flex flex-col items-center gap-4 ${selectedMethod==='wallet'?'active':''}">
-                            <i class="fas fa-wallet text-3xl text-orange-500"></i>
-                            <span class="text-[13px] font-black uppercase">ทรูวอเลท</span>
+                        <button onclick="app.setMethod('wallet')" class="method-btn p-7 flex flex-col items-center gap-3 ${selectedMethod==='wallet'?'active':''}">
+                            <i class="fas fa-wallet text-2xl text-orange-500"></i>
+                            <span class="text-[12px] font-black uppercase">วอเลท</span>
                         </button>
                     </div>
-                    <button onclick="app.showDepStep2()" class="w-full bg-luxury text-white py-7 rounded-[2.8rem] font-black shadow-2xl btn-luxury text-sm tracking-widest uppercase italic">ดำเนินการต่อ (Step 2)</button>
-                `;
-            },
-            setMethod: (m) => { selectedMethod = m; app.showDepStep1(); },
-            showDepStep2: () => {
-                currentStep = 2; ui.updateSteps(2);
-                document.getElementById('modalContent').innerHTML = `
-                    <h2 class="text-3xl font-black text-luxury mb-4 italic tracking-tighter uppercase font-title">Amount</h2>
-                    <p class="text-[11px] font-bold text-slate-400 mb-12 uppercase tracking-widest leading-none">ระบุยอดเงินที่คุณต้องการฝาก</p>
-                    <div class="relative mb-10">
-                        <span class="absolute left-8 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-200 italic font-title">฿</span>
-                        <input id="amtTx" type="number" class="w-full pl-16 pr-8 py-10 bg-bgSoft border-none rounded-[3.5rem] text-center text-6xl font-black text-brand outline-none shadow-inner font-title italic" placeholder="0">
+                    <div class="relative mb-8">
+                        <span class="absolute left-7 top-1/2 -translate-y-1/2 text-2xl font-black text-slate-200">฿</span>
+                        <input id="amtTx" type="number" class="w-full pl-14 pr-7 py-7 bg-soft border-none rounded-[2rem] text-center text-5xl font-black text-brand outline-none shadow-inner" placeholder="0">
                     </div>
-                    <button onclick="app.showDepStep3()" class="w-full bg-brand text-white py-7 rounded-[2.8rem] font-black shadow-2xl btn-luxury text-sm tracking-widest uppercase italic">สรุปข้อมูล (Step 3)</button>
+                    <button onclick="app.showDepSummary()" class="w-full bg-slate800 text-white py-6 rounded-[2rem] font-black shadow-2xl btn-action text-xs tracking-widest uppercase italic">สรุปข้อมูล (Step 2)</button>
                 `;
             },
-            showDepStep3: () => {
+            setMethod: (m) => { selectedMethod = m; app.showDep1(); },
+            showDepSummary: () => {
                 const val = parseFloat(document.getElementById('amtTx').value);
                 if(!val || val <= 0) return Swal.fire('Error', 'กรุณาระบุยอดเงิน', 'warning');
-                currentStep = 3; ui.updateSteps(3);
                 const fee = selectedMethod === 'wallet' ? (val * ((sysConfig.walletFee || 0)/100)) : 0;
                 const total = val + fee;
                 const bankInfo = selectedMethod === 'wallet' ? sysConfig.adminWallet : sysConfig.adminBank;
 
                 document.getElementById('modalContent').innerHTML = `
-                    <h2 class="text-3xl font-black text-luxury mb-4 italic tracking-tighter uppercase font-title">Summary</h2>
-                    <div class="bg-luxury text-white p-12 rounded-[4.5rem] mb-8 relative border border-white/10 shadow-2xl text-left">
-                        <p class="text-[10px] text-brand font-black mb-5 uppercase tracking-widest italic">บัญชีรับเงินแอดมิน (${selectedMethod.toUpperCase()})</p>
-                        <p class="text-2xl font-black italic font-title leading-relaxed">${bankInfo || 'ติดต่อแอดมิน'}</p>
-                        <button onclick="navigator.clipboard.writeText('${bankInfo}')" class="absolute top-10 right-10 text-brand bg-white/5 w-12 h-12 rounded-2xl flex items-center justify-center btn-luxury border border-white/5"><i class="fas fa-copy"></i></button>
+                    <h2 class="text-2xl font-black text-slate800 mb-1 italic tracking-tighter uppercase font-title">Confirm Order</h2>
+                    <p class="text-[9px] font-bold text-slate-400 mb-8 uppercase tracking-widest">กรุณาโอนเงินให้ตรงตามยอดสรุปด้านล่าง</p>
+                    
+                    <div class="receipt-card p-8 mb-8 text-left space-y-5">
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-slate-400 uppercase">ประเภท</span><span class="text-xs font-black italic uppercase text-slate800">${selectedMethod}</span></div>
+                        <div class="flex justify-between items-center border-b border-slate-200 pb-4"><span class="text-[10px] font-bold text-slate-400 uppercase">ยอดฝาก</span><span class="text-lg font-black text-slate800">฿${val.toLocaleString()}</span></div>
+                        <div class="flex justify-between items-center"><span class="text-[10px] font-bold text-slate-400 uppercase">ค่าบริการ (${selectedMethod==='wallet'?sysConfig.walletFee:0}%)</span><span class="text-xs font-black text-danger">+ ฿${fee.toLocaleString()}</span></div>
+                        <div class="flex justify-between items-center pt-2"><span class="text-[11px] font-black text-brand uppercase">ยอดต้องโอนสุทธิ</span><span class="text-3xl font-black text-brand italic">฿${total.toLocaleString()}</span></div>
                     </div>
-                    <div class="summary-box p-12 text-center mb-10">
-                        <p class="text-[11px] font-bold text-slate-400 uppercase mb-4 tracking-widest">ยอดเงินที่ต้องโอนสุทธิ</p>
-                        <p class="text-7xl font-black text-brand italic tracking-tighter font-title drop-shadow-xl">฿${total.toLocaleString()}</p>
-                        <p class="text-[9px] font-bold text-slate-300 uppercase mt-4">รวมค่าบริการ ${selectedMethod==='wallet'?sysConfig.walletFee:0}% เรียบร้อยแล้ว</p>
+
+                    <div class="bg-slate800 text-white p-8 rounded-[2.5rem] mb-8 relative border border-white/5 shadow-2xl text-left">
+                        <p class="text-[9px] text-brand font-black mb-3 uppercase tracking-widest italic">บัญชีรับเงินแอดมิน</p>
+                        <p class="text-xl font-black italic leading-relaxed font-title uppercase">${bankInfo || 'กรุณาติดต่อเจ้าหน้าที่'}</p>
+                        <button onclick="navigator.clipboard.writeText('${bankInfo}')" class="absolute top-8 right-8 text-brand bg-white/5 w-11 h-11 rounded-2xl flex items-center justify-center btn-action border border-white/5"><i class="fas fa-copy text-sm"></i></button>
                     </div>
+
                     <div class="space-y-4">
-                        <a href="${sysConfig.contactLink}" target="_blank" onclick="document.getElementById('finalDep').disabled=false" class="w-full bg-facebook text-white py-7 rounded-[3rem] font-black shadow-2xl flex items-center justify-center gap-4 text-sm tracking-widest uppercase italic btn-luxury">
-                            <i class="fab fa-facebook-messenger text-2xl"></i> ส่งสลิปโอนเงิน (ทักแชท)
+                        <a href="${sysConfig.contactLink}" target="_blank" onclick="document.getElementById('finalDep').disabled=false" class="w-full bg-facebook text-white py-6 rounded-[2rem] font-black shadow-xl flex items-center justify-center gap-4 text-[11px] tracking-widest uppercase italic btn-action">
+                            <i class="fab fa-facebook-messenger text-xl"></i> 1. ส่งสลิปหาแอดมิน
                         </a>
-                        <button id="finalDep" disabled onclick="app.submitTx('deposit', ${val}, ${fee})" class="w-full luxury-card text-white py-7 rounded-[3rem] font-black shadow-2xl btn-luxury text-sm tracking-widest uppercase italic disabled:opacity-30 disabled:grayscale">แจ้งฝากทันที</button>
+                        <button id="finalDep" disabled onclick="app.submitTx('deposit', ${val}, ${fee})" class="w-full luxury-card text-white py-6 rounded-[2rem] font-black shadow-xl btn-action text-[11px] tracking-widest uppercase italic disabled:opacity-30 disabled:grayscale">2. กดแจ้งฝากทันที</button>
                     </div>
                 `;
             },
             showWithdraw: () => {
-                currentStep = 1; document.getElementById('stepHeader').classList.add('hidden');
                 document.getElementById('modalContent').innerHTML = `
-                    <h2 class="text-4xl font-black text-luxury mb-4 italic tracking-tighter uppercase font-title leading-none">Withdraw</h2>
-                    <p class="text-[11px] font-bold text-slate-400 mb-10 uppercase tracking-widest leading-none">ระบุยอดที่คุณต้องการถอน</p>
-                    <div class="bg-bgSoft p-12 rounded-[4.5rem] mb-10 shadow-inner">
-                        <input id="amtTx" type="number" oninput="app.calcW(this.value)" class="w-full bg-transparent border-none text-center text-7xl font-black text-brand outline-none font-title italic leading-none" placeholder="0">
-                        <p id="feeTxt" class="text-[11px] font-bold text-slate-400 mt-10 italic uppercase tracking-widest leading-none">ค่าบริการระบบ ${sysConfig.feePercent || 0}%</p>
+                    <h2 class="text-3xl font-black text-slate800 mb-2 italic tracking-tighter uppercase font-title">Withdraw</h2>
+                    <p class="text-[10px] font-bold text-slate-400 mb-10 uppercase tracking-widest">ถอนเครดิตเข้าบัญชีของคุณ</p>
+                    <div class="bg-soft p-10 rounded-[3rem] mb-8 shadow-inner">
+                        <input id="amtTx" type="number" oninput="app.calcW(this.value)" class="w-full bg-transparent border-none text-center text-6xl font-black text-brand outline-none font-title italic" placeholder="0">
+                        <p id="feeTxt" class="text-[10px] font-bold text-slate-400 mt-8 italic uppercase tracking-widest">หักค่าบริการ ${sysConfig.feePercent || 0}% ต่อรายการ</p>
                     </div>
-                    <div class="bg-luxury p-10 rounded-[4.5rem] flex items-center gap-7 shadow-2xl text-left mb-8">
-                        <div class="w-14 h-14 bg-white/5 rounded-3xl flex items-center justify-center text-brand border border-white/5 shadow-xl"><i class="fas fa-university text-xl"></i></div>
+                    <div class="receipt-card p-6 flex items-center gap-5 text-left mb-8">
+                        <div class="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-brand border border-slate-100 shadow-sm"><i class="fas fa-university"></i></div>
                         <div class="overflow-hidden">
-                            <p class="text-[9px] font-bold text-white/40 uppercase mb-2 tracking-widest italic">Destination Bank Account</p>
-                            <p class="text-lg font-black text-white truncate font-title leading-none uppercase">${userData.bankName || 'ยังไม่ระบุ'} | ${userData.bankAcc || '-'}</p>
+                            <p class="text-[9px] font-bold text-slate-400 uppercase mb-1">Recipient Account</p>
+                            <p class="text-sm font-black text-slate800 truncate uppercase leading-none italic">${userData.bankName || 'ยังไม่ระบุ'} | ${userData.bankAcc || '-'}</p>
                         </div>
                     </div>
-                    <button onclick="app.submitTx('withdraw')" class="w-full luxury-card text-white py-8 rounded-[3.5rem] font-black shadow-2xl btn-luxury text-sm uppercase italic tracking-widest mt-4">ยืนยันถอนเงิน (หักทันที)</button>
+                    <button onclick="app.submitTx('withdraw')" class="w-full luxury-card text-white py-7 rounded-[2.5rem] font-black shadow-2xl btn-action text-xs uppercase italic tracking-widest">ยืนยันถอนเครดิต (หักทันที)</button>
                 `;
             },
             calcW: (v) => {
                 const val = parseFloat(v) || 0;
                 const fee = val * ((sysConfig.feePercent || 0)/100);
-                document.getElementById('feeTxt').innerHTML = `หักบริการ: ฿${fee.toLocaleString()} | <span class="text-brand font-black underline underline-offset-8 italic">รับจริง: ฿${(val - fee).toLocaleString()}</span>`;
+                document.getElementById('feeTxt').innerHTML = `หักค่าธรรมเนียม: ฿${fee.toLocaleString()} | <span class="text-brand font-black underline underline-offset-4 italic">รับจริง: ฿${(val - fee).toLocaleString()}</span>`;
             },
             savePF: async () => {
                 try {
@@ -386,7 +370,7 @@
             submitTx: async (type, dAmt = 0, dFee = 0) => {
                 const val = type === 'deposit' ? dAmt : parseFloat(document.getElementById('amtTx').value);
                 if(!val || val <= 0) return Swal.fire('Error', 'ยอดเงินไม่ถูกต้อง', 'warning');
-                if(type==='withdraw' && val > userData.balance) return Swal.fire('Error', 'ยอดเงินไม่พอสำหรับการถอน', 'error');
+                if(type==='withdraw' && val > userData.balance) return Swal.fire('Error', 'เครดิตไม่เพียงพอ', 'error');
                 
                 try {
                     Swal.showLoading();
@@ -401,18 +385,16 @@
                     } else {
                         await addDoc(collection(db,"transactions"), { uid: user.uid, amount: val, fee: dFee, netAmount: val, totalTransfer: val + dFee, status: 'pending', timestamp: serverTimestamp(), type: 'deposit', userDisplayName: userData.displayName, email: userData.email, method: selectedMethod, userBank: `${userData.bankName} ${userData.bankAcc}`, userFb: userData.contactLink });
                     }
-                    Swal.fire({icon:'success',title: 'ดำเนินการเรียบร้อย',timer:3000,showConfirmButton:false}); 
+                    Swal.fire({icon:'success',title: 'แจ้งรายการสำเร็จ',timer:3000,showConfirmButton:false}); 
                     ui.closeModal();
                 } catch(e) { Swal.fire('Error', e.message, 'error'); }
             }
         };
 
-        // Real-time Nexus
         onAuthStateChanged(auth, u => {
             if(u) {
                 user = u;
                 document.getElementById('authPage').classList.add('hidden');
-                
                 onSnapshot(doc(db,"users",u.uid), s => {
                     if(s.exists()){
                         userData = s.data();
@@ -420,7 +402,6 @@
                         document.getElementById('pName').innerText = userData.displayName || 'Unnamed User';
                         document.getElementById('pID').innerText = u.uid.slice(0, 18) + '...';
                         document.getElementById('pImg').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
-                        document.getElementById('pImgNav').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
                         ui.animateBalance(Number(userData.balance || 0));
                         if(document.getElementById('pB')) document.getElementById('pB').value = userData.bankName || '';
                         if(document.getElementById('pA')) document.getElementById('pA').value = userData.bankAcc || '';
@@ -428,44 +409,36 @@
                         ui.hideLoader(); document.getElementById('mainPage').classList.remove('hidden');
                     }
                 });
-
                 onSnapshot(doc(db,"system","config"), s => { if(s.exists()){ sysConfig = s.data(); document.getElementById('supportBtn').href = sysConfig.contactLink; } });
-                
-                // Real-time History (Sort client-side to avoid index)
                 onSnapshot(query(collection(db,"transactions"), where("uid","==",u.uid)), s => {
                     allTx = []; s.forEach(d=>{ const data = d.data(); data.id = d.id; allTx.push(data); });
                     allTx.sort((a, b) => b.timestamp - a.timestamp);
-
                     const tb = document.getElementById('txList'); tb.innerHTML='';
                     document.getElementById('noData').classList.toggle('hidden', allTx.length > 0);
                     allTx.forEach(x => {
                         const isD = x.type==='deposit' || (x.type==='adjustment' && x.amount > 0);
-                        const statusClass = x.status==='completed'?'status-completed':(x.status==='pending'?'status-pending':'status-rejected');
                         tb.innerHTML += `
-                        <div onclick="ui.showTxDetail('${x.id}')" class="p-8 flex justify-between items-center tx-item fade-in">
-                            <div class="flex items-center gap-6">
-                                <div class="w-16 h-16 rounded-3xl flex items-center justify-center ${isD?'bg-emerald-50 text-emerald-500':'bg-rose-50 text-rose-500'} border border-slate-50 shadow-inner">
-                                    <i class="fas ${isD?'fa-plus':'fa-minus'} text-xl"></i>
+                        <div onclick="ui.showTxDetail('${x.id}')" class="p-6 flex justify-between items-center tx-item shadow-sm">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-2xl flex items-center justify-center ${isD?'bg-emerald-50 text-emerald-500':'bg-rose-50 text-rose-500'} border border-slate-50 shadow-inner">
+                                    <i class="fas ${isD?'fa-plus':'fa-minus'} text-sm"></i>
                                 </div>
-                                <div>
-                                    <p class="font-black text-luxury text-xs uppercase leading-none mb-3 tracking-tighter">${x.type === 'adjustment' ? 'ยอดปรับปรุง' : x.type.toUpperCase()}</p>
-                                    <p class="text-[9px] text-slate-400 font-bold uppercase tracking-widest italic">${x.timestamp ? moment(x.timestamp.seconds*1000).fromNow() : '...'}</p>
+                                <div class="overflow-hidden">
+                                    <p class="font-black text-slate800 text-[11px] uppercase italic leading-none mb-2 tracking-tighter">${x.type === 'adjustment' ? 'ยอดปรับปรุง' : x.type.toUpperCase()}</p>
+                                    <p class="text-[9px] text-slate-400 font-bold italic">${x.timestamp ? moment(x.timestamp.seconds*1000).fromNow() : '...'}</p>
                                 </div>
                             </div>
                             <div class="text-right">
-                                <p class="font-black text-xl italic font-title ${isD?'text-brand':'text-luxury'} mb-3">${isD?'+':'-'}฿${x.amount.toLocaleString()}</p>
-                                <span class="status-pill ${statusClass}">${x.status}</span>
+                                <p class="font-black text-base italic font-title ${isD?'text-brand':'text-slate-900'} mb-2">${isD?'+':'-'}฿${x.amount.toLocaleString()}</p>
+                                <span class="status-pill ${x.status==='completed'?'bg-emerald-50 text-success':'bg-amber-50 text-amber-500'}">${x.status==='completed'?'สำเร็จ':'รอกดสอบ'}</span>
                             </div>
                         </div>`;
                     });
                 });
-
                 onSnapshot(collection(db,"announcements"), s => {
                     const bar = document.getElementById('newsBar');
-                    if(!s.empty){ 
-                        const n = s.docs[0].data(); bar.classList.remove('hidden');
-                        document.getElementById('newsText').innerHTML = `<span class="text-brand font-black italic uppercase mr-4 tracking-widest leading-none">[ ${n.title} ]</span> ${n.content}`; 
-                    } else { bar.classList.add('hidden'); }
+                    if(!s.empty){ const n = s.docs[0].data(); bar.classList.remove('hidden'); document.getElementById('newsText').innerHTML = `<span class="text-brand font-black uppercase mr-4 tracking-widest leading-none">[ ${n.title} ]</span> ${n.content}`; } 
+                    else { bar.classList.add('hidden'); }
                 });
             } else { document.getElementById('authPage').classList.remove('hidden'); ui.hideLoader(); }
         });
