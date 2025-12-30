@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RS INFINITY | MASTERPIECE</title>
+    <title>RS INFINITY | AI PRO</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Rajdhani:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -16,33 +16,29 @@
                 extend: {
                     colors: {
                         gold: '#D4AF37',
-                        'gold-light': '#FDD043',
-                        'gold-dark': '#8a6c1e',
+                        'gold-light': '#FBE8A6',
                         dark: '#050505',
-                        panel: '#0a0a0a',
+                        panel: '#0F0F0F',
+                        facebook: '#1877F2',
+                        line: '#06C755'
                     },
                     fontFamily: {
                         sans: ['Kanit', 'sans-serif'],
                         tech: ['Rajdhani', 'sans-serif'],
                     },
                     animation: {
-                        'spin-slow': 'spin 8s linear infinite',
                         'pulse-gold': 'pulseGold 2s infinite',
-                        'scan': 'scanLine 2s linear infinite',
-                        'fade-in': 'fadeIn 0.5s ease-out forwards',
+                        'scan-vertical': 'scanVertical 2s ease-in-out infinite',
                     },
                     keyframes: {
                         pulseGold: {
                             '0%, 100%': { boxShadow: '0 0 5px rgba(212, 175, 55, 0.2)' },
                             '50%': { boxShadow: '0 0 20px rgba(212, 175, 55, 0.6)' },
                         },
-                        scanLine: {
-                            '0%': { transform: 'translateY(-100%)' },
-                            '100%': { transform: 'translateY(100%)' },
-                        },
-                        fadeIn: {
-                            '0%': { opacity: '0', transform: 'translateY(10px)' },
-                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        scanVertical: {
+                            '0%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(100%)' },
+                            '100%': { transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -53,608 +49,541 @@
     <style>
         body {
             background-color: #000;
-            background-image: 
-                radial-gradient(circle at 50% 0%, #1a1a1a 0%, #000 70%);
+            background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #000 80%);
             color: #e5e5e5;
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Glassmorphism Classes */
+        /* Styles */
         .glass {
-            background: rgba(18, 18, 18, 0.7);
-            backdrop-filter: blur(12px);
+            background: rgba(20, 20, 20, 0.7);
+            backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        .glass-gold {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0,0,0,0));
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
-        }
-
-        .glass-card {
-            background: linear-gradient(135deg, #111 0%, #050505 100%);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px -10px rgba(0,0,0,0.8);
-        }
-
-        /* Utilities */
+        .gold-border { border: 1px solid rgba(212, 175, 55, 0.3); }
+        .gold-glow-text { text-shadow: 0 0 10px rgba(212, 175, 55, 0.5); }
+        
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .text-glow { text-shadow: 0 0 10px rgba(212, 175, 55, 0.6); }
-        .btn-press:active { transform: scale(0.96); transition: 0.1s; }
-        
-        /* Custom Loading Animation */
-        .loader-ring {
-            border: 2px solid transparent;
-            border-top: 2px solid #D4AF37;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        /* Input Reset */
-        input:focus { outline: none; border-color: #D4AF37; box-shadow: 0 0 15px rgba(212,175,55,0.1); }
 
-        /* Hidden Classes for JS Toggling */
-        .page-content { display: none; opacity: 0; transition: opacity 0.3s ease; }
-        .page-content.active { display: block; opacity: 1; }
+        /* Input Customization */
+        select, input {
+            background-color: #0a0a0a;
+            border: 1px solid #333;
+            color: white;
+            transition: all 0.3s;
+        }
+        select:focus, input:focus {
+            border-color: #D4AF37;
+            outline: none;
+            box-shadow: 0 0 10px rgba(212,175,55,0.1);
+        }
+
+        /* Page Transitions */
+        .page-section { display: none; opacity: 0; animation: fadeIn 0.4s forwards; }
+        .page-section.active { display: block; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
-<body class="flex flex-col h-screen overflow-hidden text-sm">
+<body class="flex flex-col h-screen overflow-hidden text-sm font-sans">
 
-    <div id="loading-screen" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
-        <div class="relative w-32 h-32">
-            <div class="absolute inset-0 rounded-full border-t-2 border-gold animate-spin"></div>
-            <div class="absolute inset-2 rounded-full border-r-2 border-white/20 animate-spin-slow"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fa-solid fa-fingerprint text-4xl text-gold animate-pulse"></i>
-            </div>
-        </div>
-        <div class="mt-6 text-center">
-            <h1 class="text-2xl font-bold font-tech tracking-[0.2em] text-white">RS INFINITY</h1>
-            <p id="system-log" class="text-[10px] text-gold font-mono mt-2 h-4">System Initializing...</p>
-        </div>
-    </div>
-
-    <header class="h-16 px-6 glass flex justify-between items-center z-20 shrink-0 border-b border-gray-800/50">
+    <header class="h-16 px-5 glass flex justify-between items-center z-20 shrink-0 border-b border-gray-800">
         <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-gold to-yellow-800 flex items-center justify-center shadow-lg shadow-gold/20">
-                <i class="fa-solid fa-layer-group text-black"></i>
-            </div>
+            <i class="fa-solid fa-layer-group text-gold text-2xl animate-pulse"></i>
             <div>
-                <div class="text-xs text-gold font-bold tracking-widest leading-none">AI SYSTEM</div>
-                <div class="text-lg font-bold text-white font-tech leading-none tracking-wide">RS INFINITY</div>
+                <h1 class="font-tech font-bold text-xl text-white tracking-widest leading-none">RS INFINITY</h1>
+                <p class="text-[9px] text-gray-500 uppercase tracking-widest">AI Trading Intelligence</p>
             </div>
         </div>
-        
-        <div class="flex flex-col items-end">
-            <div class="flex items-center gap-1.5">
-                <div class="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
-                <span class="text-[9px] font-bold text-green-400">SERVER ONLINE</span>
-            </div>
-            <span class="text-[9px] text-gray-500 font-mono">v4.2.0 (Stable)</span>
+        <div class="px-3 py-1 bg-gray-900 rounded-full border border-gray-700 flex items-center gap-2">
+            <div class="w-1.5 h-1.5 rounded-full bg-green-500 shadow-[0_0_5px_#22c55e]"></div>
+            <span class="text-[10px] text-gray-300 font-mono">SYSTEM ONLINE</span>
         </div>
     </header>
 
     <main class="flex-1 overflow-y-auto no-scrollbar relative bg-[#050505]">
-        
-        <div id="page-home" class="page-content active p-5 pb-24 space-y-6">
+
+        <div id="page-scanner" class="page-section active p-5 pb-24 space-y-6">
             
-            <div class="glass-card p-5 rounded-2xl relative overflow-hidden group">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-110 transition duration-700">
-                    <i class="fa-solid fa-chart-area"></i>
+            <div class="glass p-5 rounded-2xl relative overflow-hidden group border border-gray-800">
+                <div class="absolute -right-5 -top-5 text-8xl text-white/5 rotate-12 group-hover:rotate-0 transition duration-500">
+                    <i class="fa-solid fa-chart-pie"></i>
                 </div>
                 
-                <div class="relative z-10">
-                    <label class="text-[10px] text-gold uppercase tracking-widest font-bold mb-1">Current Asset</label>
-                    <div onclick="openModal('search-modal')" class="flex items-center gap-3 cursor-pointer group-hover:translate-x-1 transition">
-                        <div class="w-10 h-10 rounded-full bg-gray-800 flex items-center justify-center text-xl text-white border border-gray-700" id="asset-icon-display">₿</div>
+                <label class="text-[10px] text-gold uppercase tracking-widest mb-2 block font-bold">Selected Asset</label>
+                <div onclick="openModal('asset-modal')" class="flex items-center justify-between cursor-pointer active:scale-95 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-gray-800 to-black border border-gray-700 flex items-center justify-center text-2xl" id="display-icon">₿</div>
                         <div>
-                            <div id="asset-name-display" class="text-2xl font-bold text-white font-tech leading-none">BTC/USDT</div>
-                            <div class="text-[10px] text-gray-400">Click to change</div>
+                            <div class="text-2xl font-bold text-white font-tech leading-none" id="display-pair">BTC/USDT</div>
+                            <div class="text-[10px] text-gray-400">Crypto Currency</div>
                         </div>
-                        <i class="fa-solid fa-chevron-right text-gold text-xs ml-auto"></i>
                     </div>
-                </div>
-                
-                <div class="mt-4 pt-3 border-t border-gray-800 flex gap-4 overflow-hidden">
-                    <div class="flex gap-4 animate-[marquee_10s_linear_infinite] whitespace-nowrap">
-                        <span class="text-[9px] text-green-500">BTC +2.4%</span>
-                        <span class="text-[9px] text-red-500">ETH -0.8%</span>
-                        <span class="text-[9px] text-green-500">XAU +0.15%</span>
-                        <span class="text-[9px] text-green-500">EURUSD +0.02%</span>
+                    <div class="w-8 h-8 rounded-full bg-gray-900 flex items-center justify-center text-gold border border-gold/20">
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="flex flex-col items-center justify-center py-6">
-                <div class="relative w-64 h-64 flex items-center justify-center">
-                    <div class="absolute w-full h-full rounded-full border border-gold/10 animate-[spin_10s_linear_infinite]"></div>
-                    <div class="absolute w-[80%] h-[80%] rounded-full border border-dashed border-gold/30 animate-[spin_15s_linear_infinite_reverse]"></div>
-                    <div class="absolute w-[90%] h-[90%] rounded-full border-t border-gold opacity-50 animate-spin"></div>
+            <div class="flex flex-col items-center justify-center py-4">
+                <div class="relative w-72 h-72 flex items-center justify-center">
+                    <div class="absolute w-full h-full rounded-full border border-gold/5 animate-[spin_8s_linear_infinite]"></div>
+                    <div class="absolute w-[85%] h-[85%] rounded-full border-2 border-dashed border-gold/20 animate-[spin_12s_linear_infinite_reverse]"></div>
                     
-                    <button onclick="openModal('config-modal')" class="relative z-10 w-48 h-48 rounded-full bg-gradient-to-b from-[#151515] to-black border border-gold/40 shadow-[0_0_50px_rgba(212,175,55,0.15)] flex flex-col items-center justify-center btn-press group overflow-hidden">
-                        <div class="absolute inset-0 bg-gold/5 opacity-0 group-hover:opacity-100 transition duration-500"></div>
-                        <i class="fa-solid fa-crosshairs text-5xl text-gray-500 group-hover:text-gold transition duration-500 mb-2 drop-shadow-[0_0_10px_rgba(212,175,55,0.5)]"></i>
-                        <span class="text-2xl font-bold text-white tracking-widest font-tech group-hover:text-glow transition">SCAN</span>
-                        <span class="text-[9px] text-gold uppercase mt-1 tracking-[0.2em]">AI Protocol</span>
+                    <button onclick="openModal('config-modal')" class="relative z-10 w-52 h-52 rounded-full bg-gradient-to-b from-[#151515] to-black border border-gold/40 shadow-[0_0_40px_rgba(212,175,55,0.1)] active:scale-95 transition duration-300 flex flex-col items-center justify-center group">
+                        <i class="fa-solid fa-fingerprint text-6xl text-gray-600 group-hover:text-gold transition duration-500 mb-2 filter drop-shadow-lg"></i>
+                        <span class="text-3xl font-bold text-white tracking-widest font-tech group-hover:text-gold-glow-text transition">START</span>
+                        <span class="text-[10px] text-gold uppercase mt-1 tracking-[0.3em]">AI Analysis</span>
+                        
+                        <div class="absolute inset-0 rounded-full overflow-hidden opacity-0 group-hover:opacity-20 transition">
+                            <div class="w-full h-2 bg-gold/50 blur-md absolute top-0 animate-scan-vertical"></div>
+                        </div>
                     </button>
                 </div>
-                <p class="text-gray-600 text-[10px] mt-[-20px] bg-[#050505] px-2 z-10">กดปุ่มเพื่อเริ่มวิเคราะห์กราฟ</p>
+                <p class="text-gray-500 text-xs mt-[-20px] bg-black px-3 z-20">แตะเพื่อเริ่มตั้งค่าการวิเคราะห์</p>
             </div>
 
-            <div class="glass p-3 rounded-xl flex items-center gap-3">
-                <div class="w-8 h-8 rounded bg-green-900/20 flex items-center justify-center text-green-500 animate-pulse">
-                    <i class="fa-solid fa-wifi"></i>
+            <div class="space-y-3">
+                <h3 class="text-xs text-gray-500 uppercase ml-1">Recent AI Success</h3>
+                <div class="glass p-3 rounded-xl flex justify-between items-center border border-gray-800/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span class="font-bold text-white">XAUUSD</span>
+                        <span class="text-[10px] px-2 py-0.5 bg-green-900/30 text-green-400 rounded">WIN</span>
+                    </div>
+                    <span class="text-xs text-green-400 font-mono">+840 Pips</span>
                 </div>
-                <div class="flex-1 overflow-hidden">
-                    <div class="text-[10px] text-gray-400 uppercase">Recent AI Activity</div>
-                    <div class="text-xs text-white font-mono truncate">Signal #8842: XAUUSD Buy Profit hit TP1 just now...</div>
+                <div class="glass p-3 rounded-xl flex justify-between items-center border border-gray-800/50">
+                    <div class="flex items-center gap-3">
+                        <div class="w-2 h-2 rounded-full bg-green-500"></div>
+                        <span class="font-bold text-white">GBPUSD</span>
+                        <span class="text-[10px] px-2 py-0.5 bg-green-900/30 text-green-400 rounded">WIN</span>
+                    </div>
+                    <span class="text-xs text-green-400 font-mono">+420 Pips</span>
                 </div>
             </div>
         </div>
 
-        <div id="page-chart" class="page-content h-full flex flex-col bg-[#0a0a0a]">
-            <div class="h-12 border-b border-gray-800 flex items-center justify-between px-4 bg-[#111]">
-                <span class="text-xs font-bold text-gold font-tech" id="chart-title">BTC/USDT</span>
+        <div id="page-chart" class="page-section h-full flex flex-col bg-[#000]">
+            <div class="h-10 bg-[#111] flex items-center justify-between px-4 border-b border-gray-800">
+                <span class="text-gold font-bold font-tech" id="chart-title">BTC/USDT</span>
                 <div class="flex gap-1">
-                    <button onclick="changeChartTimeframe('1')" class="px-2 py-1 rounded text-[10px] bg-gray-800 text-gray-400 hover:text-white">1m</button>
-                    <button onclick="changeChartTimeframe('5')" class="px-2 py-1 rounded text-[10px] bg-gold text-black font-bold">5m</button>
-                    <button onclick="changeChartTimeframe('15')" class="px-2 py-1 rounded text-[10px] bg-gray-800 text-gray-400 hover:text-white">15m</button>
+                    <button onclick="changeTF('1')" class="px-3 py-0.5 text-[10px] bg-gray-800 text-gray-400 rounded hover:text-white">1m</button>
+                    <button onclick="changeTF('5')" class="px-3 py-0.5 text-[10px] bg-gray-800 text-gray-400 rounded hover:text-white">5m</button>
+                    <button onclick="changeTF('15')" class="px-3 py-0.5 text-[10px] bg-gold text-black font-bold rounded">15m</button>
+                    <button onclick="changeTF('60')" class="px-3 py-0.5 text-[10px] bg-gray-800 text-gray-400 rounded hover:text-white">1h</button>
                 </div>
             </div>
-            <div class="flex-1 relative">
-                <div id="tradingview_main" class="w-full h-full"></div>
+            <div class="flex-1 w-full relative">
+                <div id="tradingview_full" class="absolute inset-0 w-full h-full"></div>
             </div>
         </div>
 
-        <div id="page-profile" class="page-content p-5 pb-24 space-y-6">
+        <div id="page-profile" class="page-section p-6 space-y-8">
             
-            <div class="w-full aspect-[1.58] rounded-2xl p-6 relative overflow-hidden flex flex-col justify-between shadow-2xl">
-                <div class="absolute inset-0 bg-gradient-to-br from-[#2a2a2a] to-black"></div>
-                <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"></div>
-                <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gold blur-[60px] opacity-20"></div>
+            <div class="w-full aspect-[1.6] rounded-2xl relative overflow-hidden shadow-2xl flex flex-col justify-between p-6">
+                <div class="absolute inset-0 bg-gradient-to-br from-[#222] via-[#0a0a0a] to-black"></div>
+                <div class="absolute inset-0 border border-gold/30 rounded-2xl"></div>
+                <div class="absolute top-[-50px] right-[-50px] w-40 h-40 bg-gold/20 blur-[50px] rounded-full"></div>
                 
                 <div class="relative z-10 flex justify-between items-start">
-                    <i class="fa-solid fa-infinity text-gold text-3xl"></i>
+                    <div class="flex flex-col">
+                        <span class="text-gold font-bold tracking-widest text-lg font-tech">RS INFINITY</span>
+                        <span class="text-[9px] text-gray-400 uppercase">Premium Member</span>
+                    </div>
+                    <i class="fa-solid fa-crown text-gold text-2xl drop-shadow-[0_0_10px_rgba(212,175,55,0.8)]"></i>
+                </div>
+
+                <div class="relative z-10 text-center space-y-1">
+                    <div class="text-[10px] text-gray-500 uppercase tracking-widest">Status Verification</div>
+                    <div class="text-2xl font-bold text-white font-tech tracking-wider">ACTIVE</div>
+                </div>
+
+                <div class="relative z-10 flex justify-between items-end">
+                    <div>
+                        <div class="text-[8px] text-gray-500 uppercase">Username</div>
+                        <div class="text-sm font-bold text-white">Trader_Admin</div>
+                    </div>
                     <div class="text-right">
-                        <div class="text-[10px] text-gold/80 tracking-widest uppercase">Member Status</div>
-                        <div class="text-lg font-bold text-white font-tech tracking-wide italic text-glow">VVIP DIRECTOR</div>
+                        <div class="text-[8px] text-gray-500 uppercase">ID Code</div>
+                        <div class="text-sm font-bold text-white font-mono">#8842-X</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="glass p-6 rounded-2xl text-center border border-gray-800">
+                <h3 class="text-xs text-gray-400 uppercase mb-4 tracking-wider"><i class="fa-regular fa-clock text-gold mr-2"></i> สมาชิกคงเหลือ (Time Remaining)</h3>
                 
-                <div class="relative z-10">
-                    <div class="text-xl font-mono text-white/90 tracking-widest shadow-black drop-shadow-md">0000 8842 1993 ADM</div>
-                    <div class="flex justify-between items-end mt-4">
-                        <div>
-                            <div class="text-[9px] text-gray-400 uppercase">Card Holder</div>
-                            <div class="text-sm font-bold text-white">ADMIN USER</div>
-                        </div>
-                        <div>
-                            <div class="text-[9px] text-gray-400 uppercase">Expires</div>
-                            <div class="text-sm font-bold text-white">30/12/2030</div>
-                        </div>
+                <div class="grid grid-cols-4 gap-2 mb-2">
+                    <div class="bg-gray-900/80 p-2 rounded-lg border border-gray-700">
+                        <div id="cd-days" class="text-2xl font-bold text-white font-tech">29</div>
+                        <div class="text-[8px] text-gray-500">DAYS</div>
+                    </div>
+                    <div class="bg-gray-900/80 p-2 rounded-lg border border-gray-700">
+                        <div id="cd-hours" class="text-2xl font-bold text-white font-tech">12</div>
+                        <div class="text-[8px] text-gray-500">HRS</div>
+                    </div>
+                    <div class="bg-gray-900/80 p-2 rounded-lg border border-gray-700">
+                        <div id="cd-mins" class="text-2xl font-bold text-white font-tech">45</div>
+                        <div class="text-[8px] text-gray-500">MINS</div>
+                    </div>
+                    <div class="bg-gray-900/80 p-2 rounded-lg border border-gray-700 relative overflow-hidden">
+                        <div id="cd-secs" class="text-2xl font-bold text-gold font-tech">00</div>
+                        <div class="text-[8px] text-gray-500">SECS</div>
+                        <div class="absolute inset-0 border border-gold/20 rounded-lg animate-pulse"></div>
                     </div>
                 </div>
+                <div class="text-[10px] text-red-400 mt-2">*กรุณาต่ออายุก่อนระบบตัดอัตโนมัติ</div>
             </div>
 
-            <div class="grid grid-cols-2 gap-3">
-                <div class="glass p-4 rounded-xl text-center">
-                    <div class="text-[10px] text-gray-400 uppercase">Win Rate</div>
-                    <div class="text-2xl font-tech font-bold text-green-500">92.4%</div>
-                </div>
-                <div class="glass p-4 rounded-xl text-center">
-                    <div class="text-[10px] text-gray-400 uppercase">Total Profit</div>
-                    <div class="text-2xl font-tech font-bold text-gold">$12,450</div>
-                </div>
+            <div class="space-y-3">
+                <a href="#" class="flex items-center justify-center gap-3 w-full py-4 rounded-xl bg-facebook text-white font-bold shadow-lg shadow-blue-900/20 active:scale-95 transition">
+                    <i class="fa-brands fa-facebook text-xl"></i> ติดต่อ Facebook
+                </a>
+                <a href="#" class="flex items-center justify-center gap-3 w-full py-4 rounded-xl bg-line text-white font-bold shadow-lg shadow-green-900/20 active:scale-95 transition">
+                    <i class="fa-brands fa-line text-xl"></i> ติดต่อ Line Support
+                </a>
             </div>
 
-            <div class="glass rounded-xl overflow-hidden">
-                <div class="p-4 border-b border-gray-800 flex items-center justify-between cursor-pointer hover:bg-white/5">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-blue-900/20 flex items-center justify-center text-blue-500"><i class="fa-brands fa-line"></i></div>
-                        <span class="text-sm text-white">ติดต่อซัพพอร์ต (LINE)</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-gray-600"></i>
-                </div>
-                <div class="p-4 border-b border-gray-800 flex items-center justify-between cursor-pointer hover:bg-white/5">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-purple-900/20 flex items-center justify-center text-purple-500"><i class="fa-solid fa-key"></i></div>
-                        <span class="text-sm text-white">เปลี่ยนรหัสผ่าน</span>
-                    </div>
-                    <i class="fa-solid fa-chevron-right text-xs text-gray-600"></i>
-                </div>
-                <div onclick="logout()" class="p-4 flex items-center justify-between cursor-pointer hover:bg-red-900/10 transition">
-                    <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-red-900/20 flex items-center justify-center text-red-500"><i class="fa-solid fa-power-off"></i></div>
-                        <span class="text-sm text-red-500">ออกจากระบบ</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="text-center text-[10px] text-gray-600 mt-4">
-                RS Infinity &copy; 2025 All Rights Reserved.
+            <button onclick="alert('Logged out')" class="w-full py-3 rounded-xl border border-red-900/50 text-red-500 text-xs hover:bg-red-900/10 transition mt-6">
+                ออกจากระบบ (Log Out)
+            </button>
+
+            <div class="text-center text-[9px] text-gray-700 pb-10">
+                Version 5.0.1 (Ultimate Edition) <br> Powered by RS AI Core
             </div>
         </div>
 
     </main>
 
-    <nav class="h-20 bg-[#080808] border-t border-gray-800 flex justify-between items-center px-8 z-30 shrink-0">
-        <button onclick="switchPage('home')" class="nav-btn flex flex-col items-center gap-1 text-gold transition" id="nav-home">
-            <i class="fa-solid fa-house text-xl"></i>
-            <span class="text-[10px] font-bold">Scanner</span>
+    <nav class="h-20 bg-[#080808] border-t border-gray-800 flex justify-around items-center px-2 z-30 shrink-0">
+        <button onclick="navTo('scanner')" class="nav-item flex flex-col items-center gap-1 w-16 text-gold" id="btn-scanner">
+            <i class="fa-solid fa-radar text-xl"></i>
+            <span class="text-[9px] font-bold">Scanner</span>
         </button>
-        <button onclick="switchPage('chart')" class="nav-btn flex flex-col items-center gap-1 text-gray-600 hover:text-white transition" id="nav-chart">
+        <button onclick="navTo('chart')" class="nav-item flex flex-col items-center gap-1 w-16 text-gray-600 hover:text-white transition" id="btn-chart">
             <i class="fa-solid fa-chart-line text-xl"></i>
-            <span class="text-[10px] font-bold">Live Chart</span>
+            <span class="text-[9px] font-bold">Chart</span>
         </button>
-        <button onclick="switchPage('profile')" class="nav-btn flex flex-col items-center gap-1 text-gray-600 hover:text-white transition" id="nav-profile">
-            <i class="fa-solid fa-user-astronaut text-xl"></i>
-            <span class="text-[10px] font-bold">Profile</span>
+        <button onclick="navTo('profile')" class="nav-item flex flex-col items-center gap-1 w-16 text-gray-600 hover:text-white transition" id="btn-profile">
+            <i class="fa-solid fa-user-shield text-xl"></i>
+            <span class="text-[9px] font-bold">Profile</span>
         </button>
     </nav>
 
-    <div id="search-modal" class="fixed inset-0 z-[60] bg-black/95 hidden flex flex-col">
-        <div class="p-4 border-b border-gray-800 flex items-center gap-4 bg-[#0a0a0a]">
-            <button onclick="closeModal('search-modal')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button>
-            <input type="text" placeholder="Search Asset (e.g. Gold)..." class="flex-1 bg-transparent text-white font-bold text-lg placeholder-gray-700">
+    <div id="asset-modal" class="fixed inset-0 z-[60] bg-black/95 hidden flex flex-col">
+        <div class="p-4 border-b border-gray-800 flex items-center gap-4 bg-[#111]">
+            <button onclick="closeModal('asset-modal')" class="text-gray-400"><i class="fa-solid fa-arrow-left"></i></button>
+            <h2 class="text-white font-bold">เลือกสินทรัพย์ (Assets)</h2>
         </div>
-        <div class="p-4 grid grid-cols-1 gap-3 overflow-y-auto no-scrollbar">
-            <div onclick="selectAsset('BTC/USDT', '₿')" class="glass p-4 rounded-xl flex items-center justify-between border hover:border-gold cursor-pointer">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-yellow-500/20 text-yellow-500 flex items-center justify-center"><i class="fa-brands fa-bitcoin"></i></div>
-                    <div>
-                        <div class="font-bold text-white">BTC/USDT</div>
-                        <div class="text-[10px] text-gray-500">Bitcoin</div>
-                    </div>
-                </div>
-                <div class="text-green-500 font-mono">+2.1%</div>
+        <div class="p-5 grid grid-cols-2 gap-3 overflow-y-auto content-start">
+            <div onclick="selectAsset('BTC/USDT', '₿')" class="glass p-4 rounded-xl border border-gray-800 hover:border-gold cursor-pointer flex flex-col items-center gap-2">
+                <i class="fa-brands fa-bitcoin text-3xl text-yellow-500"></i>
+                <div class="font-bold text-white">BTC/USDT</div>
+                <div class="text-[10px] text-gray-500">Bitcoin</div>
             </div>
-            <div onclick="selectAsset('XAUUSD', '⚜')" class="glass p-4 rounded-xl flex items-center justify-between border hover:border-gold cursor-pointer">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-yellow-200/20 text-yellow-200 flex items-center justify-center"><i class="fa-solid fa-gem"></i></div>
-                    <div>
-                        <div class="font-bold text-white">XAUUSD</div>
-                        <div class="text-[10px] text-gray-500">Gold Spot</div>
-                    </div>
-                </div>
-                <div class="text-red-500 font-mono">-0.4%</div>
+            <div onclick="selectAsset('ETH/USDT', 'Ξ')" class="glass p-4 rounded-xl border border-gray-800 hover:border-gold cursor-pointer flex flex-col items-center gap-2">
+                <i class="fa-brands fa-ethereum text-3xl text-purple-500"></i>
+                <div class="font-bold text-white">ETH/USDT</div>
+                <div class="text-[10px] text-gray-500">Ethereum</div>
             </div>
-             <div onclick="selectAsset('EURUSD', '€')" class="glass p-4 rounded-xl flex items-center justify-between border hover:border-gold cursor-pointer">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-full bg-blue-500/20 text-blue-500 flex items-center justify-center"><i class="fa-solid fa-euro-sign"></i></div>
-                    <div>
-                        <div class="font-bold text-white">EURUSD</div>
-                        <div class="text-[10px] text-gray-500">Forex</div>
-                    </div>
-                </div>
-                <div class="text-green-500 font-mono">+0.01%</div>
+            <div onclick="selectAsset('XAUUSD', '⚜')" class="glass p-4 rounded-xl border border-gray-800 hover:border-gold cursor-pointer flex flex-col items-center gap-2">
+                <i class="fa-solid fa-coins text-3xl text-gold"></i>
+                <div class="font-bold text-white">XAUUSD</div>
+                <div class="text-[10px] text-gray-500">Gold Spot</div>
+            </div>
+            <div onclick="selectAsset('EURUSD', '€')" class="glass p-4 rounded-xl border border-gray-800 hover:border-gold cursor-pointer flex flex-col items-center gap-2">
+                <i class="fa-solid fa-euro-sign text-3xl text-blue-500"></i>
+                <div class="font-bold text-white">EURUSD</div>
+                <div class="text-[10px] text-gray-500">Forex</div>
+            </div>
+            <div onclick="selectAsset('GBPUSD', '£')" class="glass p-4 rounded-xl border border-gray-800 hover:border-gold cursor-pointer flex flex-col items-center gap-2">
+                <i class="fa-solid fa-sterling-sign text-3xl text-indigo-500"></i>
+                <div class="font-bold text-white">GBPUSD</div>
+                <div class="text-[10px] text-gray-500">Forex</div>
+            </div>
+            <div onclick="selectAsset('USDJPY', '¥')" class="glass p-4 rounded-xl border border-gray-800 hover:border-gold cursor-pointer flex flex-col items-center gap-2">
+                <i class="fa-solid fa-yen-sign text-3xl text-red-500"></i>
+                <div class="font-bold text-white">USDJPY</div>
+                <div class="text-[10px] text-gray-500">Forex</div>
             </div>
         </div>
     </div>
 
     <div id="config-modal" class="fixed inset-0 z-[70] bg-black/90 backdrop-blur-sm hidden flex items-end sm:items-center justify-center">
-        <div class="w-full sm:max-w-md bg-[#111] border-t border-gold/30 rounded-t-3xl sm:rounded-3xl p-6 pb-10 shadow-2xl animate-[fadeIn_0.3s]">
+        <div class="w-full sm:max-w-md bg-[#111] border-t border-gold/30 rounded-t-3xl sm:rounded-3xl p-6 pb-10 shadow-2xl">
             <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h3 class="text-xl font-bold text-white font-tech">SYSTEM CONFIG</h3>
-                    <p class="text-[10px] text-gray-500">Setup Parameters</p>
-                </div>
+                <h3 class="text-lg font-bold text-white font-tech uppercase"><i class="fa-solid fa-sliders mr-2 text-gold"></i> AI Parameter Config</h3>
                 <button onclick="closeModal('config-modal')" class="text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
             
-            <div class="space-y-5">
-                <div class="bg-gray-900 p-4 rounded-xl border border-gray-800">
-                    <label class="text-[10px] text-gold uppercase font-bold mb-2 block"><i class="fa-solid fa-wallet mr-1"></i> Capital ($)</label>
-                    <input type="number" id="inp-capital" value="1000" class="w-full bg-transparent text-3xl font-tech font-bold text-white placeholder-gray-700" placeholder="0.00">
-                </div>
-
+            <div class="space-y-4">
                 <div>
-                    <label class="text-[10px] text-gray-500 uppercase mb-2 block">Timeframe</label>
-                    <div class="flex gap-2">
-                        <button onclick="selectTF('1m')" class="tf-btn flex-1 py-3 bg-gray-800 rounded-lg text-xs text-gray-400 font-bold border border-transparent">1M</button>
-                        <button onclick="selectTF('5m')" class="tf-btn flex-1 py-3 bg-gold text-black rounded-lg text-xs font-bold border border-gold shadow-lg shadow-gold/20">5M</button>
-                        <button onclick="selectTF('15m')" class="tf-btn flex-1 py-3 bg-gray-800 rounded-lg text-xs text-gray-400 font-bold border border-transparent">15M</button>
+                    <label class="text-[10px] text-gray-400 uppercase mb-1 block">Capital Amount (เงินทุน)</label>
+                    <div class="relative">
+                        <span class="absolute left-3 top-2.5 text-gold">$</span>
+                        <input type="number" id="inp-capital" value="1000" class="w-full pl-8 py-2 rounded-lg bg-gray-900 border border-gray-700 text-white font-tech focus:border-gold">
                     </div>
                 </div>
 
-                <button onclick="startScan()" class="w-full mt-4 bg-gradient-to-r from-gold-dark to-gold text-black font-bold font-tech text-lg py-4 rounded-xl shadow-[0_0_20px_rgba(212,175,55,0.3)] btn-press">
-                    START AI ANALYSIS <i class="fa-solid fa-bolt ml-2"></i>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-[10px] text-gray-400 uppercase mb-1 block">Risk Level (ความเสี่ยง)</label>
+                        <select class="w-full p-2 rounded-lg bg-gray-900 border border-gray-700 text-xs">
+                            <option value="low">Conservative (1%)</option>
+                            <option value="med" selected>Balanced (2%)</option>
+                            <option value="high">Aggressive (5%)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="text-[10px] text-gray-400 uppercase mb-1 block">Leverage</label>
+                        <select class="w-full p-2 rounded-lg bg-gray-900 border border-gray-700 text-xs">
+                            <option value="100">1:100</option>
+                            <option value="500" selected>1:500</option>
+                            <option value="1000">1:1000</option>
+                            <option value="unlimited">Unlimited</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="text-[10px] text-gray-400 uppercase mb-1 block">Trading Strategy (กลยุทธ์)</label>
+                    <div class="grid grid-cols-2 gap-2">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="strat" class="peer sr-only" checked>
+                            <div class="p-2 rounded border border-gray-700 bg-gray-900 text-gray-400 text-xs text-center peer-checked:bg-gold peer-checked:text-black peer-checked:font-bold transition">Trend Follow</div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="strat" class="peer sr-only">
+                            <div class="p-2 rounded border border-gray-700 bg-gray-900 text-gray-400 text-xs text-center peer-checked:bg-gold peer-checked:text-black peer-checked:font-bold transition">Reversal Sniper</div>
+                        </label>
+                    </div>
+                </div>
+
+                <button onclick="processAI()" class="w-full mt-2 bg-gradient-to-r from-yellow-700 to-gold text-white font-bold font-tech text-lg py-3 rounded-xl shadow-lg shadow-gold/20 active:scale-95 transition">
+                    RUN AI SYSTEM <i class="fa-solid fa-microchip ml-2"></i>
                 </button>
             </div>
         </div>
     </div>
 
-    <div id="result-modal" class="fixed inset-0 z-[80] bg-[#050505] hidden flex flex-col h-full overflow-hidden">
+    <div id="result-modal" class="fixed inset-0 z-[80] bg-[#050505] hidden flex flex-col h-full">
         <div class="h-14 px-4 flex justify-between items-center border-b border-gray-800 bg-[#0a0a0a]">
             <div class="flex items-center gap-2">
-                <span class="relative flex h-3 w-3">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-                </span>
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></span>
                 <span class="text-xs font-bold text-red-500 tracking-widest">LIVE SIGNAL</span>
             </div>
-            <button onclick="closeModal('result-modal')" class="w-8 h-8 rounded-full bg-gray-800 flex items-center justify-center text-gray-400"><i class="fa-solid fa-xmark"></i></button>
+            <button onclick="closeModal('result-modal')" class="text-gray-400"><i class="fa-solid fa-xmark text-xl"></i></button>
         </div>
 
         <div class="flex-1 overflow-y-auto no-scrollbar pb-10">
-            <div class="h-64 w-full bg-[#111] relative border-b border-gray-800">
-                <div id="tradingview_result" class="w-full h-full"></div>
-                <div class="absolute top-2 left-2 z-10 bg-black/80 backdrop-blur border border-gold/50 px-3 py-1 rounded-lg">
-                    <div class="text-[9px] text-gray-400 uppercase">Signal Valid For</div>
-                    <div id="countdown" class="text-lg font-tech font-bold text-gold">04:59</div>
-                </div>
+            <div class="h-60 w-full bg-[#111] relative border-b border-gray-800">
+                <div id="tradingview_res" class="w-full h-full"></div>
             </div>
 
-            <div class="p-5 -mt-6 relative z-20">
+            <div class="p-5 -mt-6 relative z-10">
                 <div class="glass p-6 rounded-3xl border border-gray-700 shadow-2xl backdrop-blur-xl">
-                    
                     <div class="flex justify-between items-center mb-4">
-                        <div class="text-3xl font-bold font-tech text-white" id="res-asset">BTC/USDT</div>
-                        <div class="px-3 py-1 rounded bg-gray-800 border border-gray-700 text-xs text-white" id="res-tf">M5</div>
+                        <div class="text-2xl font-bold font-tech text-white" id="res-name">BTC/USDT</div>
+                        <div class="text-right">
+                            <div class="text-[10px] text-gray-400 uppercase">Confidence</div>
+                            <div class="text-xl font-bold text-gold font-tech">98.5%</div>
+                        </div>
                     </div>
 
-                    <div class="flex items-center justify-between mb-6">
-                        <div>
-                            <div class="text-[10px] text-gray-400 uppercase tracking-widest">Action</div>
-                            <div id="res-action" class="text-5xl font-black text-green-500 tracking-tighter drop-shadow-md">BUY</div>
-                        </div>
-                        <div class="text-right">
-                            <div class="text-[10px] text-gray-400 uppercase tracking-widest">Confidence</div>
-                            <div class="text-3xl font-tech font-bold text-white">98%</div>
-                        </div>
+                    <div class="text-center py-4 border-y border-gray-800 mb-4 bg-black/20 rounded-xl">
+                        <div class="text-[10px] text-gray-400 uppercase tracking-widest mb-1">Recommended Action</div>
+                        <div id="res-action" class="text-5xl font-black text-green-500 tracking-tighter drop-shadow-md">BUY</div>
                     </div>
 
                     <div class="grid grid-cols-3 gap-2 mb-4">
-                        <div class="bg-gray-900/80 p-2 rounded-lg border border-gray-700 text-center">
-                            <div class="text-[9px] text-gray-500 uppercase">ENTRY</div>
-                            <div id="res-entry" class="text-sm font-bold text-white font-tech">--</div>
+                        <div class="p-2 bg-gray-900 rounded border border-gray-800 text-center">
+                            <div class="text-[9px] text-gray-500 uppercase">Entry</div>
+                            <div id="res-entry" class="font-bold text-white text-sm font-tech">---</div>
                         </div>
-                        <div class="bg-green-900/20 p-2 rounded-lg border border-green-500/30 text-center">
+                        <div class="p-2 bg-green-900/20 rounded border border-green-900 text-center">
                             <div class="text-[9px] text-green-500 uppercase">TP</div>
-                            <div id="res-tp" class="text-sm font-bold text-green-400 font-tech">--</div>
+                            <div id="res-tp" class="font-bold text-green-400 text-sm font-tech">---</div>
                         </div>
-                        <div class="bg-red-900/20 p-2 rounded-lg border border-red-500/30 text-center">
+                        <div class="p-2 bg-red-900/20 rounded border border-red-900 text-center">
                             <div class="text-[9px] text-red-500 uppercase">SL</div>
-                            <div id="res-sl" class="text-sm font-bold text-red-400 font-tech">--</div>
+                            <div id="res-sl" class="font-bold text-red-400 text-sm font-tech">---</div>
                         </div>
                     </div>
 
-                    <div class="bg-gradient-to-r from-gold/10 to-transparent border-l-4 border-gold p-3 rounded-r-lg mb-4">
-                        <div class="flex justify-between items-center">
-                            <span class="text-xs text-gold font-bold uppercase"><i class="fa-solid fa-coins mr-1"></i> Lot Size</span>
-                            <span id="res-lot" class="text-xl font-bold text-white font-tech">0.10</span>
+                    <div class="bg-gold/10 p-3 rounded-xl border border-gold/30 flex justify-between items-center">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-gold"></i>
+                            <div class="text-[10px] text-gold uppercase font-bold">Safe Lot Size</div>
                         </div>
-                        <div class="text-[10px] text-gray-400">Calculated from balance: $<span id="res-balance">1000</span></div>
+                        <div id="res-lot" class="text-xl font-bold text-white font-tech">0.05</div>
                     </div>
-
-                    <div class="space-y-2">
-                        <div class="text-[10px] text-gray-500 uppercase flex items-center gap-1"><i class="fa-solid fa-brain"></i> AI Reasoning</div>
-                        <p id="res-reason" class="text-xs text-gray-300 font-light leading-relaxed">
-                            ระบบตรวจพบสัญญาณ Bullish Divergence ที่ชัดเจนใน TF M5 พร้อมกับ Volume ซื้อที่พุ่งสูงขึ้นทะลุแนวต้าน 42,500 บ่งบอกถึงแรงส่งขาขึ้นที่แข็งแกร่ง
+                    
+                    <div class="mt-4 pt-4 border-t border-gray-800">
+                        <div class="text-[10px] text-gray-500 mb-1"><i class="fa-solid fa-robot mr-1"></i> AI Reasoning</div>
+                        <p class="text-xs text-gray-300 font-light leading-relaxed">
+                            ระบบ AI ตรวจพบแรงซื้อสะสมบริเวณแนวรับสำคัญ (Demand Zone) ร่วมกับสัญญาณ RSI เกิด Bullish Divergence แนะนำให้เปิดสถานะ Buy เพื่อทำกำไรระยะสั้น
                         </p>
                     </div>
-
                 </div>
             </div>
-        </div>
-
-        <div class="p-4 border-t border-gray-800 bg-black">
-            <button onclick="closeModal('result-modal')" class="w-full bg-gray-800 hover:bg-gray-700 text-white py-4 rounded-xl font-bold transition">Close Signal</button>
+            
+            <div class="px-5 pb-5">
+                <button onclick="closeModal('result-modal')" class="w-full bg-gray-800 text-white py-3 rounded-xl font-bold text-sm">ปิดหน้านี้</button>
+            </div>
         </div>
     </div>
 
     <script>
-        // --- GLOBAL STATE ---
+        // Data
         let currentAsset = 'BTC/USDT';
         let currentSymbol = '₿';
-        let currentTimeframe = '5m';
-        let countdownInterval;
+        let countdownTimer;
 
-        // --- INITIALIZATION ---
-        window.onload = () => {
-            // Fake Loading Process
-            const logs = [
-                "Connecting to Neural Network...",
-                "Loading Market Data...",
-                "Syncing with Binance/Exness...",
-                "System Ready."
-            ];
-            let i = 0;
-            const logEl = document.getElementById('system-log');
-            const interval = setInterval(() => {
-                if(i < logs.length) { logEl.innerText = logs[i]; i++; }
-            }, 800);
-
-            setTimeout(() => {
-                clearInterval(interval);
-                document.getElementById('loading-screen').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('loading-screen').style.display = 'none';
-                    initMainChart(); // Load chart when ready
-                }, 500);
-            }, 3500);
-        };
-
-        // --- NAVIGATION ---
-        function switchPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page-content').forEach(p => {
-                p.classList.remove('active');
-                setTimeout(() => { if(!p.classList.contains('active')) p.style.display = 'none'; }, 300); // fade out effect
+        // Navigation
+        function navTo(pageId) {
+            // Hide all
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('text-gold');
+                el.classList.add('text-gray-600');
             });
-            
-            // Show target page
-            const target = document.getElementById('page-' + pageId);
-            target.style.display = 'block'; // set display first
-            setTimeout(() => target.classList.add('active'), 10); // then fade in
 
-            // Update Nav Icons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('text-gold');
-                btn.classList.add('text-gray-600');
-            });
-            document.getElementById('nav-' + pageId).classList.add('text-gold');
-            document.getElementById('nav-' + pageId).classList.remove('text-gray-600');
+            // Show Target
+            document.getElementById('page-' + pageId).classList.add('active');
+            document.getElementById('btn-' + pageId).classList.add('text-gold');
+            document.getElementById('btn-' + pageId).classList.remove('text-gray-600');
 
-            // Specific Actions
-            if(pageId === 'chart') {
-                document.getElementById('chart-title').innerText = currentAsset;
-                initMainChart();
-            }
+            if(pageId === 'chart') initChart('tradingview_full', false);
         }
 
-        // --- MODALS ---
+        // Modals
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
-        // --- ASSET SELECTION ---
+        // Asset Selection
         function selectAsset(pair, symbol) {
             currentAsset = pair;
             currentSymbol = symbol;
-            
-            // Update UI Home
-            document.getElementById('asset-name-display').innerText = pair;
-            document.getElementById('asset-icon-display').innerText = symbol;
-            
-            // Update Charts
-            closeModal('search-modal');
+            document.getElementById('display-pair').innerText = pair;
+            document.getElementById('display-icon').innerText = symbol;
+            document.getElementById('chart-title').innerText = pair;
+            closeModal('asset-modal');
         }
 
-        function selectTF(tf) {
-            currentTimeframe = tf;
-            document.querySelectorAll('.tf-btn').forEach(b => {
-                b.className = "tf-btn flex-1 py-3 bg-gray-800 rounded-lg text-xs text-gray-400 font-bold border border-transparent";
-            });
-            event.target.className = "tf-btn flex-1 py-3 bg-gold text-black rounded-lg text-xs font-bold border border-gold shadow-lg shadow-gold/20";
-        }
+        // Countdown Logic (Profile)
+        function startProfileTimer() {
+            // Set expiry date to 30 days from now
+            const expiryDate = new Date();
+            expiryDate.setDate(expiryDate.getDate() + 29);
+            expiryDate.setHours(expiryDate.getHours() + 12);
 
-        // --- AI LOGIC (SIMULATION) ---
-        function startScan() {
-            closeModal('config-modal');
-            
-            // Show Loading again briefly for effect
-            const loader = document.getElementById('loading-screen');
-            loader.style.display = 'flex';
-            loader.style.opacity = '1';
-            document.getElementById('system-log').innerText = "AI ANALYZING PATTERNS...";
+            setInterval(() => {
+                const now = new Date().getTime();
+                const distance = expiryDate - now;
 
-            setTimeout(() => {
-                loader.style.opacity = '0';
-                setTimeout(() => loader.style.display = 'none', 500);
-                showResult();
-            }, 2000);
-        }
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        function showResult() {
-            // 1. Get Inputs
-            const capital = parseFloat(document.getElementById('inp-capital').value) || 1000;
-            const isBuy = Math.random() > 0.45; // Random Signal
-            
-            // 2. Generate Price Logic
-            let price = currentAsset.includes('BTC') ? 43500 : (currentAsset.includes('XAU') ? 2030 : 1.0850);
-            // Randomize slightly
-            price = price + (Math.random() * (price * 0.001));
-            
-            let gapTP = currentAsset.includes('BTC') ? 200 : (currentAsset.includes('XAU') ? 3 : 0.0020);
-            let gapSL = currentAsset.includes('BTC') ? 150 : (currentAsset.includes('XAU') ? 2 : 0.0015);
-            
-            let dir = isBuy ? 1 : -1;
-            let entry = price;
-            let tp = price + (gapTP * dir);
-            let sl = price - (gapSL * dir);
-
-            // 3. Money Management (Risk 1-2%)
-            let riskAmount = capital * 0.02;
-            // Lot = Risk / Distance (Simplified formula for demo)
-            let lot = (riskAmount / 100).toFixed(2); 
-            if(lot < 0.01) lot = 0.01;
-
-            // 4. Render UI
-            document.getElementById('res-asset').innerText = currentAsset;
-            document.getElementById('res-tf').innerText = currentTimeframe.toUpperCase();
-            document.getElementById('res-balance').innerText = capital;
-            
-            const actionEl = document.getElementById('res-action');
-            actionEl.innerText = isBuy ? "BUY" : "SELL";
-            actionEl.className = `text-5xl font-black tracking-tighter drop-shadow-md ${isBuy ? 'text-green-500' : 'text-red-500'}`;
-            
-            document.getElementById('res-entry').innerText = entry.toFixed(currentAsset.includes('USD') && !currentAsset.includes('XAU') && !currentAsset.includes('BTC') ? 4 : 2);
-            document.getElementById('res-tp').innerText = tp.toFixed(4); // simplify decimal for demo
-            document.getElementById('res-sl').innerText = sl.toFixed(4);
-            document.getElementById('res-lot').innerText = lot;
-
-            // Generate Reasoning
-            const technicalTerms = ["EMA 200", "RSI Oversold", "Fibonacci 61.8%", "Supply Zone", "Demand Zone", "MACD Crossover"];
-            const term = technicalTerms[Math.floor(Math.random() * technicalTerms.length)];
-            const reason = `AI ตรวจพบโครงสร้างราคาแบบ ${isBuy ? 'Uptrend' : 'Downtrend'} ชัดเจน โดยมีการยืนยันจากสัญญาณ ${term} ใน Timeframe ${currentTimeframe} แนะนำให้เข้าออเดอร์ตามแผน`;
-            document.getElementById('res-reason').innerText = reason;
-
-            // 5. Chart & Timer
-            openModal('result-modal');
-            renderChart('tradingview_result', currentAsset, true);
-            startCountdown();
-        }
-
-        function startCountdown() {
-            clearInterval(countdownInterval);
-            let duration = (parseInt(currentTimeframe) || 5) * 60;
-            const el = document.getElementById('countdown');
-            
-            countdownInterval = setInterval(() => {
-                let m = Math.floor(duration / 60);
-                let s = duration % 60;
-                el.innerText = `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}`;
-                
-                if(--duration < 0) {
-                    clearInterval(countdownInterval);
-                    el.innerText = "EXPIRED";
-                    el.classList.add('text-red-500');
-                }
+                document.getElementById('cd-days').innerText = days;
+                document.getElementById('cd-hours').innerText = hours;
+                document.getElementById('cd-mins').innerText = minutes;
+                document.getElementById('cd-secs').innerText = seconds < 10 ? '0' + seconds : seconds;
             }, 1000);
         }
 
-        // --- TRADINGVIEW INTEGRATION ---
-        function initMainChart() {
-            renderChart('tradingview_main', currentAsset, false);
+        // AI Process Logic
+        function processAI() {
+            closeModal('config-modal');
+            
+            // SweetAlert2 styled Loading (Native implementation for simplicity)
+            const btn = document.querySelector('button[onclick="processAI()"]');
+            const originalText = btn.innerHTML;
+            
+            // Simulate loading overlay
+            const overlay = document.createElement('div');
+            overlay.className = "fixed inset-0 bg-black z-[100] flex flex-col items-center justify-center";
+            overlay.innerHTML = `
+                <div class="w-16 h-16 border-4 border-gold border-t-transparent rounded-full animate-spin mb-4"></div>
+                <div class="text-gold font-tech text-xl animate-pulse">AI PROCESSING DATA...</div>
+                <div class="text-gray-500 text-xs mt-2 font-mono">Analyzing Market Structure</div>
+            `;
+            document.body.appendChild(overlay);
+
+            setTimeout(() => {
+                document.body.removeChild(overlay);
+                showResult();
+            }, 3000); // 3 seconds delay
         }
 
-        function changeChartTimeframe(tf) {
-            renderChart('tradingview_main', currentAsset, false, tf);
+        function showResult() {
+            const capital = parseFloat(document.getElementById('inp-capital').value) || 1000;
+            const isGold = currentAsset.includes('XAU');
+            const isBuy = Math.random() > 0.5;
+            
+            // Generate Prices
+            let price = isGold ? 2030.50 : (currentAsset.includes('BTC') ? 43200.00 : 1.0850);
+            let move = isGold ? 5.00 : (currentAsset.includes('BTC') ? 300.00 : 0.0030);
+            
+            let entry = price;
+            let tp = isBuy ? price + move : price - move;
+            let sl = isBuy ? price - (move/1.5) : price + (move/1.5);
+            
+            // Calculate Lot (Simple Rule: Risk 2% / SL distance)
+            let lot = (capital * 0.0001).toFixed(2);
+            if(lot < 0.01) lot = 0.01;
+
+            // Render
+            document.getElementById('res-name').innerText = currentAsset;
+            document.getElementById('res-action').innerText = isBuy ? "BUY" : "SELL";
+            document.getElementById('res-action').className = `text-5xl font-black tracking-tighter drop-shadow-md ${isBuy ? 'text-green-500' : 'text-red-500'}`;
+            
+            document.getElementById('res-entry').innerText = entry.toFixed(isGold||currentAsset.includes('BTC') ? 2 : 4);
+            document.getElementById('res-tp').innerText = tp.toFixed(isGold||currentAsset.includes('BTC') ? 2 : 4);
+            document.getElementById('res-sl').innerText = sl.toFixed(isGold||currentAsset.includes('BTC') ? 2 : 4);
+            document.getElementById('res-lot').innerText = lot;
+
+            openModal('result-modal');
+            initChart('tradingview_res', true);
         }
 
-        function renderChart(containerId, symbol, isMini, intervalOverride) {
-            // Map symbol to TV format
-            let tvSymbol = "BINANCE:" + symbol.replace('/', '');
-            if(symbol.includes('XAU')) tvSymbol = "OANDA:XAUUSD";
-            if(symbol.includes('EUR') || symbol.includes('GBP')) tvSymbol = "FX:" + symbol.replace('/', '');
+        // TradingView
+        function changeTF(tf) {
+            // Update chart interval
+            initChart('tradingview_full', false, tf);
+        }
 
-            let interval = intervalOverride || currentTimeframe.replace('m','');
+        function initChart(containerId, isMini, interval = "15") {
+            let symbol = "BINANCE:" + currentAsset.replace('/', '');
+            if(currentAsset.includes('XAU')) symbol = "OANDA:XAUUSD";
+            if(currentAsset.includes('EUR') || currentAsset.includes('GBP')) symbol = "FX:" + currentAsset.replace('/', '');
 
             new TradingView.widget({
                 "width": "100%",
                 "height": "100%",
-                "symbol": tvSymbol,
+                "symbol": symbol,
                 "interval": interval,
                 "timezone": "Asia/Bangkok",
                 "theme": "dark",
-                "style": "1", // Candles
+                "style": "1",
                 "locale": "th_TH",
                 "toolbar_bg": "#000",
                 "enable_publishing": false,
                 "hide_top_toolbar": isMini,
                 "hide_legend": isMini,
-                "save_image": false,
                 "container_id": containerId,
-                "backgroundColor": "rgba(0,0,0,1)",
-                "allow_symbol_change": !isMini
+                "backgroundColor": "rgba(0,0,0,1)"
             });
         }
 
-        function logout() {
-            if(confirm('ต้องการออกจากระบบ?')) {
-                location.reload(); // Simple reload for demo
-            }
-        }
+        // Init
+        startProfileTimer();
     </script>
 </body>
 </html>
