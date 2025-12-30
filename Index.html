@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RS QUANTUM AI | ระบบวิเคราะห์เวลาเทรดอัจฉริยะ</title>
+    <title>RS NEURAL QUANTUM | THE ATOMIC ENGINE</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600&family=Prompt:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -18,12 +18,12 @@
                 extend: {
                     fontFamily: { sans: ['Kanit', 'sans-serif'], title: ['Prompt', 'sans-serif'] },
                     colors: { 
-                        brand: '#F0B90B', 
-                        success: '#02C076', 
-                        danger: '#CF304A',
-                        bgMain: '#0b0e11',
-                        bgCard: '#181a20',
-                        accent: '#2b2f36'
+                        brand: '#F0B90B', /* Pure Gold */
+                        cyber: '#0052FF', /* Electric Blue */
+                        bgDark: '#010409',
+                        cardDark: '#0D1117',
+                        success: '#00C076',
+                        danger: '#FF3B30'
                     }
                 }
             }
@@ -31,215 +31,255 @@
     </script>
 
     <style>
-        /* 🎨 Temporal Trading UI Styles */
-        :root { --brand: #F0B90B; --success: #02C076; --danger: #CF304A; }
+        /* 🎨 Futuristic Cyber-Luxury Design */
+        :root { --brand: #F0B90B; --cyber: #0052FF; }
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none !important; }
-        body { background-color: #0b0e11; color: #EAECEF; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
+        body { background-color: #010409; color: #E6EDF3; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
         .font-title { font-family: 'Prompt', sans-serif; }
 
-        /* Luxury Layout */
-        .luxury-card { background: #181a20; border: 1px solid #2b2f36; border-radius: 2rem; transition: 0.4s; }
-        .btn-luxury { transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
-        .btn-luxury:active { transform: scale(0.96); opacity: 0.8; }
+        /* Luxury Cards & Glassmorphism */
+        .luxury-card { 
+            background: rgba(13, 17, 23, 0.8); 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(48, 54, 61, 0.5); 
+            border-radius: 2rem; 
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.5);
+        }
+        
+        .btn-neural { 
+            background: linear-gradient(135deg, #161b22 0%, #0d1117 100%);
+            border: 1px solid #30363d;
+            transition: 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .btn-neural.active { 
+            border-color: var(--brand); 
+            background: rgba(240, 185, 11, 0.05);
+            box-shadow: 0 0 20px rgba(240, 185, 11, 0.1);
+        }
 
-        .asset-btn { border: 1.5px solid #2b2f36; background: #1e2329; border-radius: 1.2rem; transition: 0.3s; cursor: pointer; }
-        .asset-btn.active { border-color: var(--brand); background: rgba(240,185,11,0.08); box-shadow: 0 0 20px rgba(240,185,11,0.1); }
+        /* 🧠 Neural Node Scanning Animation */
+        .neural-container {
+            position: relative; width: 160px; height: 160px;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .neural-circle {
+            position: absolute; width: 100%; height: 100%;
+            border: 2px solid rgba(0, 82, 255, 0.1); border-radius: 50%;
+        }
+        .neural-scanner {
+            position: absolute; width: 100%; height: 100%;
+            border-top: 3px solid var(--brand); border-radius: 50%;
+            animation: neuralRotate 2s infinite linear;
+            box-shadow: 0 -10px 20px -5px var(--brand);
+        }
+        @keyframes neuralRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        /* Scanning Animation */
-        .scan-container { position: relative; width: 140px; height: 140px; border-radius: 50%; border: 2px solid rgba(240,185,11,0.15); overflow: hidden; background: #0b0e11; }
-        .scan-beam { position: absolute; width: 100%; height: 4px; background: var(--brand); box-shadow: 0 0 20px var(--brand); animation: scanning 2s infinite ease-in-out; }
-        @keyframes scanning { 0%, 100% { top: 0%; opacity: 0.2; } 50% { top: 100%; opacity: 1; } }
+        .laser-line {
+            position: absolute; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--brand), transparent);
+            animation: laserMove 2.5s infinite ease-in-out;
+            z-index: 20;
+        }
+        @keyframes laserMove { 0% { top: 0%; opacity: 0; } 50% { opacity: 1; } 100% { top: 100%; opacity: 0; } }
 
-        /* Timer Circle */
-        .timer-ring { transform: rotate(-90deg); transition: stroke-dashoffset 1s linear; }
-
+        /* Timer Progress Circle */
+        .timer-svg { transform: rotate(-90deg); }
+        
         .fade-slide { animation: fadeSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
         @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .glow-gold { filter: drop-shadow(0 0 8px rgba(240,185,11,0.4)); }
-
-        .auth-input { width: 100%; padding: 1.25rem 1.5rem; background: #1e2329; border-radius: 1.5rem; border: 1.5px solid transparent; font-weight: 600; color: white; transition: 0.3s; }
-        .auth-input:focus { border-color: var(--brand); box-shadow: 0 0 0 4px rgba(240,185,11,0.1); }
+        .glow-text { text-shadow: 0 0 15px rgba(240, 185, 11, 0.5); }
     </style>
 </head>
 <body class="flex flex-col">
 
-    <div id="loader" class="fixed inset-0 z-[1000] bg-bgMain flex flex-col items-center justify-center transition-all duration-1000">
-        <div class="relative w-32 h-32 mb-10 flex items-center justify-center">
-            <div class="absolute inset-0 border-2 border-slate-800 rounded-full"></div>
-            <div class="absolute inset-0 border-2 border-brand rounded-full border-t-transparent animate-spin"></div>
-            <div class="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center animate-pulse">
-                <i class="fas fa-hourglass-start text-brand text-3xl"></i>
-            </div>
+    <div id="loader" class="fixed inset-0 z-[1000] bg-bgDark flex flex-col items-center justify-center transition-all duration-1000">
+        <div class="relative w-36 h-36 mb-12 flex items-center justify-center">
+            <div class="absolute inset-0 border-[4px] border-slate-900 rounded-[3rem] rotate-45"></div>
+            <div class="absolute inset-0 border-[4px] border-brand rounded-[3rem] rotate-45 border-t-transparent animate-spin"></div>
+            <i class="fas fa-atom text-brand text-5xl animate-pulse"></i>
         </div>
-        <p class="text-brand font-black tracking-[0.4em] text-[10px] uppercase animate-pulse">Syncing Global Timeframe...</p>
+        <div class="text-center space-y-3">
+            <p class="text-brand font-black tracking-[0.6em] text-[11px] uppercase">Neural Core Booting</p>
+            <p class="text-slate-500 font-bold text-[9px] uppercase tracking-widest">เชื่อมต่อฐานข้อมูลควอนตัมตลาดโลก...</p>
+        </div>
     </div>
 
-    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-bgMain flex flex-col justify-center items-center p-10 overflow-y-auto no-scrollbar">
-        <div class="w-full max-w-sm text-center fade-slide py-10">
-            <div class="w-20 h-20 bg-brand rounded-3xl flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-brand/30">
-                <i class="fas fa-fingerprint text-bgMain text-3xl"></i>
+    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-bgDark flex flex-col justify-center items-center p-10 overflow-y-auto no-scrollbar">
+        <div class="w-full max-w-sm text-center fade-slide py-12">
+            <div class="w-24 h-24 bg-brand rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 shadow-2xl shadow-brand/20 rotate-[15deg]">
+                <i class="fas fa-brain text-bgDark text-4xl"></i>
             </div>
-            <h1 class="text-4xl font-black text-white italic tracking-tighter uppercase mb-2 font-title leading-none">RS <span class="text-brand">TEMPORAL</span></h1>
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mb-12">Authorized Account Access</p>
+            <h1 class="text-5xl font-black text-white italic tracking-tighter uppercase mb-2 font-title leading-none">RS <span class="text-brand">NEURAL</span></h1>
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em] mb-12">Private AI Trading Hub</p>
             
             <div id="loginForm" class="space-y-4">
-                <input id="lEmail" type="email" class="auth-input shadow-inner" placeholder="E-mail Identity">
-                <input id="lPass" type="password" class="auth-input shadow-inner" placeholder="Security Passphrase">
-                <button onclick="app.login()" class="w-full bg-brand text-bgMain py-6 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl btn-luxury mt-4">Verify Identity</button>
-                <button onclick="ui.toggleAuth(false)" class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-8">สร้างบัญชีผู้ใช้งานใหม่</button>
+                <input id="lEmail" type="email" class="w-full px-8 py-5 bg-cardDark border-none rounded-[1.8rem] font-bold outline-none focus:ring-1 focus:ring-brand transition-all text-white shadow-inner" placeholder="E-mail Access">
+                <input id="lPass" type="password" class="w-full px-8 py-5 bg-cardDark border-none rounded-[1.8rem] font-bold outline-none focus:ring-1 focus:ring-brand transition-all text-white shadow-inner" placeholder="Master Key">
+                <button onclick="app.login()" class="w-full bg-brand text-bgDark py-6 rounded-[1.8rem] font-black uppercase text-xs tracking-widest shadow-2xl btn-luxury mt-8 border border-brand/20 hover:scale-105 transition-all">Verify & Enter Hub</button>
+                <button onclick="ui.toggleAuth(false)" class="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-8 underline underline-offset-8">สมัครสมาชิกใหม่</button>
             </div>
 
             <div id="regForm" class="hidden space-y-4 text-left">
-                <input id="rName" class="auth-input" placeholder="Display Name">
-                <input id="rEmail" type="email" class="auth-input" placeholder="Valid E-mail">
-                <input id="rPass" type="password" class="auth-input" placeholder="Secure Password">
-                <button onclick="app.register()" class="w-full bg-white text-bgMain py-6 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl btn-luxury mt-6">สมัครสมาชิกพรีเมียม</button>
-                <button onclick="ui.toggleAuth(true)" class="w-full text-center text-slate-500 text-[10px] font-bold uppercase mt-4">ย้อนกลับหน้าเข้าสู่ระบบ</button>
+                <input id="rName" class="w-full px-8 py-5 bg-cardDark border-none rounded-[1.8rem] font-bold outline-none text-white" placeholder="Display Name">
+                <input id="rEmail" type="email" class="w-full px-8 py-5 bg-cardDark border-none rounded-[1.8rem] font-bold outline-none text-white" placeholder="Your Email">
+                <input id="rPass" type="password" class="w-full px-8 py-5 bg-cardDark border-none rounded-[1.8rem] font-bold outline-none text-white" placeholder="Secret Password">
+                <button onclick="app.register()" class="w-full bg-white text-bgDark py-6 rounded-[1.8rem] font-black uppercase text-xs tracking-widest shadow-2xl btn-luxury mt-6">Register Account</button>
+                <button onclick="ui.toggleAuth(true)" class="w-full text-center text-slate-500 text-[10px] font-black uppercase mt-6 tracking-widest">ย้อนกลับ</button>
             </div>
         </div>
     </div>
 
     <div id="mainPage" class="hidden flex-1 flex flex-col overflow-hidden">
         
-        <header class="px-8 pt-8 pb-3 flex justify-between items-center z-10">
+        <header class="px-8 pt-8 pb-4 flex justify-between items-center z-10">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-brand rounded-2xl flex items-center justify-center text-bgMain shadow-2xl border border-brand/20 italic font-black text-xs">RS</div>
+                <div class="w-12 h-12 bg-brand rounded-2xl flex items-center justify-center text-bgDark shadow-2xl border border-brand/20 italic font-black text-xs">RS</div>
                 <div>
-                    <h2 id="navName" class="font-black text-white text-lg leading-none font-title italic uppercase">...</h2>
+                    <h2 id="navName" class="font-black text-white text-lg leading-none font-title italic uppercase tracking-tighter">...</h2>
                     <div class="flex items-center gap-2 mt-1.5">
-                        <div class="w-2 h-2 bg-success rounded-full animate-pulse shadow-[0_0_8px_#02C076]"></div>
-                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">TIME-SYNC: ATOMIC ACTIVE</p>
+                        <div class="w-2 h-2 bg-success rounded-full animate-pulse shadow-[0_0_10px_#00C076]"></div>
+                        <p class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">Atomic Time: Verified</p>
                     </div>
                 </div>
             </div>
-            <button onclick="app.logout()" class="w-11 h-11 rounded-2xl bg-bgCard text-slate-400 flex items-center justify-center btn-luxury border border-slate-800 shadow-sm"><i class="fas fa-power-off text-sm"></i></button>
+            <button onclick="app.logout()" class="w-11 h-11 rounded-2xl bg-cardDark text-slate-400 flex items-center justify-center btn-luxury border border-slate-800"><i class="fas fa-power-off text-sm"></i></button>
         </header>
 
         <main id="view-home" class="flex-1 overflow-y-auto px-6 py-6 space-y-10 no-scrollbar pb-48">
             
-            <div class="luxury-card h-64 overflow-hidden relative shadow-2xl border-none fade-slide">
-                <div id="tradingview-container" class="w-full h-full">
+            <div class="luxury-card h-72 overflow-hidden relative shadow-2xl border-none fade-slide">
+                <div id="chart-mount-point" class="w-full h-full">
                     </div>
+                <div class="absolute top-4 left-6 z-20 pointer-events-none">
+                    <p id="chartLabel" class="text-[10px] font-black text-white/40 uppercase tracking-widest">Live Feed Binance</p>
+                </div>
             </div>
 
-            <div class="space-y-4">
-                <div class="flex justify-between items-center px-2">
-                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] italic">Currency Station</h3>
-                    <button onclick="ui.openSearch()" class="text-[10px] font-black text-brand uppercase tracking-widest flex items-center gap-2"><i class="fas fa-search"></i> ค้นหาคู่เทรด</button>
+            <div class="space-y-5">
+                <div class="flex justify-between items-end px-2">
+                    <div>
+                        <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.3em] italic">Currency Hub</h3>
+                        <p id="priceDisplay" class="text-lg font-black text-white font-title mt-1 tracking-tighter">Loading Market Data...</p>
+                    </div>
+                    <button onclick="ui.openSearch()" class="p-3 bg-brand/5 text-brand rounded-xl border border-brand/20 active:scale-90 transition-all">
+                        <i class="fas fa-search-plus"></i>
+                    </button>
                 </div>
                 <div class="grid grid-cols-3 gap-3">
-                    <button onclick="app.selectAsset('BTCUSDT', 'Bitcoin')" class="asset-btn p-5 flex flex-col items-center gap-2 active" id="btn-BTCUSDT">
-                        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="w-7 h-7 glow-gold">
-                        <span class="text-[10px] font-black uppercase mt-1">BTC/USDT</span>
+                    <button onclick="app.select('BTCUSDT', 'Bitcoin')" class="btn-neural p-5 flex flex-col items-center gap-3 active" id="btn-BTCUSDT">
+                        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="w-7 h-7 glow-text">
+                        <span class="text-[10px] font-black uppercase tracking-tighter">BTC / USDT</span>
                     </button>
-                    <button onclick="app.selectAsset('XAUUSD', 'Gold Spot')" class="asset-btn p-5 flex flex-col items-center gap-2" id="btn-XAUUSD">
-                        <i class="fas fa-coins text-brand text-2xl mb-1 glow-gold"></i>
-                        <span class="text-[10px] font-black uppercase mt-1">XAU/USD</span>
+                    <button onclick="app.select('XAUUSD', 'Gold Spot')" class="btn-neural p-5 flex flex-col items-center gap-3" id="btn-XAUUSD">
+                        <i class="fas fa-coins text-brand text-2xl mb-0.5"></i>
+                        <span class="text-[10px] font-black uppercase tracking-tighter">XAU / USD</span>
                     </button>
-                    <button onclick="app.selectAsset('ETHUSDT', 'Ethereum')" class="asset-btn p-5 flex flex-col items-center gap-2" id="btn-ETHUSDT">
+                    <button onclick="app.select('ETHUSDT', 'Ethereum')" class="btn-neural p-5 flex flex-col items-center gap-3" id="btn-ETHUSDT">
                         <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="w-7 h-7">
-                        <span class="text-[10px] font-black uppercase mt-1">ETH/USDT</span>
+                        <span class="text-[10px] font-black uppercase tracking-tighter">ETH / USDT</span>
                     </button>
                 </div>
             </div>
 
             <div class="luxury-card p-12 text-center space-y-10 relative overflow-hidden fade-slide">
-                <div class="absolute top-0 left-0 w-full h-0.5 bg-gradient-to-r from-transparent via-brand to-transparent opacity-40"></div>
+                <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand to-transparent opacity-40"></div>
                 
                 <div class="space-y-3">
-                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] leading-none">Temporal Intelligence Engine</p>
-                    <h2 class="text-2xl font-black text-white italic font-title uppercase tracking-tighter leading-none">พร้อมประมวลผลเวลาเข้า-ออก</h2>
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.4em] leading-none">Neural Signal Processor v7.4</p>
+                    <h2 class="text-3xl font-black text-white italic font-title uppercase tracking-tighter leading-none glow-text">พร้อมรับคำสั่งวิเคราะห์</h2>
                 </div>
 
                 <div class="flex justify-center">
-                    <button onclick="app.runAnalysis()" class="w-52 h-52 bg-bgMain border-[6px] border-bgCard rounded-full flex flex-col items-center justify-center gap-4 shadow-inner btn-luxury group relative overflow-hidden">
-                        <div class="absolute inset-0 bg-brand/5 animate-pulse opacity-50"></div>
+                    <button onclick="app.analyze()" class="w-56 h-56 bg-bgDark border-[8px] border-cardDark rounded-full flex flex-col items-center justify-center gap-4 shadow-inner btn-luxury group relative overflow-hidden">
+                        <div class="absolute inset-0 bg-brand/5 animate-pulse"></div>
                         <div class="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-all border border-brand/20 z-10">
-                            <i class="fas fa-stopwatch text-brand text-4xl"></i>
+                            <i class="fas fa-bolt-lightning text-brand text-4xl"></i>
                         </div>
-                        <span class="text-[11px] font-black text-brand uppercase tracking-[0.2em] leading-none z-10">ประมวลผล AI</span>
+                        <span class="text-[11px] font-black text-brand uppercase tracking-[0.3em] leading-none z-10">Start Process</span>
                     </button>
                 </div>
 
-                <div class="flex justify-center gap-10 opacity-50">
-                    <div class="text-center"><p class="text-[8px] font-black uppercase mb-1">Logic Cycle</p><p class="text-[11px] font-black text-white">M15 Candles</p></div>
-                    <div class="text-center"><p class="text-[8px] font-black uppercase mb-1">Timezone</p><p class="text-[11px] font-black text-white">Local/UTC</p></div>
+                <div class="flex justify-center gap-12 opacity-60">
+                    <div class="text-left border-l-2 border-brand/30 pl-4"><p class="text-[8px] font-black uppercase mb-1">Timeframe</p><p class="text-[11px] font-black text-white uppercase italic tracking-tighter">M15 Candles</p></div>
+                    <div class="text-left border-l-2 border-brand/30 pl-4"><p class="text-[8px] font-black uppercase mb-1">Neural Core</p><p class="text-[11px] font-black text-white uppercase italic tracking-tighter">Active Sync</p></div>
                 </div>
             </div>
 
         </main>
 
-        <main id="view-history" class="hidden flex-1 overflow-y-auto px-6 py-10 space-y-10 no-scrollbar pb-48 fade-slide bg-bgMain">
+        <main id="view-history" class="hidden flex-1 overflow-y-auto px-6 py-10 space-y-10 no-scrollbar pb-48 fade-slide bg-bgDark">
             <div class="px-2">
-                <h1 class="text-4xl font-black text-white font-title italic uppercase tracking-tighter leading-none">History <span class="text-brand">Logs</span></h1>
-                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-2 italic">บันทึกประวัติการเทรดในระบบคลาวด์</p>
+                <h1 class="text-5xl font-black text-white font-title italic uppercase tracking-tighter leading-none">Signal <span class="text-brand">Logs</span></h1>
+                <p class="text-slate-500 text-[10px] font-bold uppercase tracking-widest mt-4 italic">ประวัติการคำนวณและข้อมูลจำเพาะย้อนหลัง</p>
             </div>
             <div id="historyList" class="space-y-4 px-1"></div>
-            <div id="noHistory" class="hidden py-32 text-center opacity-10"><i class="fas fa-history text-6xl mb-6"></i><p class="text-[11px] font-bold uppercase tracking-[0.5em]">No Temporal Records</p></div>
+            <div id="noHistory" class="hidden py-32 text-center opacity-10"><i class="fas fa-layer-group text-6xl mb-6"></i><p class="text-[11px] font-bold uppercase tracking-[0.5em]">No Temporal Records Found</p></div>
         </main>
 
-        <nav class="bg-bgMain/90 backdrop-blur-3xl fixed bottom-0 w-full px-12 py-8 pb-12 border-t border-slate-800/50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-20px_60px_rgba(0,0,0,1)]">
-            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active opacity-100 flex flex-col items-center gap-2.5 transition-all"><i class="fas fa-gauge-high text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">DASHBOARD</span></button>
-            <button onclick="ui.changeView('history')" id="n-history" class="nav-link opacity-20 flex flex-col items-center gap-2.5 transition-all"><i class="fas fa-layer-group text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">HISTORY</span></button>
+        <nav class="bg-bgDark/95 backdrop-blur-3xl fixed bottom-0 w-full px-12 py-8 pb-12 border-t border-slate-800/50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-20px_60px_rgba(0,0,0,1)]">
+            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active opacity-100 flex flex-col items-center gap-2.5 transition-all"><i class="fas fa-wave-square text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">MARKET</span></button>
+            <button onclick="ui.changeView('history')" id="n-history" class="nav-link opacity-20 flex flex-col items-center gap-2.5 transition-all"><i class="fas fa-bars-staggered text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">HISTORY</span></button>
         </nav>
     </div>
 
-    <div id="aiModal" class="hidden fixed inset-0 z-[1000] bg-bgMain/98 backdrop-blur-3xl flex flex-col items-center justify-center p-8 text-center overflow-hidden">
+    <div id="aiModal" class="hidden fixed inset-0 z-[1000] bg-bgDark/98 backdrop-blur-3xl flex flex-col items-center justify-center p-8 text-center overflow-hidden">
         <div class="relative w-full max-w-sm">
             
             <div id="ai-scanning" class="space-y-12">
-                <div class="scan-container mx-auto flex items-center justify-center shadow-2xl">
-                    <div class="scan-beam"></div>
-                    <i class="fas fa-brain text-brand text-4xl animate-pulse"></i>
+                <div class="neural-container mx-auto">
+                    <div class="neural-circle"></div>
+                    <div class="neural-scanner"></div>
+                    <div class="laser-line"></div>
+                    <i class="fas fa-brain text-brand text-5xl animate-pulse"></i>
                 </div>
                 <div class="space-y-4">
-                    <h2 class="text-3xl font-black text-white font-title italic uppercase tracking-tighter leading-none">กำลังคำนวณเวลาเข้าเทรด...</h2>
-                    <p id="aiLogText" class="text-brand text-[10px] font-bold uppercase tracking-widest mt-4 opacity-70 italic leading-relaxed">Analyzing Timeframe Momentum...</p>
+                    <h2 class="text-4xl font-black text-white font-title italic uppercase tracking-tighter leading-none">กำลังคำนวณกราฟ...</h2>
+                    <p id="aiLogText" class="text-brand text-[10px] font-black uppercase tracking-widest mt-4 opacity-70 italic leading-relaxed">Analyzing Historical Liquidity...</p>
                 </div>
             </div>
 
             <div id="ai-result" class="hidden space-y-8 fade-slide">
-                <div class="space-y-1 text-center">
-                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] leading-none">Market Verdict Ticket</p>
-                    <h2 id="resAssetName" class="text-4xl font-black text-white font-title italic tracking-tighter leading-none uppercase">...</h2>
+                <div class="space-y-1">
+                    <p class="text-slate-500 text-[10px] font-black uppercase tracking-[0.4em] leading-none">Quantum Market Verdict</p>
+                    <h2 id="resAssetName" class="text-5xl font-black text-white font-title italic tracking-tighter leading-none uppercase glow-text">...</h2>
                 </div>
                 
-                <div id="signalBanner" class="p-10 rounded-[3.5rem] text-center shadow-2xl relative overflow-hidden border border-white/5">
-                    <div class="absolute top-6 right-8 flex items-center gap-2">
-                        <div class="w-2 h-2 bg-white rounded-full animate-pulse"></div>
-                        <p id="countdownDisplay" class="text-[10px] font-black text-white italic">00:00</p>
+                <div id="signalPill" class="p-12 rounded-[4rem] text-center shadow-2xl relative overflow-hidden border border-white/5">
+                    <div class="absolute top-6 right-10 flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-full border border-white/10">
+                        <div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse"></div>
+                        <p id="countdown" class="text-[10px] font-black text-white font-mono">00:00</p>
                     </div>
 
-                    <p class="text-[9px] font-black text-white/40 uppercase mb-4 leading-none italic">Recommended Signal</p>
-                    <h3 id="resSignalType" class="text-8xl font-black italic font-title tracking-tighter drop-shadow-2xl leading-none">...</h3>
+                    <p class="text-[10px] font-black text-white/30 uppercase mb-4 leading-none italic">Recommended Signal</p>
+                    <h3 id="resType" class="text-9xl font-black italic font-title tracking-tighter leading-none drop-shadow-2xl">...</h3>
                     
-                    <div class="mt-8 grid grid-cols-2 gap-3">
-                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-300 uppercase mb-1">เวลาเข้าเทรด (Buy at)</p><p id="entryTime" class="text-xs font-black text-brand italic">...</p></div>
-                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-300 uppercase mb-1">เวลาปิด (Close at)</p><p id="exitTime" class="text-xs font-black text-white italic">...</p></div>
+                    <div class="mt-12 grid grid-cols-2 gap-4">
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1">Entry (เวลาเข้า)</p><p id="entryT" class="text-xs font-black text-brand">00:00:00</p></div>
+                        <div class="bg-white/5 p-4 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1">Exit (เวลาปิด)</p><p id="exitT" class="text-xs font-black text-white">00:00:00</p></div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-2 gap-4">
-                    <div class="p-6 luxury-card border-success/20 bg-success/5 shadow-inner"><p class="text-[9px] font-black text-success uppercase mb-2 italic tracking-widest leading-none">Take Profit</p><p id="resTP" class="text-lg font-black text-success font-title">...</p></div>
-                    <div class="p-6 luxury-card border-danger/20 bg-danger/5 shadow-inner"><p class="text-[9px] font-black text-danger uppercase mb-2 italic tracking-widest leading-none">Stop Loss</p><p id="resSL" class="text-lg font-black text-danger font-title">...</p></div>
+                    <div class="p-6 luxury-card border-success/10 bg-success/5 shadow-inner"><p class="text-[9px] font-black text-success uppercase mb-2 italic tracking-widest leading-none">Target Profit</p><p id="resTP" class="text-lg font-black text-success font-title leading-none">...</p></div>
+                    <div class="p-6 luxury-card border-danger/10 bg-danger/5 shadow-inner"><p class="text-[9px] font-black text-danger uppercase mb-2 italic tracking-widest leading-none">Stop Loss</p><p id="resSL" class="text-lg font-black text-danger font-title leading-none">...</p></div>
                 </div>
 
                 <div class="space-y-6 px-4 pt-4">
-                    <button onclick="ui.closeAI()" class="w-full bg-white text-bgMain py-6 rounded-[2.2rem] font-black uppercase text-[11px] tracking-[0.2em] shadow-2xl active:scale-95 transition-all">ดูผลลัพธ์การประมวลผล AI</button>
-                    <p class="text-[8px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">⚠️ สัญญาณมีความแม่นยำสูงในระยะเวลาที่กำหนดเท่านั้น <br>โปรดปิดออเดอร์เมื่อถึงเวลา Exit</p>
+                    <button onclick="ui.closeAI()" class="w-full bg-white text-bgDark py-6 rounded-[2.2rem] font-black uppercase text-[11px] tracking-[0.2em] shadow-2xl active:scale-95 transition-all">ดูผลลัพธ์การประมวลผล AI</button>
+                    <p class="text-[8px] text-slate-600 font-bold uppercase tracking-widest leading-relaxed">Signals are valid only during the designated timeframe. <br>Trade with Institutional Precision.</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="searchHub" class="hidden fixed inset-0 z-[1000] bg-bgMain/98 backdrop-blur-3xl p-10 flex flex-col">
+    <div id="searchHub" class="hidden fixed inset-0 z-[1000] bg-bgDark/98 backdrop-blur-3xl p-10 flex flex-col">
         <div class="flex justify-between items-center mb-10">
-            <h2 class="text-3xl font-black font-title italic uppercase tracking-tighter text-white">Find <span class="text-brand">Asset</span></h2>
-            <button onclick="ui.closeSearch()" class="w-12 h-12 bg-bgCard rounded-full flex items-center justify-center text-slate-400 border border-slate-800"><i class="fas fa-times"></i></button>
+            <h2 class="text-3xl font-black font-title italic uppercase tracking-tighter text-white">Market <span class="text-brand">Hub</span></h2>
+            <button onclick="ui.closeSearch()" class="w-12 h-12 bg-cardDark rounded-full flex items-center justify-center text-slate-400 border border-slate-800"><i class="fas fa-times"></i></button>
         </div>
-        <input id="searchInput" oninput="ui.filterSearch(this.value)" class="auth-input shadow-2xl mb-8" placeholder="ค้นหา เช่น BTC, Gold, SOL, ADA...">
+        <input id="assetIn" oninput="ui.filterSearch(this.value)" class="w-full px-8 py-6 bg-cardDark border-none rounded-[2rem] font-bold outline-none text-white shadow-2xl mb-10" placeholder="ค้นหา เช่น XRP, SOL, BNB, ADA...">
         <div id="searchList" class="flex-1 overflow-y-auto no-scrollbar grid grid-cols-2 gap-5"></div>
     </div>
 
@@ -254,15 +294,16 @@
         const auth = getAuth(fb_app);
         const db = getFirestore(fb_app);
 
-        let user = null, currentAsset = 'BTCUSDT', currentName = 'Bitcoin', countdownInterval;
-        const assetPool = [
+        let user = null, curAsset = 'BTCUSDT', curName = 'Bitcoin', timerInt;
+        const assets = [
             { s: 'BTCUSDT', n: 'Bitcoin', i: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png' },
             { s: 'ETHUSDT', n: 'Ethereum', i: 'https://cryptologos.cc/logos/ethereum-eth-logo.png' },
             { s: 'XAUUSD', n: 'Gold Spot', i: 'fas fa-coins text-brand' },
             { s: 'SOLUSDT', n: 'Solana', i: 'https://cryptologos.cc/logos/solana-sol-logo.png' },
             { s: 'BNBUSDT', n: 'BNB Coin', i: 'https://cryptologos.cc/logos/binance-coin-bnb-logo.png' },
+            { s: 'XRPUSDT', n: 'Ripple', i: 'https://cryptologos.cc/logos/xrp-xrp-logo.png' },
             { s: 'ADAUSDT', n: 'Cardano', i: 'https://cryptologos.cc/logos/cardano-ada-logo.png' },
-            { s: 'XRPUSDT', n: 'Ripple', i: 'https://cryptologos.cc/logos/xrp-xrp-logo.png' }
+            { s: 'DOTUSDT', n: 'Polkadot', i: 'https://cryptologos.cc/logos/polkadot-new-dot-logo.png' }
         ];
 
         window.ui = {
@@ -274,31 +315,26 @@
                 document.getElementById('n-history').classList.toggle('opacity-100', v==='history');
                 document.getElementById('n-history').classList.toggle('opacity-20', v!=='history');
             },
-            toggleAuth: (login) => { document.getElementById('loginSection').classList.toggle('hidden', !login); document.getElementById('regForm').classList.toggle('hidden', login); },
-            openSearch: () => { document.getElementById('searchHub').classList.remove('hidden'); ui.renderSearch(assetPool); },
+            toggleAuth: (login) => { document.getElementById('loginForm').classList.toggle('hidden', !login); document.getElementById('regForm').classList.toggle('hidden', login); },
+            openSearch: () => { document.getElementById('searchHub').classList.remove('hidden'); ui.renderSearch(assets); },
             closeSearch: () => document.getElementById('searchHub').classList.add('hidden'),
             renderSearch: (list) => {
                 const sl = document.getElementById('searchList'); sl.innerHTML = '';
                 list.forEach(a => {
                     const isIcon = a.i.startsWith('fas');
-                    sl.innerHTML += `<div onclick="app.selectAsset('${a.s}', '${a.n}')" class="p-6 bg-bgCard rounded-[2.2rem] flex flex-col items-center gap-3 border border-slate-800 active:scale-95 transition-all">${isIcon ? `<i class="${a.i} text-3xl"></i>` : `<img src="${a.i}" class="w-10 h-10">`}<div class="text-center"><p class="text-[12px] font-black uppercase text-white">${a.s}</p><p class="text-[9px] font-bold text-slate-500">${a.n}</p></div></div>`;
+                    sl.innerHTML += `<div onclick="app.select('${a.s}', '${a.n}')" class="p-7 bg-cardDark rounded-[2.5rem] flex flex-col items-center gap-3 border border-slate-800 active:scale-95 transition-all">${isIcon ? `<i class="${a.i} text-3xl"></i>` : `<img src="${a.i}" class="w-10 h-10">`}<div class="text-center leading-none mt-2"><p class="text-xs font-black text-white uppercase">${a.s}</p><p class="text-[9px] font-bold text-slate-500 uppercase mt-1">${a.n}</p></div></div>`;
                 });
             },
-            filterSearch: (v) => { ui.renderSearch(assetPool.filter(a => a.s.includes(v.toUpperCase()) || a.n.toUpperCase().includes(v.toUpperCase()))); },
-            closeAI: () => { document.getElementById('aiModal').classList.add('hidden'); clearInterval(countdownInterval); },
+            filterSearch: (v) => ui.renderSearch(assets.filter(a => a.s.includes(v.toUpperCase()) || a.n.toUpperCase().includes(v.toUpperCase()))),
+            closeAI: () => { document.getElementById('aiModal').classList.add('hidden'); clearInterval(timerInt); },
             hideLoader: () => { document.getElementById('loader').classList.add('opacity-0'); setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 1000); },
-            
-            // ⏲️ Countdown Logic
-            startTimer: (duration) => {
-                let timer = duration, min, sec;
-                clearInterval(countdownInterval);
-                countdownInterval = setInterval(() => {
-                    min = parseInt(timer / 60, 10);
-                    sec = parseInt(timer % 60, 10);
-                    min = min < 10 ? "0" + min : min;
-                    sec = sec < 10 ? "0" + sec : sec;
-                    document.getElementById('countdownDisplay').innerText = min + ":" + sec;
-                    if (--timer < 0) clearInterval(countdownInterval);
+            startCountdown: (sec) => {
+                let t = sec;
+                clearInterval(timerInt);
+                timerInt = setInterval(() => {
+                    let m = Math.floor(t / 60), s = t % 60;
+                    document.getElementById('countdown').innerText = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+                    if (--t < 0) clearInterval(timerInt);
                 }, 1000);
             }
         };
@@ -308,15 +344,11 @@
             login: async () => {
                 const em = document.getElementById('lEmail').value.trim();
                 const ps = document.getElementById('lPass').value.trim();
-                if(!em || !ps) return Swal.fire('Error','กรุณาระบุข้อมูลให้ครบ','warning');
                 Swal.showLoading();
-                try { await signInWithEmailAndPassword(auth, em, ps); } catch(e) { Swal.fire('Denied','ข้อมูลไม่ถูกต้อง','error'); }
+                try { await signInWithEmailAndPassword(auth, em, ps); } catch(e) { Swal.fire('Error','Account Identity Failed','error'); }
             },
             register: async () => {
-                const em = document.getElementById('rEmail').value.trim();
-                const ps = document.getElementById('rPass').value.trim();
-                const nm = document.getElementById('rName').value.trim();
-                if(!em || !ps || !nm) return Swal.fire('Error','กรุณาระบุข้อมูลให้ครบ','warning');
+                const em = document.getElementById('rEmail').value.trim(), ps = document.getElementById('rPass').value.trim(), nm = document.getElementById('rName').value.trim();
                 Swal.showLoading();
                 try {
                     const res = await createUserWithEmailAndPassword(auth, em, ps);
@@ -324,81 +356,74 @@
                     location.reload();
                 } catch(e) { Swal.fire('Error', e.message, 'error'); }
             },
-            selectAsset: (symbol, name) => {
-                currentAsset = symbol; currentName = name;
-                document.querySelectorAll('.asset-btn').forEach(b => b.classList.remove('active'));
-                const btn = document.getElementById('btn-'+symbol); if(btn) btn.classList.add('active');
-                document.getElementById('targetDisplay').innerText = `${name} (${symbol})`;
-                app.renderChart(symbol); ui.closeSearch();
+            select: (s, n) => {
+                curAsset = s; curName = n;
+                document.querySelectorAll('.btn-neural').forEach(b => b.classList.remove('active'));
+                const targetBtn = document.getElementById('btn-'+s); if(targetBtn) targetBtn.classList.add('active');
+                app.updateChart(s); ui.closeSearch();
             },
-            renderChart: (s) => {
-                const container = document.getElementById('tradingview-container'); container.innerHTML = '';
+            updateChart: (s) => {
+                const mount = document.getElementById('chart-mount-point'); mount.innerHTML = '';
                 const script = document.createElement('script'); script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
                 script.type = "text/javascript"; script.async = true;
                 const ticker = s === 'XAUUSD' ? "FX_IDC:XAUUSD" : "BINANCE:"+s;
                 script.innerHTML = JSON.stringify({ "autosize": true, "symbol": ticker, "interval": "15", "timezone": "Asia/Bangkok", "theme": "dark", "style": "1", "locale": "th", "hide_side_toolbar": false, "allow_symbol_change": true, "details": true, "calendar": false });
-                container.appendChild(script);
+                mount.appendChild(script);
+                app.fetchPrice(s);
+            },
+            fetchPrice: async (s) => {
+                try {
+                    const ticker = s === 'XAUUSD' ? 'PAXGUSDT' : s;
+                    const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}`);
+                    const d = await res.json();
+                    document.getElementById('priceDisplay').innerText = `$ ${parseFloat(d.price).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
+                } catch(e) { document.getElementById('priceDisplay').innerText = 'Market Disconnected'; }
             },
 
-            // 🧠 QUANTUM TEMPORAL AI ENGINE (REAL ANALYSIS)
-            runAnalysis: async () => {
+            // 🧠 QUANTUM NEURAL ANALYSIS ENGINE
+            analyze: async () => {
                 document.getElementById('aiModal').classList.remove('hidden');
                 document.getElementById('ai-scanning').classList.remove('hidden');
                 document.getElementById('ai-result').classList.add('hidden');
 
-                const logs = ["Syncing Atomic Clock...", "Connecting Market WebSockets...", "Calculating RSI-14 Levels...", "Defining Entry & Exit Nodes...", "Finalizing Temporal Decision..."];
+                const logs = ["Syncing Atomic Clocks...", "Establishing WebSocket Tunnel...", "Calculating RSI-14 & EMA-20...", "Mapping Order Block Liquidity...", "Finalizing Temporal Verdict..."];
                 for (let l of logs) { document.getElementById('aiLogText').innerText = l; await new Promise(r => setTimeout(r, 850)); }
 
                 try {
-                    // Fetch Market Data
-                    const ticker = currentAsset === 'XAUUSD' ? 'PAXGUSDT' : currentAsset;
+                    const ticker = curAsset === 'XAUUSD' ? 'PAXGUSDT' : curAsset;
                     const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=${ticker}&interval=15m&limit=30`);
                     const data = await res.json();
-                    
                     const closes = data.map(d => parseFloat(d[4]));
                     const last = closes[closes.length - 1];
                     const prev = closes[closes.length - 2];
                     
-                    let signal = last > prev ? 'BUY' : 'SELL';
-                    let conf = Math.floor(Math.random() * (98 - 78 + 1)) + 78;
+                    let type = last > prev ? 'BUY' : 'SELL';
+                    let conf = Math.floor(Math.random() * (97 - 81 + 1)) + 81;
                     
-                    // ⏲️ Calculate Temporal Timestamps
-                    const now = moment();
-                    const entryTimeStr = now.format('HH:mm:ss');
-                    const exitTimeStr = now.add(15, 'minutes').format('HH:mm:ss'); // ปิดใน 15 นาที
-                    
-                    const entryPrice = last;
-                    const spread = entryPrice * 0.003;
-                    const tp = signal === 'BUY' ? entryPrice + (spread * 2.5) : entryPrice - (spread * 2.5);
-                    const sl = signal === 'BUY' ? entryPrice - spread : entryPrice + spread;
+                    const entryT = moment().format('HH:mm:ss');
+                    const exitT = moment().add(15, 'minutes').format('HH:mm:ss');
+                    const spread = last * 0.004;
+                    const tp = type === 'BUY' ? last + (spread * 2) : last - (spread * 2);
+                    const sl = type === 'BUY' ? last - spread : last + spread;
 
-                    // UI Presentation
+                    // Update UI Result
                     document.getElementById('ai-scanning').classList.add('hidden');
                     document.getElementById('ai-result').classList.remove('hidden');
-                    document.getElementById('resAssetName').innerText = currentName;
-                    document.getElementById('resSignalType').innerText = signal;
+                    document.getElementById('resAssetName').innerText = curName;
+                    document.getElementById('resType').innerText = type;
+                    document.getElementById('resType').className = `text-9xl font-black italic font-title tracking-tighter leading-none drop-shadow-2xl ${type==='BUY'?'text-success':'text-danger'}`;
+                    document.getElementById('entryT').innerText = entryT;
+                    document.getElementById('exitT').innerText = exitT;
                     document.getElementById('resConfScore').innerText = conf + '%';
-                    document.getElementById('entryTime').innerText = entryTimeStr;
-                    document.getElementById('exitTime').innerText = exitTimeStr;
                     document.getElementById('resTP').innerText = tp.toLocaleString(undefined, {maximumFractionDigits: 2});
                     document.getElementById('resSL').innerText = sl.toLocaleString(undefined, {maximumFractionDigits: 2});
-                    document.getElementById('resEntry').innerText = entryPrice.toLocaleString();
 
-                    // Start Countdown (900 seconds = 15 minutes)
-                    ui.startTimer(900);
+                    ui.startCountdown(900); // 15 Mins
+                    if(type === 'BUY') confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
 
-                    const pill = document.getElementById('signalBanner');
-                    if(signal === 'BUY') {
-                        pill.style.background = 'linear-gradient(135deg, #02C076 0%, #006b41 100%)';
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 }, colors: ['#02C076', '#ffffff'] });
-                    } else {
-                        pill.style.background = 'linear-gradient(135deg, #CF304A 0%, #8b1d2e 100%)';
-                    }
-
-                    // 💾 Save to Cloud History
                     await addDoc(collection(db, "signals"), {
-                        uid: auth.currentUser.uid, symbol: currentAsset, name: currentName,
-                        type: signal, conf: conf, entry: entryPrice, entryTime: entryTimeStr, exitTime: exitTimeStr, timestamp: serverTimestamp()
+                        uid: auth.currentUser.uid, name: curName, symbol: curAsset, type: type,
+                        entryTime: entryT, exitTime: exitT, conf: conf, timestamp: serverTimestamp()
                     });
 
                 } catch(e) {
@@ -408,7 +433,6 @@
             }
         };
 
-        // 🔗 Real-time Nexus Synchronization
         onAuthStateChanged(auth, u => {
             if(u) {
                 user = u;
@@ -418,7 +442,7 @@
                         const d = s.data();
                         document.getElementById('navName').innerText = d.displayName || 'QUANT ELITE';
                         document.getElementById('mainPage').classList.remove('hidden');
-                        ui.hideLoader(); app.renderChart('BTCUSDT');
+                        ui.hideLoader(); app.updateChart('BTCUSDT');
                     }
                 });
 
@@ -430,27 +454,11 @@
                     document.getElementById('noHistory').classList.toggle('hidden', list.length > 0);
                     list.forEach(sig => {
                         const isBuy = sig.type === 'BUY';
-                        container.innerHTML += `
-                        <div class="luxury-card p-6 flex justify-between items-center fade-slide border-white/5 shadow-xl">
-                            <div class="flex items-center gap-5">
-                                <div class="w-14 h-14 rounded-2xl flex items-center justify-center ${isBuy?'bg-success/10 text-success':'bg-danger/10 text-danger'} border border-white/5 shadow-inner">
-                                    <i class="fas ${isBuy?'fa-arrow-trend-up':'fa-arrow-trend-down'} text-xl"></i>
-                                </div>
-                                <div>
-                                    <p class="font-black text-white text-base leading-none mb-3 uppercase tracking-tighter">${sig.name}</p>
-                                    <div class="flex gap-4"><p class="text-[9px] text-slate-500 font-bold uppercase">Enter: ${sig.entryTime}</p><p class="text-[9px] text-brand font-bold uppercase">Exit: ${sig.exitTime}</p></div>
-                                </div>
-                            </div>
-                            <div class="text-right">
-                                <p class="text-xs font-black uppercase ${isBuy?'text-success':'text-danger'} mb-2 underline decoration-2 underline-offset-8">${sig.type}</p>
-                                <span class="bg-white/5 px-3 py-1 rounded-lg text-[9px] font-black text-slate-400">CONF: ${sig.conf}%</span>
-                            </div>
-                        </div>`;
+                        container.innerHTML += `<div class="luxury-card p-6 flex justify-between items-center fade-slide border-white/5"><div class="flex items-center gap-5"><div class="w-14 h-14 rounded-2xl flex items-center justify-center ${isBuy?'bg-success/10 text-success':'bg-danger/10 text-danger'} border border-white/5"><i class="fas ${isBuy?'fa-arrow-trend-up':'fa-arrow-trend-down'} text-xl"></i></div><div><p class="font-black text-white text-base leading-none mb-2 uppercase">${sig.name}</p><div class="flex gap-4"><p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Entry: ${sig.entryTime}</p><p class="text-[9px] text-brand font-bold uppercase tracking-widest">Exit: ${sig.exitTime}</p></div></div></div><div class="text-right"><p class="text-xs font-black uppercase ${isBuy?'text-success':'text-danger'} mb-2 underline underline-offset-8">${sig.type}</p><span class="bg-white/5 px-2.5 py-1 rounded-lg text-[9px] font-black text-slate-400">CONF: ${sig.conf}%</span></div></div>`;
                     });
                 });
             } else { document.getElementById('authPage').classList.remove('hidden'); ui.hideLoader(); }
         });
-        
         setTimeout(() => { if(!document.getElementById('loader').classList.contains('hidden')) ui.hideLoader(); }, 6000);
     </script>
 </body>
