@@ -3,280 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RS INFINITY - AI SYSTEM</title>
+    <title>RS INFINITY - PRO TRADER</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;600&family=Rajdhani:wght@500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        'gold-light': '#FEDC56',
+                        'gold-dark': '#A67C00',
+                        dark: '#050505',
+                        glass: 'rgba(20, 20, 20, 0.85)',
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* --- VISUAL IDENTITY: Premium Dark Tech --- */
-        :root {
-            --gold-primary: #FFD700;
-            --gold-dark: #B8860B;
-            --bg-dark: #050505;
-            --glass-bg: rgba(20, 20, 20, 0.85);
-            --glass-border: rgba(255, 215, 0, 0.2);
-        }
-
+        /* --- CORE STYLES --- */
         body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg-dark);
+            background-color: #000;
             background-image: 
-                linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)),
-                repeating-linear-gradient(45deg, #111 0, #111 1px, transparent 0, transparent 50%);
-            background-size: 20px 20px;
-            color: #ffffff;
+                radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 70%),
+                repeating-linear-gradient(45deg, #0a0a0a 0, #0a0a0a 1px, transparent 0, transparent 50%);
+            background-size: 100% 100%, 20px 20px;
+            color: #fff;
             overflow-x: hidden;
-            height: 100vh;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Glassmorphism */
+        /* Glassmorphism Ultra */
         .glass-panel {
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid var(--glass-border);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* Typography */
-        .font-tech { font-family: 'Rajdhani', sans-serif; }
-        .text-gold { 
-            background: linear-gradient(to bottom, #FFD700, #FDB931);
+        .glass-gold {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0,0,0,0));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        /* Text Gradients */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #D4AF37, #FEDC56, #D4AF37);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            text-shadow: 0px 0px 10px rgba(255, 215, 0, 0.3);
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
         }
 
-        /* Interactive Elements */
-        .btn-scan {
-            background: linear-gradient(135deg, #FFD700, #B8860B);
-            animation: pulse-gold 2s infinite;
-        }
-        .btn-click:active { transform: scale(0.95); transition: transform 0.1s; }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* Custom Animations */
+        .btn-press:active { transform: scale(0.96); transition: 0.1s; }
         
-        @keyframes pulse-gold {
-            0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 215, 0, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        .scan-circle {
+            background: conic-gradient(from 0deg, transparent 0%, #D4AF37 50%, transparent 100%);
+            animation: spin 2s linear infinite;
+        }
+        
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Loader */
+        .loader-orbit {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 2px solid #333; border-top-color: #D4AF37;
+            animation: spin 1s infinite linear;
         }
 
-        /* Helper Classes */
+        /* Scrollbar Hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
         .hidden-page { display: none !important; }
-        .grayscale-mode { filter: grayscale(100%); pointer-events: none; opacity: 0.5; }
-        .loader-ring {
-            border: 4px solid #333;
-            border-top: 4px solid var(--gold-primary);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* Bottom Nav */
-        .bottom-nav {
-            background: rgba(10, 10, 10, 0.95);
-            border-top: 1px solid var(--glass-border);
-            border-top-left-radius: 20px;
-            border-top-right-radius: 20px;
-        }
-        .nav-item.active { color: var(--gold-primary); }
     </style>
 </head>
-<body class="flex flex-col h-screen">
+<body class="flex flex-col h-screen text-gray-100 font-sans">
 
-    <div id="loading-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-black">
-        <div class="text-center">
-            <div class="loader-ring mx-auto mb-4"></div>
-            <h1 class="text-2xl font-bold tracking-widest text-gold italic">CONNECTING...</h1>
-            <p id="loading-text" class="text-xs text-gray-500 mt-2">Connecting to Firestore</p>
-        </div>
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
+        <div class="loader-orbit mb-4"></div>
+        <div class="text-xl font-bold italic tracking-widest text-gradient-gold">SYSTEM LOADING</div>
+        <p id="loading-text" class="text-xs text-gray-500 mt-2 font-tech">Connecting to Server...</p>
     </div>
 
-    <div id="auth-screen" class="hidden-page fixed inset-0 z-40 flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm">
-        <div class="glass-panel w-full max-w-sm p-8 rounded-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
+    <div id="auth-screen" class="hidden-page fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="w-full max-w-sm glass-panel p-8 rounded-3xl relative overflow-hidden border-t border-gold/20">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gold/20 blur-[50px] rounded-full"></div>
             
-            <h2 id="auth-title" class="text-3xl font-bold text-center mb-6 italic text-gold">LOGIN</h2>
+            <h2 class="text-3xl font-bold text-center mb-1 text-white">WELCOME</h2>
+            <p class="text-center text-gray-400 text-sm mb-8">เข้าสู่ระบบเพื่อใช้งาน AI Scanner</p>
             
             <form id="login-form" class="space-y-4">
-                <div>
-                    <label class="text-xs text-gray-400">Email</label>
-                    <input type="email" id="email" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-yellow-500 outline-none" placeholder="example@email.com" required>
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center gap-3">
+                    <i class="fa-solid fa-envelope text-gold/70 ml-2"></i>
+                    <input type="email" id="email" class="bg-transparent w-full outline-none text-white placeholder-gray-500" placeholder="Email Address" required>
                 </div>
-                <div>
-                    <label class="text-xs text-gray-400">Password</label>
-                    <input type="password" id="password" class="w-full bg-black/50 border border-gray-700 rounded-lg p-3 text-white focus:border-yellow-500 outline-none" placeholder="••••••••" required>
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center gap-3">
+                    <i class="fa-solid fa-lock text-gold/70 ml-2"></i>
+                    <input type="password" id="password" class="bg-transparent w-full outline-none text-white placeholder-gray-500" placeholder="Password" required>
                 </div>
-                <button type="submit" id="auth-btn" class="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold py-3 rounded-lg btn-click mt-4">เข้าสู่ระบบ</button>
+                
+                <button type="submit" class="w-full bg-gradient-to-r from-gold-dark to-gold text-black font-bold py-3.5 rounded-xl mt-4 btn-press shadow-lg shadow-gold/20">
+                    เข้าสู่ระบบ
+                </button>
             </form>
 
-            <div class="mt-6 text-center text-sm text-gray-400" id="auth-switch">
-                ยังไม่มีบัญชี? <span onclick="toggleAuthMode()" class="text-yellow-400 cursor-pointer underline">สมัครสมาชิก</span>
+            <div class="mt-6 text-center text-sm text-gray-400">
+                <span id="auth-mode-text">ยังไม่มีบัญชี?</span> 
+                <button onclick="toggleAuthMode()" class="text-gold font-medium ml-1 underline">สมัครสมาชิก</button>
             </div>
-            <div id="auth-error" class="text-red-500 text-xs text-center mt-2 hidden"></div>
+            <div id="auth-error" class="text-red-400 text-xs text-center mt-3 hidden"></div>
         </div>
     </div>
 
-    <div id="app-container" class="hidden-page flex-1 flex flex-col relative">
+    <div id="app-container" class="hidden-page flex-1 flex flex-col h-full relative">
         
-        <header class="flex justify-between items-center p-5 pt-8">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-bolt text-yellow-500"></i>
-                <h1 class="text-xl font-bold italic tracking-wide">RS <span class="text-gold">INFINITY</span></h1>
+        <header class="px-6 pt-10 pb-4 flex justify-between items-center z-20 bg-gradient-to-b from-black via-black/90 to-transparent">
+            <div>
+                <div class="text-[10px] text-gray-400 font-tech tracking-wider mb-[-2px]">AI TRADING SYSTEM</div>
+                <div class="text-xl font-bold italic tracking-wide text-white">RS <span class="text-gradient-gold">INFINITY</span></div>
             </div>
             <div class="flex items-center gap-3">
-                 <span id="header-status" class="text-[10px] px-2 py-1 rounded bg-gray-800 text-gray-400">CHECKING</span>
-                <div class="w-10 h-10 rounded-full bg-gray-800 border border-yellow-500/50 flex items-center justify-center overflow-hidden">
-                    <i class="fa-solid fa-user text-gray-400"></i>
+                <div id="status-pill" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-[10px] text-gray-300 font-medium">ONLINE</span>
                 </div>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto pb-24 px-4 relative">
+        <main class="flex-1 overflow-y-auto no-scrollbar pb-28 px-4 relative">
             
-            <div id="home-page" class="space-y-6">
-                <div class="glass-panel p-4 rounded-xl flex justify-between items-center">
-                    <div>
-                        <div class="text-xs text-gray-400">BTC/USDT</div>
-                        <div id="btc-price" class="text-2xl font-tech font-bold text-white">$...</div>
+            <div id="home-page" class="space-y-6 animate-fade-in">
+                
+                <div class="glass-panel p-1 rounded-2xl flex items-center justify-between pl-4 pr-1">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-gray-400">SELECTED ASSET</span>
+                        <div class="flex items-center gap-2 cursor-pointer" onclick="openSearchModal()">
+                            <span id="current-asset-name" class="font-bold text-lg text-white">BTC/USDT</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </div>
                     </div>
-                    <div class="text-right">
-                        <div class="text-xs text-gray-400">ETH/USDT</div>
-                        <div id="eth-price" class="text-lg font-tech font-bold text-white">$...</div>
-                    </div>
-                </div>
-
-                <div class="relative py-10 flex justify-center">
-                    <button id="scan-btn" onclick="openScannerModal()" class="btn-scan w-48 h-48 rounded-full flex flex-col items-center justify-center relative z-10 btn-click shadow-[0_0_30px_rgba(255,215,0,0.3)] border-4 border-black">
-                        <i class="fa-solid fa-fingerprint text-4xl text-black mb-2"></i>
-                        <span class="text-black font-bold text-lg">SCAN MARKET</span>
-                        <span class="text-black/70 text-xs">AI Processing</span>
+                    <button onclick="openSearchModal()" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-gold btn-press">
+                        <i class="fa-solid fa-magnifying-glass"></i>
                     </button>
-                    <div class="absolute inset-0 bg-yellow-500/10 blur-3xl rounded-full z-0 transform scale-75"></div>
                 </div>
 
-                <div id="expired-alert" class="hidden glass-panel p-4 rounded-xl border-red-500/50 bg-red-900/20 text-center animate-pulse">
-                    <i class="fa-solid fa-lock text-red-500 text-2xl mb-2"></i>
-                    <h3 class="text-red-400 font-bold">ACCOUNT EXPIRED</h3>
-                    <p class="text-xs text-gray-300 mt-1">กรุณาติดต่อแอดมินเพื่อเติมวันใช้งาน</p>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="glass-panel p-3 rounded-xl border-l-2 border-gold/50">
+                        <div class="text-[10px] text-gray-400">CURRENT PRICE</div>
+                        <div id="main-price" class="text-xl font-tech font-bold text-white">$...</div>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border-l-2 border-gray-600">
+                        <div class="text-[10px] text-gray-400">24H CHANGE</div>
+                        <div id="price-change" class="text-xl font-tech font-bold text-green-400">...%</div>
+                    </div>
+                </div>
+
+                <div class="py-6 flex flex-col items-center">
+                    <div class="relative w-64 h-64 flex items-center justify-center">
+                        <div class="absolute inset-0 border border-white/5 rounded-full"></div>
+                        <div class="absolute inset-4 border border-white/5 rounded-full"></div>
+                        <div class="absolute inset-0 rounded-full scan-circle opacity-20"></div>
+                        
+                        <button onclick="openTimeframeModal()" id="scan-btn" class="relative z-10 w-48 h-48 rounded-full bg-gradient-to-br from-gray-900 to-black border-2 border-gold/30 shadow-[0_0_40px_rgba(212,175,55,0.15)] flex flex-col items-center justify-center btn-press">
+                            <i class="fa-solid fa-fingerprint text-5xl text-gradient-gold mb-2"></i>
+                            <span class="text-white font-bold text-lg tracking-wide">SCAN AI</span>
+                            <span class="text-gray-500 text-[10px] font-tech uppercase mt-1">Tap to Analyze</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="text-center">
+                    <p class="text-xs text-gray-500">ระบบ AI วิเคราะห์แนวโน้มตลาดอัจฉริยะ</p>
+                    <p class="text-[10px] text-gray-600 mt-1">Powered by RS Infinity Neural Network</p>
                 </div>
             </div>
 
             <div id="chart-page" class="hidden-page h-full flex flex-col">
-                <div class="glass-panel p-2 mb-2 rounded-lg flex gap-2 overflow-x-auto">
-                    <button onclick="changeChart('BTCUSDT')" class="px-4 py-1 rounded bg-yellow-500/20 text-yellow-500 text-xs border border-yellow-500/50">BTC</button>
-                    <button onclick="changeChart('ETHUSDT')" class="px-4 py-1 rounded bg-gray-800 text-gray-400 text-xs">ETH</button>
-                    <button onclick="changeChart('XAUUSD')" class="px-4 py-1 rounded bg-gray-800 text-gray-400 text-xs">GOLD</button>
-                </div>
-                <div id="tv_chart_container" class="flex-1 rounded-xl overflow-hidden glass-panel"></div>
+                <div id="tv_chart_container" class="flex-1 rounded-2xl overflow-hidden glass-panel border border-white/10"></div>
             </div>
 
-            <div id="profile-page" class="hidden-page space-y-6">
-                <div class="glass-panel p-6 rounded-2xl relative overflow-hidden bg-gradient-to-br from-gray-900 to-black border border-gray-800">
-                    <div class="flex justify-between items-start mb-8">
-                        <div class="italic text-gold font-bold text-lg">VIP MEMBER</div>
-                        <i class="fa-brands fa-bitcoin text-gray-700 text-4xl"></i>
+            <div id="profile-page" class="hidden-page space-y-5 animate-fade-in">
+                
+                <div class="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden p-6 flex flex-col justify-between shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#000] to-[#111]"></div>
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"></div>
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative flex justify-between items-start z-10">
+                        <div>
+                            <div class="text-gold font-bold italic tracking-wider text-sm">RS INFINITY</div>
+                            <div class="text-[10px] text-gray-400 tracking-[0.2em] uppercase">Private Member</div>
+                        </div>
+                        <i class="fa-solid fa-wifi text-gray-600 rotate-90"></i>
                     </div>
-                    <div class="mb-2">
-                        <div class="text-xs text-gray-500">ACCOUNT EMAIL</div>
-                        <div id="profile-email" class="text-sm font-tech tracking-wider">...</div>
-                    </div>
-                    <div>
-                        <div class="text-xs text-gray-500 mb-1">TIME REMAINING</div>
-                        <div id="countdown" class="text-3xl font-tech font-bold text-white tracking-widest">LOADING...</div>
+
+                    <div class="relative z-10 w-10 h-8 bg-gradient-to-br from-yellow-200 to-yellow-600 rounded-md border border-yellow-700/50 mb-2 opacity-80"></div>
+
+                    <div class="relative z-10">
+                        <div id="profile-email-card" class="font-tech text-lg text-gray-200 tracking-widest mb-4 drop-shadow-md">LOADING...</div>
+                        
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-[8px] text-gray-500 uppercase">Current Package</div>
+                                <div id="package-name" class="text-gold font-bold text-sm">VIP TRADER</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[8px] text-gray-500 uppercase">Valid Thru</div>
+                                <div id="expiry-date-text" class="text-white font-tech font-bold">--/--/--</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="space-y-3">
-                    <button id="contact-admin-btn" class="w-full glass-panel p-4 rounded-xl flex items-center justify-between btn-click">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-green-900/50 flex items-center justify-center text-green-500"><i class="fa-brands fa-line"></i></div>
-                            <span>ติดต่อแอดมิน (Support)</span>
-                        </div>
-                        <i class="fa-solid fa-chevron-right text-gray-600"></i>
+                <div class="glass-panel p-4 rounded-xl text-center">
+                    <div class="text-xs text-gray-400 mb-1">เวลาใช้งานคงเหลือ (Time Remaining)</div>
+                    <div id="countdown" class="text-3xl font-tech font-bold text-gradient-gold">Loading...</div>
+                </div>
+
+                <div id="expired-alert" class="hidden p-4 rounded-xl bg-red-900/20 border border-red-500/30 text-center">
+                    <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl mb-2"></i>
+                    <h3 class="text-red-400 font-bold">แพ็กเกจหมดอายุ</h3>
+                    <p class="text-xs text-gray-400">กรุณาติดต่อแอดมินเพื่อต่ออายุ</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    <button id="btn-line" class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2 btn-press hover:bg-[#06C755]/10 hover:border-[#06C755]/30 transition-all">
+                        <i class="fa-brands fa-line text-3xl text-[#06C755]"></i>
+                        <span class="text-xs font-medium">ติดต่อ LINE</span>
                     </button>
-                    
-                    <button onclick="logout()" class="w-full glass-panel p-4 rounded-xl flex items-center justify-between btn-click text-red-400 border-red-900/30">
-                        <div class="flex items-center gap-3">
-                            <div class="w-8 h-8 rounded-full bg-red-900/20 flex items-center justify-center"><i class="fa-solid fa-power-off"></i></div>
-                            <span>ออกจากระบบ</span>
-                        </div>
+                    <button id="btn-fb" class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2 btn-press hover:bg-[#1877F2]/10 hover:border-[#1877F2]/30 transition-all">
+                        <i class="fa-brands fa-facebook text-3xl text-[#1877F2]"></i>
+                        <span class="text-xs font-medium">ติดต่อ Facebook</span>
                     </button>
                 </div>
+                
+                <button onclick="logout()" class="w-full py-3 rounded-xl border border-red-900/50 text-red-500/70 text-sm mt-2 btn-press">
+                    <i class="fa-solid fa-power-off mr-2"></i> ออกจากระบบ
+                </button>
             </div>
 
         </main>
 
-        <nav class="bottom-nav fixed bottom-0 w-full h-20 flex justify-around items-center px-2 z-30">
-            <button onclick="switchTab('home')" class="nav-item active flex flex-col items-center gap-1 p-2 btn-click" id="nav-home">
-                <i class="fa-solid fa-house text-xl"></i>
-                <span class="text-[10px]">Home</span>
+        <nav class="fixed bottom-4 left-4 right-4 h-16 bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex justify-around items-center px-2 z-30 shadow-2xl">
+            <button onclick="switchTab('home')" class="nav-item active flex flex-col items-center gap-1 w-16 p-2 btn-press" id="nav-home">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[9px]">Home</span>
             </button>
-            <button onclick="switchTab('chart')" class="nav-item text-gray-500 flex flex-col items-center gap-1 p-2 btn-click" id="nav-chart">
-                <i class="fa-solid fa-chart-simple text-xl"></i>
-                <span class="text-[10px]">Chart</span>
+            <button onclick="switchTab('chart')" class="nav-item text-gray-500 flex flex-col items-center gap-1 w-16 p-2 btn-press" id="nav-chart">
+                <i class="fa-solid fa-chart-pie text-lg"></i>
+                <span class="text-[9px]">Chart</span>
             </button>
-            <button onclick="switchTab('profile')" class="nav-item text-gray-500 flex flex-col items-center gap-1 p-2 btn-click" id="nav-profile">
-                <i class="fa-solid fa-user-astronaut text-xl"></i>
-                <span class="text-[10px]">Profile</span>
+            <button onclick="switchTab('profile')" class="nav-item text-gray-500 flex flex-col items-center gap-1 w-16 p-2 btn-press" id="nav-profile">
+                <i class="fa-solid fa-id-card text-lg"></i>
+                <span class="text-[9px]">Profile</span>
             </button>
         </nav>
     </div>
 
-    <div id="scanner-modal" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center">
-        <div class="glass-panel w-full max-w-xs p-6 rounded-2xl">
+    <div id="search-modal" class="hidden fixed inset-0 z-[60] bg-black/95 flex flex-col">
+        <div class="p-4 border-b border-gray-800 flex items-center gap-3">
+            <button onclick="closeModal('search-modal')" class="text-gray-400 p-2"><i class="fa-solid fa-arrow-left"></i></button>
+            <input type="text" id="asset-search-input" placeholder="ค้นหาคู่เงิน (เช่น BTC, XAU, EUR...)" class="flex-1 bg-transparent outline-none text-white placeholder-gray-600 font-sans">
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-2" id="asset-list">
+            </div>
+    </div>
+
+    <div id="tf-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center">
+        <div class="w-full sm:w-96 bg-[#1a1a1a] border-t sm:border border-gray-800 rounded-t-3xl sm:rounded-3xl p-6 pb-10 slide-up">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-xl font-bold text-gold">AI SETUP</h3>
-                <button onclick="closeModal('scanner-modal')" class="text-gray-400"><i class="fa-solid fa-xmark"></i></button>
+                <h3 class="text-lg font-bold text-white">เลือก Timeframe</h3>
+                <button onclick="closeModal('tf-modal')" class="text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
-            <div class="space-y-4">
-                <div>
-                    <label class="text-xs text-gray-400 mb-2 block">ASSET</label>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="selectAsset(this, 'BTC')" class="asset-btn bg-yellow-500 text-black font-bold py-2 rounded border border-yellow-500">BTC</button>
-                        <button onclick="selectAsset(this, 'ETH')" class="asset-btn bg-gray-800 text-gray-400 py-2 rounded border border-gray-700">ETH</button>
-                        <button onclick="selectAsset(this, 'XAU')" class="asset-btn bg-gray-800 text-gray-400 py-2 rounded border border-gray-700">GOLD</button>
-                    </div>
-                </div>
-                <div>
-                    <label class="text-xs text-gray-400 mb-2 block">TIMEFRAME</label>
-                    <div class="grid grid-cols-4 gap-2">
-                        <button onclick="selectTF(this, '1m')" class="tf-btn bg-gray-800 text-gray-400 py-2 rounded text-xs">1m</button>
-                        <button onclick="selectTF(this, '5m')" class="tf-btn bg-yellow-500 text-black font-bold py-2 rounded text-xs">5m</button>
-                        <button onclick="selectTF(this, '15m')" class="tf-btn bg-gray-800 text-gray-400 py-2 rounded text-xs">15m</button>
-                        <button onclick="selectTF(this, '30m')" class="tf-btn bg-gray-800 text-gray-400 py-2 rounded text-xs">30m</button>
-                    </div>
-                </div>
-                <button onclick="startScanning()" class="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 text-black font-bold py-3 rounded-xl mt-2 btn-click">START AI</button>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button onclick="selectTF('1m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">1 นาที (1m)</button>
+                <button onclick="selectTF('5m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">5 นาที (5m)</button>
+                <button onclick="selectTF('15m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">15 นาที (15m)</button>
+                <button onclick="selectTF('30m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">30 นาที (30m)</button>
             </div>
+            
+            <button onclick="startAIScan()" class="w-full py-4 bg-gradient-to-r from-gold-dark to-gold text-black font-bold rounded-xl btn-press">
+                <i class="fa-solid fa-robot mr-2"></i> เริ่มวิเคราะห์ (Start AI)
+            </button>
         </div>
     </div>
 
-    <div id="processing-modal" class="hidden fixed inset-0 z-[60] bg-black flex flex-col items-center justify-center">
-        <div class="relative w-64 h-64">
-            <div class="absolute inset-0 border-4 border-gray-800 rounded-full"></div>
-            <div class="absolute inset-0 border-t-4 border-yellow-500 rounded-full animate-spin"></div>
-            <div class="absolute inset-0 flex items-center justify-center">
-                <i class="fa-solid fa-robot text-5xl text-gray-200"></i>
+    <div id="result-modal" class="hidden fixed inset-0 z-[70] bg-black flex flex-col overflow-y-auto">
+        <div class="p-4 flex justify-between items-center bg-gray-900 border-b border-gray-800">
+            <h2 class="text-gold font-bold italic">AI ANALYSIS RESULT</h2>
+            <button onclick="closeModal('result-modal')" class="w-8 h-8 rounded-full bg-gray-800 text-gray-400 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="flex-1 p-6 flex flex-col items-center">
+            
+            <div id="res-signal-box" class="w-full p-6 rounded-2xl bg-green-500/10 border border-green-500/50 text-center mb-6 relative overflow-hidden">
+                <div class="absolute inset-0 bg-green-500/10 blur-xl"></div>
+                <div class="relative z-10">
+                    <div id="res-action" class="text-4xl font-black text-green-500 mb-1 tracking-wider">BUY NOW</div>
+                    <div class="text-xs text-green-300 uppercase tracking-widest">High Probability Signal</div>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <div id="res-pair" class="text-2xl font-bold text-white">BTC/USDT</div>
+                <div id="res-tf-badge" class="inline-block px-3 py-1 rounded bg-gray-800 text-xs text-gray-400 mt-1">Timeframe: 5m</div>
+            </div>
+
+            <div class="w-full grid grid-cols-2 gap-4 mb-6">
+                <div class="glass-panel p-4 rounded-xl">
+                    <div class="text-[10px] text-gray-500 uppercase">ราคาเข้า (Entry)</div>
+                    <div id="res-entry" class="text-lg font-tech font-bold text-white">...</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl">
+                    <div class="text-[10px] text-gray-500 uppercase">เวลาปิดออเดอร์</div>
+                    <div id="res-close-time" class="text-lg font-tech font-bold text-gold">...</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-2 border-green-500">
+                    <div class="text-[10px] text-gray-500 uppercase">เป้าทำกำไร (TP)</div>
+                    <div id="res-tp" class="text-lg font-tech font-bold text-green-400">...</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-2 border-red-500">
+                    <div class="text-[10px] text-gray-500 uppercase">จุดตัดขาดทุน (SL)</div>
+                    <div id="res-sl" class="text-lg font-tech font-bold text-red-400">...</div>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fa-solid fa-circle-info text-blue-400"></i>
+                    <span class="text-sm font-bold text-blue-400">คำแนะนำ (Advice)</span>
+                </div>
+                <p id="res-advice" class="text-xs text-gray-400 leading-relaxed">
+                    กราฟมีแรงซื้อเข้ามาอย่างรุนแรง เส้น EMA ตัดขึ้นและ RSI ยังไม่ Overbought แนะนำให้เปิดออเดอร์ทันทีและถือจนจบเวลา
+                </p>
             </div>
         </div>
-        <h2 class="mt-8 text-2xl font-bold animate-pulse text-gold">ANALYZING...</h2>
-    </div>
-
-    <div id="result-modal" class="hidden fixed inset-0 z-[70] bg-black/95 backdrop-blur-xl flex items-center justify-center p-6">
-        <div class="w-full max-w-sm border border-gray-800 bg-gray-900 rounded-2xl p-8 text-center">
-            <div id="signal-badge" class="inline-block px-6 py-2 rounded-full mb-6 text-xl font-bold">BUY SIGNAL</div>
-            <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-4">
-                <span class="text-gray-400">Pair</span><span id="res-pair" class="font-bold text-xl">BTC/USDT</span>
-            </div>
-            <div class="flex justify-between items-center mb-8">
-                <span class="text-gray-400">Entry</span><span class="font-tech text-gold text-lg">Market Price</span>
-            </div>
-            <button onclick="closeModal('result-modal')" class="w-full py-3 rounded-lg border border-gray-700">Close</button>
+        
+        <div class="p-4 pb-8 bg-black">
+            <button onclick="closeModal('result-modal')" class="w-full py-4 bg-gray-800 text-white font-bold rounded-xl">รับทราบ (Acknowledged)</button>
         </div>
     </div>
 
@@ -285,7 +365,7 @@
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
-        // Your Config
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0",
             authDomain: "fafada-d9899.firebaseapp.com",
@@ -295,153 +375,153 @@
             appId: "1:484777586908:web:16a8f0367ad15737364419"
         };
 
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // State
+        // STATE
         let currentUser = null;
-        let expiryTimer = null;
         let isExpired = true;
-        let adminLink = "#"; 
-        
-        // --- 1. AUTH SYSTEM ---
-        const loginForm = document.getElementById('login-form');
-        const authError = document.getElementById('auth-error');
-        let isLoginMode = true;
+        let currentAsset = { symbol: 'BTCUSDT', name: 'BTC/USDT', type: 'CRYPTO' };
+        let selectedTimeframe = '5m';
+        let expiryTimer = null;
 
-        // Monitor Auth State
+        // --- ASSET DATABASE (MOCK) ---
+        const assets = [
+            { id: 'BTCUSDT', name: 'Bitcoin (BTC)', type: 'CRYPTO' },
+            { id: 'ETHUSDT', name: 'Ethereum (ETH)', type: 'CRYPTO' },
+            { id: 'XAUUSD', name: 'Gold (XAU)', type: 'FOREX' },
+            { id: 'EURUSD', name: 'EUR/USD', type: 'FOREX' },
+            { id: 'GBPUSD', name: 'GBP/USD', type: 'FOREX' },
+            { id: 'USDJPY', name: 'USD/JPY', type: 'FOREX' },
+            { id: 'BNBUSDT', name: 'Binance Coin', type: 'CRYPTO' },
+            { id: 'SOLUSDT', name: 'Solana', type: 'CRYPTO' },
+        ];
+
+        // --- AUTH LOGIC ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log("User logged in:", user.email);
                 currentUser = user;
-                initUserData(user.uid);
+                initApp(user.uid);
             } else {
-                console.log("No user");
-                showAuthScreen();
+                showAuth();
             }
         });
 
-        function showAuthScreen() {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('app-container').classList.add('hidden-page');
-            document.getElementById('auth-screen').classList.remove('hidden-page');
-        }
+        const loginForm = document.getElementById('login-form');
+        let isLoginMode = true;
 
-        function showAppScreen() {
-            document.getElementById('loading-screen').style.display = 'none';
-            document.getElementById('auth-screen').classList.add('hidden-page');
-            document.getElementById('app-container').classList.remove('hidden-page');
-            loadTradingView('BTCUSDT');
-        }
-
-        // Login/Register Toggle
-        window.toggleAuthMode = () => {
-            isLoginMode = !isLoginMode;
-            document.getElementById('auth-title').innerText = isLoginMode ? "LOGIN" : "REGISTER";
-            document.getElementById('auth-btn').innerText = isLoginMode ? "เข้าสู่ระบบ" : "สมัครสมาชิกทันที";
-            document.querySelector('#auth-switch span').innerText = isLoginMode ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
-            document.querySelector('#auth-switch').firstChild.nodeValue = isLoginMode ? "ยังไม่มีบัญชี? " : "มีบัญชีแล้ว? ";
-            authError.classList.add('hidden');
-        };
-
-        // Handle Submit
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            authError.classList.add('hidden');
-
-            document.getElementById('loading-text').innerText = "Authenticating...";
-            document.getElementById('loading-screen').style.display = 'flex';
-
+            const errorDiv = document.getElementById('auth-error');
+            
+            document.getElementById('loading-screen').classList.remove('hidden-page');
+            
             try {
                 if (isLoginMode) {
                     await signInWithEmailAndPassword(auth, email, password);
                 } else {
                     const cred = await createUserWithEmailAndPassword(auth, email, password);
-                    // Create User in Firestore immediately
                     await setDoc(doc(db, "users", cred.user.uid), {
                         email: email,
                         createdAt: serverTimestamp(),
-                        expiryDate: new Date() // Expired by default
+                        expiryDate: new Date(), // Expired by default
+                        packageType: "FREE MEMBER"
                     });
                 }
             } catch (error) {
-                document.getElementById('loading-screen').style.display = 'none';
-                authError.innerText = error.message;
-                authError.classList.remove('hidden');
-                console.error("Auth Error:", error);
+                document.getElementById('loading-screen').classList.add('hidden-page');
+                errorDiv.innerText = "Error: " + error.code;
+                errorDiv.classList.remove('hidden');
             }
         });
 
+        window.toggleAuthMode = () => {
+            isLoginMode = !isLoginMode;
+            document.querySelector('#auth-screen h2').innerText = isLoginMode ? "WELCOME" : "REGISTER";
+            document.querySelector('#auth-screen button').innerText = isLoginMode ? "เข้าสู่ระบบ" : "สมัครสมาชิกทันที";
+            document.getElementById('auth-mode-text').innerText = isLoginMode ? "ยังไม่มีบัญชี?" : "มีบัญชีแล้ว?";
+            document.querySelector('#auth-screen .underline').innerText = isLoginMode ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
+        };
+
         window.logout = () => signOut(auth);
 
-        // --- 2. DATABASE & REALTIME ---
-        function initUserData(uid) {
-            document.getElementById('loading-text').innerText = "Syncing Profile...";
-            
-            // 1. Listen to User Data
+        // --- APP LOGIC ---
+        function initApp(uid) {
+            // Listen to User Data
             onSnapshot(doc(db, "users", uid), (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
-                    document.getElementById('profile-email').innerText = data.email;
-                    handleExpiry(data.expiryDate);
-                    showAppScreen();
-                } else {
-                    // Safety: Create doc if missing
-                    setDoc(doc(db, "users", uid), { 
-                        email: currentUser.email, 
-                        expiryDate: new Date() 
-                    }).then(() => console.log("Created missing user doc"));
+                    updateProfileUI(data);
+                    showMainApp();
                 }
-            }, (error) => {
-                console.error("Firestore Error:", error);
-                alert("Database Connection Failed! กรุณาตรวจสอบว่าตั้งค่า Firestore Rules เป็น Test Mode แล้วหรือยัง");
             });
 
-            // 2. Listen to System Config
+            // Listen to Admin Config
             onSnapshot(doc(db, "system", "config"), (docSnap) => {
                 if (docSnap.exists()) {
-                    adminLink = docSnap.data().contactLink;
+                    const conf = docSnap.data();
+                    setupContactButtons(conf.lineLink, conf.facebookLink);
                 }
             });
         }
 
-        // --- 3. EXPIRY LOGIC ---
-        function handleExpiry(expiryTimestamp) {
-            if (!expiryTimestamp) return;
-            const expiryDate = expiryTimestamp.toDate ? expiryTimestamp.toDate() : new Date(expiryTimestamp);
+        function showAuth() {
+            document.getElementById('loading-screen').classList.add('hidden-page');
+            document.getElementById('app-container').classList.add('hidden-page');
+            document.getElementById('auth-screen').classList.remove('hidden-page');
+        }
 
+        function showMainApp() {
+            document.getElementById('loading-screen').classList.add('hidden-page');
+            document.getElementById('auth-screen').classList.add('hidden-page');
+            document.getElementById('app-container').classList.remove('hidden-page');
+            updatePrice(); // Init price
+            loadChart(currentAsset.symbol);
+        }
+
+        function updateProfileUI(data) {
+            document.getElementById('profile-email-card').innerText = data.email;
+            document.getElementById('package-name').innerText = data.packageType || "MEMBER";
+            
+            if (data.expiryDate) {
+                const expDate = data.expiryDate.toDate();
+                
+                // Show Date
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                document.getElementById('expiry-date-text').innerText = expDate.toLocaleDateString('th-TH', options);
+
+                // Start Countdown
+                startCountdown(expDate);
+            }
+        }
+
+        function startCountdown(endDate) {
             if (expiryTimer) clearInterval(expiryTimer);
             
             expiryTimer = setInterval(() => {
                 const now = new Date();
-                const diff = expiryDate - now;
+                const diff = endDate - now;
 
                 if (diff <= 0) {
-                    document.getElementById('countdown').innerText = "EXPIRED";
-                    document.getElementById('countdown').classList.add('text-red-500');
-                    document.getElementById('expired-alert').classList.remove('hidden');
+                    document.getElementById('countdown').innerHTML = "<span class='text-red-500'>EXPIRED</span>";
+                    document.getElementById('status-pill').innerHTML = "<div class='w-2 h-2 rounded-full bg-red-500'></div><span class='text-red-500'>EXPIRED</span>";
                     document.getElementById('scan-btn').classList.add('grayscale-mode');
-                    document.getElementById('header-status').innerText = "EXPIRED";
-                    document.getElementById('header-status').className = "text-[10px] px-2 py-1 rounded bg-red-900 text-red-400";
+                    document.getElementById('expired-alert').classList.remove('hidden');
                     isExpired = true;
                     clearInterval(expiryTimer);
                 } else {
-                    // Format
-                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
                     
-                    document.getElementById('countdown').innerText = `${pad(days)}D : ${pad(hours)}H : ${pad(minutes)}M : ${pad(seconds)}S`;
-                    document.getElementById('countdown').classList.remove('text-red-500');
-                    document.getElementById('expired-alert').classList.add('hidden');
+                    document.getElementById('countdown').innerText = `${d}วัน : ${pad(h)}ชม : ${pad(m)}น : ${pad(s)}วิ`;
+                    document.getElementById('status-pill').innerHTML = "<div class='w-2 h-2 rounded-full bg-green-500 animate-pulse'></div><span class='text-green-500'>ACTIVE</span>";
                     document.getElementById('scan-btn').classList.remove('grayscale-mode');
-                    document.getElementById('header-status').innerText = "ACTIVE";
-                    document.getElementById('header-status').className = "text-[10px] px-2 py-1 rounded bg-green-900 text-green-400";
+                    document.getElementById('expired-alert').classList.add('hidden');
                     isExpired = false;
                 }
             }, 1000);
@@ -449,62 +529,134 @@
 
         function pad(n) { return n < 10 ? '0' + n : n; }
 
-        // --- 4. APP INTERACTION ---
-        let selectedAsset = 'BTC';
-        let selectedTF = '5m';
+        function setupContactButtons(line, fb) {
+            const btnLine = document.getElementById('btn-line');
+            const btnFb = document.getElementById('btn-fb');
+            
+            btnLine.onclick = () => window.open(line || '#', '_blank');
+            btnFb.onclick = () => window.open(fb || '#', '_blank');
+        }
 
-        window.openScannerModal = () => {
-            if (isExpired) {
-                alert("แพ็กเกจหมดอายุ! กรุณาเติมวันใช้งาน");
-                return;
-            }
-            document.getElementById('scanner-modal').classList.remove('hidden');
+        // --- SCANNER LOGIC ---
+        window.openSearchModal = () => {
+            document.getElementById('search-modal').classList.remove('hidden');
+            renderAssetList(assets);
         };
-        
+
         window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
-        
-        window.selectAsset = (el, asset) => {
-            document.querySelectorAll('.asset-btn').forEach(b => b.className = "asset-btn bg-gray-800 text-gray-400 py-2 rounded border border-gray-700");
-            el.className = "asset-btn bg-yellow-500 text-black font-bold py-2 rounded border border-yellow-500";
-            selectedAsset = asset;
+
+        document.getElementById('asset-search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = assets.filter(a => a.name.toLowerCase().includes(term) || a.id.toLowerCase().includes(term));
+            renderAssetList(filtered);
+        });
+
+        function renderAssetList(list) {
+            const container = document.getElementById('asset-list');
+            container.innerHTML = '';
+            list.forEach(asset => {
+                const el = document.createElement('div');
+                el.className = 'flex items-center justify-between p-4 rounded-xl bg-gray-900 border border-gray-800 hover:border-gold cursor-pointer transition';
+                el.innerHTML = `
+                    <div>
+                        <div class="font-bold text-white">${asset.name}</div>
+                        <div class="text-xs text-gray-500">${asset.type}</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-600"></i>
+                `;
+                el.onclick = () => {
+                    currentAsset = { symbol: asset.id, name: asset.name, type: asset.type };
+                    document.getElementById('current-asset-name').innerText = asset.name;
+                    closeModal('search-modal');
+                    updatePrice();
+                };
+                container.appendChild(el);
+            });
+        }
+
+        window.openTimeframeModal = () => {
+            if (isExpired) return alert('กรุณาต่ออายุเพื่อใช้งาน AI');
+            document.getElementById('tf-modal').classList.remove('hidden');
         };
 
-        window.selectTF = (el, tf) => {
-            document.querySelectorAll('.tf-btn').forEach(b => b.className = "tf-btn bg-gray-800 text-gray-400 py-2 rounded text-xs");
-            el.className = "tf-btn bg-yellow-500 text-black font-bold py-2 rounded text-xs";
-            selectedTF = tf;
+        window.selectTF = (tf) => {
+            selectedTimeframe = tf;
+            // Visual feedback could be added here
+            startAIScan();
         };
 
-        window.startScanning = () => {
-            closeModal('scanner-modal');
-            document.getElementById('processing-modal').classList.remove('hidden');
+        window.startAIScan = () => {
+            closeModal('tf-modal');
+            document.getElementById('loading-screen').classList.remove('hidden-page');
+            document.querySelector('#loading-screen .text-xl').innerText = "AI PROCESSING...";
+            
             setTimeout(() => {
-                document.getElementById('processing-modal').classList.add('hidden');
-                showResult();
-            }, 3000);
+                document.getElementById('loading-screen').classList.add('hidden-page');
+                showAIResult();
+            }, 2500);
         };
 
-        function showResult() {
+        function showAIResult() {
+            // Mock AI Logic
+            const price = parseFloat(document.getElementById('main-price').innerText.replace('$','').replace(',',''));
             const isBuy = Math.random() > 0.5;
-            const badge = document.getElementById('signal-badge');
+            const tfMin = parseInt(selectedTimeframe);
+            
+            // Calculate Times
+            const now = new Date();
+            const closeTime = new Date(now.getTime() + tfMin * 60000);
+            
+            // UI Update
+            const box = document.getElementById('res-signal-box');
+            const action = document.getElementById('res-action');
+            const entry = document.getElementById('res-entry');
+            const tp = document.getElementById('res-tp');
+            const sl = document.getElementById('res-sl');
             
             if (isBuy) {
-                badge.innerText = "BUY SIGNAL";
-                badge.className = "inline-block px-6 py-2 rounded-full mb-6 text-xl font-bold bg-green-500/20 text-green-500 border border-green-500 shadow-[0_0_20px_rgba(34,197,94,0.3)]";
+                box.className = "w-full p-6 rounded-2xl bg-green-500/10 border border-green-500/50 text-center mb-6 relative overflow-hidden";
+                action.innerText = "BUY (LONG)";
+                action.className = "text-3xl font-black text-green-500 mb-1 tracking-wider";
+                tp.innerText = (price * 1.005).toFixed(2);
+                sl.innerText = (price * 0.995).toFixed(2);
+                document.getElementById('res-advice').innerText = "Momentum ฝั่งซื้อแข็งแกร่ง (Strong Buy) volume เข้าสนับสนุน แนะนำให้เปิด Long ทันที";
             } else {
-                badge.innerText = "SELL SIGNAL";
-                badge.className = "inline-block px-6 py-2 rounded-full mb-6 text-xl font-bold bg-red-500/20 text-red-500 border border-red-500 shadow-[0_0_20px_rgba(239,68,68,0.3)]";
+                box.className = "w-full p-6 rounded-2xl bg-red-500/10 border border-red-500/50 text-center mb-6 relative overflow-hidden";
+                action.innerText = "SELL (SHORT)";
+                action.className = "text-3xl font-black text-red-500 mb-1 tracking-wider";
+                tp.innerText = (price * 0.995).toFixed(2);
+                sl.innerText = (price * 1.005).toFixed(2);
+                document.getElementById('res-advice').innerText = "เกิดสัญญาณกลับตัว (Reversal) RSI เข้าโซน Overbought แนะนำให้เปิด Short เพื่อทำกำไรระยะสั้น";
             }
-            
-            document.getElementById('res-pair').innerText = selectedAsset + "/USDT";
+
+            document.getElementById('res-pair').innerText = currentAsset.name;
+            document.getElementById('res-tf-badge').innerText = `Timeframe: ${selectedTimeframe}`;
+            entry.innerText = price.toFixed(2);
+            document.getElementById('res-close-time').innerText = `${pad(closeTime.getHours())}:${pad(closeTime.getMinutes())}`;
+
             document.getElementById('result-modal').classList.remove('hidden');
         }
 
-        // Contact Admin
-        document.getElementById('contact-admin-btn').addEventListener('click', () => {
-            if(adminLink && adminLink !== '#') window.open(adminLink, '_blank');
-            else alert("Admin link not set yet.");
-        });
+        // --- CHART & PRICE ---
+        async function updatePrice() {
+            try {
+                // Mock Fetch for demo - replace with real API if needed
+                const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${currentAsset.symbol.replace('/','')}`);
+                const data = await res.json();
+                
+                const p = parseFloat(data.lastPrice);
+                const chg = parseFloat(data.priceChangePercent);
+                
+                document.getElementById('main-price').innerText = `$${p.toFixed(2)}`;
+                const elChg = document.getElementById('price-change');
+                elChg.innerText = `${chg > 0 ? '+' : ''}${chg.toFixed(2)}%`;
+                elChg.className = `text-xl font-tech font-bold ${chg >= 0 ? 'text-green-400' : 'text-red-400'}`;
+            } catch (e) {
+                // If forex or error, show dummy
+                document.getElementById('main-price').innerText = "$1934.50"; 
+            }
+        }
+        setInterval(updatePrice, 5000);
 
         // Navigation
         window.switchTab = (tab) => {
@@ -517,31 +669,22 @@
             document.getElementById(tab + '-page').classList.remove('hidden-page');
             document.getElementById('nav-' + tab).classList.add('active', 'text-gold');
             document.getElementById('nav-' + tab).classList.remove('text-gray-500');
+            
+            if (tab === 'chart') loadChart(currentAsset.symbol);
         };
 
-        // Price Ticker
-        setInterval(async () => {
-            try {
-                const res = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=BTCUSDT');
-                const data = await res.json();
-                document.getElementById('btc-price').innerText = "$" + parseFloat(data.price).toFixed(2);
-                
-                const res2 = await fetch('https://api.binance.com/api/v3/ticker/price?symbol=ETHUSDT');
-                const data2 = await res2.json();
-                document.getElementById('eth-price').innerText = "$" + parseFloat(data2.price).toFixed(2);
-            } catch {}
-        }, 5000);
-
-        // Chart
-        window.changeChart = (symbol) => loadTradingView(symbol);
-        function loadTradingView(symbol) {
+        function loadChart(symbol) {
+            // Adjust symbol for TV
+            let tvSymbol = "BINANCE:" + symbol.replace('/','');
+            if(currentAsset.type === 'FOREX') tvSymbol = symbol.replace('/',''); 
+            
             document.getElementById('tv_chart_container').innerHTML = "";
             new TradingView.widget({
                 "width": "100%", "height": "100%",
-                "symbol": symbol === 'XAUUSD' ? "OANDA:XAUUSD" : "BINANCE:" + symbol,
+                "symbol": tvSymbol,
                 "interval": "15", "timezone": "Asia/Bangkok", "theme": "dark", "style": "1",
-                "container_id": "tv_chart_container", "backgroundColor": "rgba(0, 0, 0, 1)",
-                "hide_top_toolbar": true
+                "container_id": "tv_chart_container", "backgroundColor": "rgba(18, 18, 18, 1)",
+                "hide_top_toolbar": true, "allow_symbol_change": false
             });
         }
     </script>
