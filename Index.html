@@ -17,234 +17,234 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Kanit', 'sans-serif'], title: ['Prompt', 'sans-serif'] },
-                    colors: { brand: '#0052FF', luxury: '#0f172a', bgMain: '#F8FAFC', success: '#10B981', danger: '#EF4444' }
+                    colors: { brand: '#0052FF', luxury: '#0f172a', bgSoft: '#F8FAFC', success: '#10B981', warning: '#F59E0B' }
                 }
             }
         }
     </script>
 
     <style>
-        /* 🎨 Premium Design System */
-        :root { --brand: #0052FF; --luxury: #0f172a; }
+        /* 🎨 Master Style Architecture */
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none !important; }
-        body { background-color: #f8fafc; color: #1e293b; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
+        body { background-color: #FFFFFF; color: #1E293B; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
         .font-title { font-family: 'Prompt', sans-serif; }
 
-        .luxury-card { background: white; border-radius: 2.5rem; border: 1px solid #f1f5f9; box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.05); }
-        .btn-luxury { transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
-        .btn-luxury:active { transform: scale(0.95); opacity: 0.9; }
+        .luxury-card { background: white; border-radius: 2.5rem; border: 1px solid #F1F5F9; box-shadow: 0 15px 35px -5px rgba(0, 0, 0, 0.04); }
+        .btn-luxury { transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+        .btn-luxury:active { transform: scale(0.96); opacity: 0.8; }
 
         #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
 
-        /* Timeline Graphics */
-        .step-node { width: 10px; height: 10px; border-radius: 50%; background: #e2e8f0; position: relative; z-index: 2; transition: 0.5s; }
-        .step-node.active { background: var(--brand); box-shadow: 0 0 0 4px rgba(0,82,255,0.2); }
-        .line-track { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #f1f5f9; z-index: 1; transform: translateY(-50%); }
-        .line-active { position: absolute; top: 50%; left: 0; height: 2px; background: var(--brand); z-index: 1; transform: translateY(-50%); transition: 1s ease; width: 0%; }
+        /* Timeline & Progress */
+        .step-node { width: 10px; height: 10px; border-radius: 50%; background: #E2E8F0; position: relative; z-index: 2; transition: 0.5s; }
+        .step-node.active { background: #0052FF; box-shadow: 0 0 10px rgba(0,82,255,0.4); }
+        .track-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #F1F5F9; z-index: 1; transform: translateY(-50%); }
+        .track-active { position: absolute; top: 50%; left: 0; height: 2px; background: #0052FF; z-index: 1; transform: translateY(-50%); transition: 1s ease; width: 0%; }
 
         .fade-slide { animation: fadeSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        .pulse-loc { animation: locPulse 2s infinite; }
-        @keyframes locPulse { 0% { box-shadow: 0 0 0 0 rgba(0, 82, 255, 0.4); } 70% { box-shadow: 0 0 0 20px rgba(0, 82, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 82, 255, 0); } }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+
+        .loader-pulse { animation: loaderPulse 1.8s infinite ease-in-out; }
+        @keyframes loaderPulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.4; transform: scale(0.9); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
+        
+        /* Roles Toggle Style */
+        .role-btn { border: 2.5px solid #F1F5F9; transition: 0.3s; }
+        .role-btn.active { border-color: #0052FF; background: #eff6ff; color: #0052FF; }
     </style>
 </head>
 <body class="flex flex-col">
 
     <div id="loader" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center transition-all duration-700">
-        <div class="relative w-24 h-24 mb-6 flex items-center justify-center">
-            <div class="absolute inset-0 border-4 border-slate-100 rounded-full"></div>
-            <div class="absolute inset-0 border-4 border-brand rounded-full border-t-transparent animate-spin"></div>
-            <span class="text-brand font-black italic font-title text-sm">RS</span>
+        <div class="w-20 h-20 bg-luxury rounded-[2rem] flex items-center justify-center shadow-2xl loader-pulse mb-6">
+            <span class="text-white font-black italic text-xl font-title">RS</span>
         </div>
-        <p class="text-slate-400 font-bold tracking-[0.4em] text-[10px] uppercase animate-pulse">Initializing Supreme Logistics</p>
+        <p class="text-slate-400 font-bold tracking-[0.3em] text-[10px] uppercase animate-pulse">กำลังเชื่อมต่อฐานข้อมูล...</p>
     </div>
 
-    <div id="waitScreen" class="hidden fixed inset-0 z-[800] bg-white flex flex-col items-center justify-center p-12 text-center">
-        <div class="w-28 h-28 bg-blue-50 text-brand rounded-full flex items-center justify-center mb-8 shadow-xl animate-bounce">
-            <i class="fas fa-id-card-clip text-5xl"></i>
+    <div id="waitPage" class="hidden fixed inset-0 z-[800] bg-white flex flex-col justify-center items-center p-12 text-center">
+        <div class="w-24 h-24 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mb-8 shadow-xl">
+            <i class="fas fa-user-clock text-4xl"></i>
         </div>
-        <h2 class="text-3xl font-black text-luxury font-title mb-4 italic">รอการอนุมัติเจ้าหน้าที่</h2>
-        <p class="text-slate-500 text-sm leading-relaxed max-w-xs mb-10 italic">ระบบตรวจพบว่าคุณสมัครสมาชิกในนาม "คนส่งของ" กรุณารอแอดมินตรวจสอบเอกสารของท่านก่อนเริ่มต้นรับงานครับ</p>
-        <button onclick="app.logout()" class="text-brand font-black text-xs uppercase tracking-widest underline decoration-2 underline-offset-8">ออกจากระบบ</button>
+        <h2 class="text-2xl font-black text-luxury font-title mb-3">รอดำเนินการอนุมัติ</h2>
+        <p class="text-sm text-slate-500 leading-relaxed max-w-xs mb-10">บัญชีผู้ส่งพัสดุของคุณอยู่ระหว่างการตรวจสอบ <br>กรุณารอแอดมินอนุมัติเพื่อเริ่มต้นรับงานครับ</p>
+        <button onclick="app.logout()" class="text-brand font-black text-xs uppercase tracking-widest underline underline-offset-8">ออกจากระบบ</button>
     </div>
 
-    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-white flex flex-col justify-center items-center p-8 overflow-y-auto no-scrollbar">
-        <div class="w-full max-w-sm text-center fade-slide">
-            <div class="mb-12">
-                <h1 class="text-4xl font-black text-luxury italic font-title leading-none uppercase">RS <span class="text-brand">Logistics</span></h1>
-                <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mt-3">Professional Delivery Hub</p>
+    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-bgSoft flex flex-col justify-center items-center p-10 overflow-y-auto no-scrollbar">
+        <div class="w-full max-w-sm text-center fade-slide py-10">
+            <div class="flex flex-col items-center mb-12">
+                <div class="w-14 h-14 bg-luxury rounded-2xl flex items-center justify-center text-white text-lg font-black shadow-xl italic mb-4">RS</div>
+                <h1 class="text-3xl font-black text-luxury font-title leading-none uppercase italic">Supreme <span class="text-brand">Logistics</span></h1>
             </div>
 
-            <div id="loginForm" class="space-y-4">
-                <input id="lEmail" type="email" class="w-full px-8 py-5 bg-bgMain rounded-3xl font-bold outline-none border-2 border-slate-50 focus:border-brand transition-all" placeholder="อีเมลสมาชิก">
-                <input id="lPass" type="password" class="w-full px-8 py-5 bg-bgMain rounded-3xl font-bold outline-none border-2 border-slate-50 focus:border-brand transition-all" placeholder="รหัสผ่าน">
-                <button onclick="app.login()" class="w-full bg-luxury text-white py-5 rounded-3xl font-black uppercase text-xs shadow-2xl btn-luxury mt-4">ยืนยันตัวตนเข้าใช้งาน</button>
-                <button onclick="ui.toggleForm(false)" class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-6">ยังไม่มีบัญชีสมาชิก? สมัครใหม่ที่นี่</button>
+            <div id="loginSection" class="space-y-4">
+                <input id="lEmail" type="email" class="w-full px-7 py-5 bg-white border border-slate-100 rounded-[1.8rem] font-bold outline-none focus:ring-2 focus:ring-brand/10" placeholder="อีเมลแอดเดรส">
+                <input id="lPass" type="password" class="w-full px-7 py-5 bg-white border border-slate-100 rounded-[1.8rem] font-bold outline-none focus:ring-2 focus:ring-brand/10" placeholder="รหัสผ่าน">
+                <button onclick="app.login()" class="w-full bg-luxury text-white py-5 rounded-[1.8rem] font-black uppercase text-[11px] tracking-widest shadow-2xl btn-luxury mt-4">เข้าสู่ระบบ (Sign In)</button>
+                <button onclick="ui.toggleAuth(false)" class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-6">สมัครสมาชิกใหม่</button>
             </div>
 
-            <div id="regForm" class="hidden space-y-4 text-left">
+            <div id="registerSection" class="hidden space-y-4 text-left">
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase">ข้อมูลส่วนตัว</label>
-                    <input id="rName" class="w-full px-8 py-4 bg-bgMain rounded-2xl font-bold outline-none border-2 border-slate-50" placeholder="ชื่อ-นามสกุล">
+                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase tracking-tighter">1. ข้อมูลสมาชิก</label>
+                    <input id="rName" class="w-full px-7 py-4 bg-white border border-slate-100 rounded-2xl font-bold outline-none" placeholder="ชื่อ-นามสกุล">
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase">ที่อยู่ถาวร (สำหรับอ้างอิงพื้นที่)</label>
-                    <textarea id="rAddr" rows="3" class="w-full px-8 py-4 bg-bgMain rounded-2xl font-bold outline-none border-2 border-slate-50" placeholder="ระบุที่อยู่ปัจจุบันโดยละเอียด"></textarea>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 ml-4 uppercase">กำหนดอีเมล</label>
-                        <input id="rEmail" type="email" class="w-full px-8 py-4 bg-bgMain rounded-2xl font-bold outline-none border-2 border-slate-50" placeholder="Email">
-                    </div>
-                    <div class="space-y-1">
-                        <label class="text-[10px] font-black text-slate-400 ml-4 uppercase">กำหนดรหัสผ่าน</label>
-                        <input id="rPass" type="password" class="w-full px-8 py-4 bg-bgMain rounded-2xl font-bold outline-none border-2 border-slate-50" placeholder="Password">
-                    </div>
-                </div>
-                <div class="space-y-2 mt-4">
-                    <p class="text-[10px] font-black text-brand uppercase ml-4">ต้องการสมัครสมาชิกในบทบาท:</p>
+                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase tracking-tighter">2. อีเมลและรหัสผ่าน</label>
                     <div class="grid grid-cols-2 gap-3">
-                        <button id="roleC" onclick="app.selectRole('customer')" class="p-4 rounded-2xl border-2 border-slate-100 font-bold text-xs active-role bg-brand text-white border-brand">ผู้ใช้ทั่วไป<br><span class="text-[8px] opacity-60">(สมัครแล้วใช้ได้เลย)</span></button>
-                        <button id="roleD" onclick="app.selectRole('driver')" class="p-4 rounded-2xl border-2 border-slate-100 font-bold text-xs">คนส่งสินค้า<br><span class="text-[8px] opacity-60">(ต้องรอแอดมินอนุมัติ)</span></button>
+                        <input id="rEmail" type="email" class="w-full px-6 py-4 bg-white border border-slate-100 rounded-2xl font-bold outline-none" placeholder="Email">
+                        <input id="rPass" type="password" class="w-full px-6 py-4 bg-white border border-slate-100 rounded-2xl font-bold outline-none" placeholder="Password">
                     </div>
                 </div>
-                <button onclick="app.register()" class="w-full bg-brand text-white py-5 rounded-3xl font-black uppercase text-xs shadow-xl btn-luxury mt-6">สมัครสมาชิกเข้าระบบ</button>
-                <button onclick="ui.toggleForm(true)" class="w-full text-center text-slate-300 text-[10px] font-bold uppercase mt-2">ยกเลิก</button>
+                <div class="space-y-1">
+                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase tracking-tighter">3. ที่อยู่ปัจจุบัน (สำหรับรับ-ส่งของ)</label>
+                    <textarea id="rAddr" rows="3" class="w-full px-7 py-4 bg-white border border-slate-100 rounded-2xl font-bold outline-none" placeholder="บ้านเลขที่, ถนน, แขวง, เขต..."></textarea>
+                </div>
+                <div class="space-y-2 py-4">
+                    <p class="text-[10px] font-black text-brand uppercase tracking-widest ml-4">4. เลือกประเภทการสมัคร</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <button id="roleCustomer" onclick="app.setRole('customer')" class="role-btn active p-4 rounded-2xl font-black text-xs leading-tight">ลูกค้าทั่วไป<br><span class="text-[8px] font-medium opacity-70">ใช้บริการได้ทันที</span></button>
+                        <button id="roleDriver" onclick="app.setRole('driver')" class="role-btn p-4 rounded-2xl font-black text-xs leading-tight">คนส่งสินค้า<br><span class="text-[8px] font-medium opacity-70">ต้องรออนุมัติ</span></button>
+                    </div>
+                </div>
+                <button onclick="app.register()" class="w-full bg-brand text-white py-5 rounded-[1.8rem] font-black uppercase text-[11px] tracking-widest shadow-xl btn-luxury">ยืนยันการสมัคร</button>
+                <button onclick="ui.toggleAuth(true)" class="w-full text-center text-slate-300 text-[10px] font-bold uppercase mt-2 italic">ยกเลิก</button>
             </div>
         </div>
     </div>
 
     <div id="mainPage" class="hidden flex-1 flex flex-col overflow-hidden">
         
-        <main id="view-customer" class="flex-1 relative overflow-hidden">
+        <main id="view-home" class="flex-1 relative overflow-hidden">
             <div id="map"></div>
             
             <div class="absolute top-8 left-0 w-full px-6 z-10 fade-slide">
                 <div class="luxury-card h-16 flex items-center justify-between px-6 bg-white/90 backdrop-blur-md border-white">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-luxury rounded-xl flex items-center justify-center text-white text-[10px] font-black italic shadow-lg">RS</div>
+                        <div class="w-10 h-10 bg-luxury rounded-xl flex items-center justify-center text-white text-[11px] font-black italic shadow-lg">RS</div>
                         <div>
-                            <h2 class="font-black text-luxury text-sm font-title leading-none">ORDER TRACKING</h2>
-                            <p id="shipID" class="text-[9px] font-bold text-brand uppercase tracking-widest mt-1.5 animate-pulse">#SEARCHING...</p>
+                            <h2 class="font-black text-luxury text-sm font-title leading-none uppercase">Shipment Status</h2>
+                            <p id="shipStatus" class="text-[9px] font-black text-brand uppercase tracking-widest mt-1.5 animate-pulse">กำลังซิงค์พิกัด...</p>
                         </div>
                     </div>
-                    <button onclick="app.logout()" class="w-10 h-10 rounded-xl bg-bgMain flex items-center justify-center text-slate-300 hover:text-danger"><i class="fas fa-power-off text-sm"></i></button>
+                    <button onclick="app.logout()" class="text-slate-300 hover:text-danger transition-colors"><i class="fas fa-power-off"></i></button>
                 </div>
             </div>
 
             <div class="absolute bottom-32 left-0 w-full px-6 z-10">
-                <div class="luxury-card p-8 fade-slide">
+                <div class="luxury-card p-7 fade-slide shadow-2xl">
                     <div class="relative flex justify-between items-center mb-8 px-4">
-                        <div class="line-track"></div>
-                        <div id="lineActive" class="line-active"></div>
-                        <div class="flex flex-col items-center gap-2"><div id="n1" class="step-node active"></div><span class="text-[8px] font-black text-slate-400 uppercase">ออเดอร์</span></div>
-                        <div class="flex flex-col items-center gap-2"><div id="n2" class="step-node"></div><span class="text-[8px] font-black text-slate-400 uppercase">เตรียมของ</span></div>
-                        <div class="flex flex-col items-center gap-2"><div id="n3" class="step-node"></div><span class="text-[8px] font-black text-slate-400 uppercase">กำลังส่ง</span></div>
-                        <div class="flex flex-col items-center gap-2"><div id="n4" class="step-node"></div><span class="text-[8px] font-black text-slate-400 uppercase">สำเร็จ</span></div>
+                        <div class="track-line"></div>
+                        <div id="trackActive" class="track-active"></div>
+                        <div class="flex flex-col items-center gap-2"><div id="s1" class="step-node active"></div><span class="text-[8px] font-black text-slate-400 uppercase">ออเดอร์</span></div>
+                        <div class="flex flex-col items-center gap-2"><div id="s2" class="step-node"></div><span class="text-[8px] font-black text-slate-400 uppercase">เตรียมงาน</span></div>
+                        <div class="flex flex-col items-center gap-2"><div id="s3" class="step-node"></div><span class="text-[8px] font-black text-slate-400 uppercase">ส่งสินค้า</span></div>
+                        <div class="flex flex-col items-center gap-2"><div id="s4" class="step-node"></div><span class="text-[8px] font-black text-slate-400 uppercase">สำเร็จ</span></div>
                     </div>
 
-                    <div class="flex items-center justify-between border-t border-slate-50 pt-6">
+                    <div class="flex items-center justify-between border-t border-slate-50 pt-5">
                         <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-bgMain border-2 border-white shadow-inner flex items-center justify-center overflow-hidden">
-                                <img id="driverImg" src="" class="w-full h-full object-cover">
+                            <div class="w-12 h-12 rounded-2xl bg-bgSoft border border-slate-100 flex items-center justify-center overflow-hidden shadow-inner">
+                                <img id="driverPic" src="" class="w-full h-full object-cover">
                             </div>
                             <div>
-                                <p id="statusLabel" class="text-[9px] font-black text-brand uppercase tracking-widest mb-1.5 leading-none">สถานะปัจจุบัน</p>
-                                <h3 id="driverName" class="font-black text-luxury text-base font-title leading-none uppercase italic">กำลังค้นหาเจ้าหน้าที่...</h3>
+                                <p id="orderCode" class="text-[10px] font-black text-brand uppercase tracking-widest leading-none mb-1.5 italic">ORDER #000000</p>
+                                <h3 id="driverName" class="font-black text-luxury text-[15px] font-title leading-none uppercase">กำลังค้นหาผู้ส่ง...</h3>
                             </div>
                         </div>
-                        <button onclick="app.openOrderModal()" class="w-12 h-12 bg-brand/10 text-brand rounded-2xl flex items-center justify-center shadow-sm border border-brand/10 btn-luxury"><i class="fas fa-plus"></i></button>
+                        <button onclick="app.openOrderModal()" class="w-12 h-12 bg-luxury text-white rounded-2xl flex items-center justify-center shadow-xl btn-luxury"><i class="fas fa-box-open"></i></button>
                     </div>
                 </div>
             </div>
         </main>
 
-        <main id="view-driver" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-10 no-scrollbar pb-48 fade-slide">
-            <div class="flex justify-between items-end">
-                <div class="space-y-2">
-                    <h1 class="text-4xl font-black text-luxury italic uppercase font-title leading-none">Job <span class="text-brand">Panel</span></h1>
-                    <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">ศูนยรวมงานและอัปเดตพิกัด</p>
-                </div>
-                <div class="w-14 h-14 rounded-[1.5rem] bg-luxury text-white flex items-center justify-center shadow-2xl animate-pulse italic text-xs font-black">RS</div>
+        <main id="view-driver" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-10 no-scrollbar pb-40 fade-slide bg-white">
+            <div class="space-y-1.5">
+                <h1 class="text-4xl font-black text-luxury font-title italic uppercase">Worker <span class="text-brand">Hub</span></h1>
+                <p class="text-slate-400 text-xs font-bold uppercase tracking-[0.2em]">แผงควบคุมและรายการจัดส่ง</p>
             </div>
 
             <div class="p-8 rounded-[3rem] bg-luxury text-white flex items-center justify-between shadow-2xl relative overflow-hidden">
-                <div class="absolute -right-5 -bottom-5 opacity-10"><i class="fas fa-satellite-dish text-6xl"></i></div>
+                <div class="absolute -right-5 -bottom-5 opacity-10"><i class="fas fa-satellite text-7xl"></i></div>
                 <div class="relative z-10 flex items-center gap-5">
-                    <div id="gpsPulse" class="w-3 h-3 bg-slate-500 rounded-full"></div>
+                    <div id="gpsNode" class="w-3 h-3 bg-slate-500 rounded-full transition-all"></div>
                     <div>
                         <p id="gpsLabel" class="text-xs font-black uppercase italic leading-none">System Offline</p>
-                        <p class="text-[9px] text-white/40 font-bold uppercase mt-1.5 tracking-widest">การแชร์พิกัดเรียลไทม์</p>
+                        <p class="text-[9px] text-white/40 font-bold uppercase mt-2 tracking-widest">Real-time Location Sharing</p>
                     </div>
                 </div>
-                <button id="gpsBtn" onclick="driver.toggleGPS()" class="px-6 py-2.5 bg-brand rounded-full font-black text-[10px] uppercase tracking-widest btn-luxury shadow-xl">Go Online</button>
+                <button id="gpsBtn" onclick="worker.toggleGPS()" class="px-6 py-3 bg-brand rounded-full font-black text-[10px] uppercase tracking-widest btn-luxury shadow-xl">Go Online</button>
             </div>
 
             <div class="space-y-6">
-                <div class="flex items-center gap-3 border-l-4 border-brand pl-4">
-                    <h3 class="text-sm font-black text-luxury uppercase tracking-widest italic font-title leading-none">Active Workloads</h3>
-                </div>
+                <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] border-l-2 border-brand pl-4">รายการงานปัจจุบัน</h3>
                 <div id="jobList" class="space-y-4">
                     </div>
             </div>
         </main>
 
-        <main id="view-profile" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-10 no-scrollbar pb-48 fade-slide">
-            <div class="bg-white p-14 rounded-[5rem] text-center border-2 border-slate-50 shadow-inner relative overflow-hidden">
-                <div class="absolute -top-10 -right-10 w-40 h-40 bg-brandSoft rounded-full blur-[80px] opacity-40"></div>
-                <div class="w-36 h-36 bg-bgMain rounded-full mx-auto mb-8 border-8 border-white shadow-2xl overflow-hidden relative z-10">
+        <main id="view-account" class="hidden flex-1 overflow-y-auto px-8 py-12 space-y-12 no-scrollbar pb-40 fade-slide">
+            <div class="bg-bgSoft p-12 rounded-[4.5rem] text-center border-2 border-slate-50 shadow-inner">
+                <div class="w-36 h-36 bg-white rounded-full mx-auto mb-8 border-8 border-white shadow-2xl overflow-hidden shadow-slate-200">
                     <img id="pImg" src="" class="w-full h-full object-cover">
                 </div>
-                <h2 id="pName" class="text-3xl font-black text-luxury italic uppercase font-title leading-tight relative z-10">...</h2>
-                <div class="bg-brandSoft px-6 py-3 rounded-full border border-blue-50 inline-flex items-center gap-3 mt-4 relative z-10">
-                    <span class="text-[10px] font-black text-brand uppercase tracking-widest italic" id="pRole">Loading Identity...</span>
+                <h2 id="pName" class="text-3xl font-black text-luxury italic uppercase font-title leading-tight">...</h2>
+                <div class="bg-white px-7 py-3 rounded-full border border-slate-100 inline-block mt-6 shadow-sm">
+                    <p id="pRole" class="text-[10px] font-black text-brand uppercase tracking-widest">...</p>
                 </div>
             </div>
-
+            
             <div class="space-y-8 px-2">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-400 ml-6 uppercase">Registered Office / Address</label>
-                    <div class="p-6 bg-white rounded-[2rem] border border-slate-100 italic text-sm font-bold text-luxury leading-relaxed shadow-sm" id="pAddr">...</div>
+                <div class="space-y-2.5">
+                    <label class="text-[10px] font-black text-slate-300 ml-6 uppercase tracking-widest">สถานที่จดทะเบียน</label>
+                    <div id="pAddr" class="p-8 bg-white rounded-[2.5rem] border border-slate-100 italic text-sm font-bold text-luxury leading-relaxed shadow-sm">...</div>
                 </div>
-                <button onclick="app.logout()" class="w-full bg-rose-50 text-rose-500 py-6 rounded-[2.8rem] font-black text-[11px] uppercase tracking-[0.3em] border border-rose-100 btn-luxury">Log Out Securely</button>
+                <button onclick="app.logout()" class="w-full bg-rose-50 text-rose-500 py-6 rounded-[2.8rem] font-black text-[11px] uppercase tracking-[0.3em] border border-rose-100 btn-luxury">Log Out From System</button>
             </div>
         </main>
-
-        <nav class="bg-white/95 backdrop-blur-2xl fixed bottom-0 w-full px-12 py-6 pb-14 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-25px_60px_rgba(0,0,0,0.04)]">
-            <button onclick="ui.changeView('tracking')" id="n-tracking" class="nav-link active opacity-100 flex flex-col items-center gap-2"><i class="fas fa-location-crosshairs text-2xl"></i><span class="text-[9px] font-black uppercase font-title tracking-tighter">MAPS</span></button>
-            <button onclick="ui.changeView('driver')" id="n-driver" class="hidden nav-link opacity-30 flex flex-col items-center gap-2"><i class="fas fa-truck-fast text-2xl"></i><span class="text-[9px] font-black uppercase font-title tracking-tighter">DRIVER</span></button>
-            <button onclick="ui.changeView('profile')" id="n-profile" class="nav-link opacity-30 flex flex-col items-center gap-2"><i class="fas fa-fingerprint text-2xl"></i><span class="text-[9px] font-black uppercase font-title tracking-tighter">ME</span></button>
+        
+        <nav class="bg-white/95 backdrop-blur-2xl fixed bottom-0 w-full px-12 py-6 pb-14 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-20px_60px_rgba(0,0,0,0.04)]">
+            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active flex flex-col items-center gap-2 transition-all opacity-100">
+                <i class="fas fa-location-crosshairs text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">TRACKING</span>
+            </button>
+            <button onclick="ui.changeView('driver')" id="n-driver" class="hidden nav-link flex flex-col items-center gap-2 transition-all opacity-20">
+                <i class="fas fa-truck-fast text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">WORKER</span>
+            </button>
+            <button onclick="ui.changeView('account')" id="n-account" class="nav-link flex flex-col items-center gap-2 transition-all opacity-20">
+                <i class="fas fa-fingerprint text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">ACCOUNT</span>
+            </button>
         </nav>
     </div>
 
     <div id="modal" class="hidden fixed inset-0 z-[1000] bg-luxury/90 backdrop-blur-xl flex items-end justify-center transition-all duration-500">
-        <div class="bg-white w-full rounded-t-[6rem] p-10 pb-28 shadow-2xl relative max-w-2xl fade-slide">
-            <button onclick="ui.closeModal()" class="absolute top-10 right-14 w-12 h-12 bg-bgMain rounded-full flex items-center justify-center text-slate-400 border-2 border-white shadow-sm btn-luxury"><i class="fas fa-times"></i></button>
-            <div class="w-20 h-1.5 bg-slate-100 rounded-full mx-auto mb-14 shadow-inner"></div>
+        <div class="bg-white w-full rounded-t-[6rem] p-10 pb-32 shadow-2xl relative max-w-2xl fade-slide">
+            <button onclick="ui.closeModal()" class="absolute top-10 right-14 w-12 h-12 bg-bgSoft rounded-full flex items-center justify-center text-slate-400 border-2 border-white btn-luxury shadow-sm"><i class="fas fa-times"></i></button>
+            <div class="w-16 h-1.5 bg-slate-100 rounded-full mx-auto mb-14 shadow-inner"></div>
             
-            <div id="modalContent" class="space-y-8 text-left px-4">
-                <h2 class="text-3xl font-black text-luxury italic font-title leading-none uppercase">CREATE <span class="text-brand">SHIPMENT</span></h2>
-                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest leading-none">ระบุรายละเอียดจุดรับ-จุดส่ง เพื่อเริ่มงาน</p>
+            <div id="modalContent" class="space-y-10 text-left px-4">
+                <div class="space-y-2">
+                    <h2 class="text-4xl font-black text-luxury italic font-title leading-none uppercase">Shipment <span class="text-brand">Order</span></h2>
+                    <p class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">สร้างรายการขนส่งสินค้าใหม่</p>
+                </div>
 
-                <div class="space-y-6 pt-4">
+                <div class="space-y-6">
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 ml-6 uppercase">1. จุดรับพัสดุ (Pickup Point)</label>
+                        <label class="text-[10px] font-black text-slate-400 ml-6 uppercase">1. จุดรับพัสดุ (Pickup Location)</label>
                         <div class="relative">
                             <i class="fas fa-warehouse absolute left-7 top-1/2 -translate-y-1/2 text-brand/30"></i>
-                            <input id="mPickup" class="w-full pl-16 pr-8 py-5 bg-bgMain rounded-[1.8rem] font-bold outline-none border-2 border-slate-50 focus:border-brand transition-all text-sm" placeholder="ระบุตำแหน่งจุดรับ">
+                            <input id="mPickup" class="w-full pl-16 pr-8 py-5 bg-bgSoft border-none rounded-[1.8rem] font-bold outline-none focus:ring-2 focus:ring-brand/10" placeholder="สถานที่รับของ">
                         </div>
                     </div>
                     <div class="space-y-2">
-                        <label class="text-[10px] font-black text-slate-400 ml-6 uppercase">2. จุดส่งปลายทาง (Delivery Point)</label>
+                        <label class="text-[10px] font-black text-slate-400 ml-6 uppercase">2. จุดส่งปลายทาง (Drop-off)</label>
                         <div class="relative">
                             <i class="fas fa-location-dot absolute left-7 top-1/2 -translate-y-1/2 text-brand/30"></i>
-                            <input id="mDrop" class="w-full pl-16 pr-8 py-5 bg-bgMain rounded-[1.8rem] font-bold outline-none border-2 border-slate-50 focus:border-brand transition-all text-sm" placeholder="ระบุตำแหน่งที่ส่ง">
+                            <input id="mDrop" class="w-full pl-16 pr-8 py-5 bg-bgSoft border-none rounded-[1.8rem] font-bold outline-none focus:ring-2 focus:ring-brand/10" placeholder="สถานที่ส่งของ">
                         </div>
                     </div>
-                    <button onclick="app.submitOrder()" class="w-full luxury-card-bg bg-luxury text-white py-6 rounded-[2.5rem] font-black uppercase text-xs tracking-[0.3em] shadow-2xl btn-luxury mt-6">ยืนยันคำสั่งจัดส่ง</button>
+                    <button onclick="app.submitOrder()" class="w-full bg-luxury text-white py-6 rounded-[2.5rem] font-black uppercase text-xs tracking-[0.3em] shadow-2xl btn-luxury mt-8 border border-white/10">สร้างคำสั่งจัดส่งทันที</button>
                 </div>
             </div>
         </div>
@@ -253,162 +253,148 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, updateDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, updateDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // 🔥 FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0", authDomain: "fafada-d9899.firebaseapp.com", projectId: "fafada-d9899", storageBucket: "fafada-d9899.firebasestorage.app", messagingSenderId: "484777586908", appId: "1:484777586908:web:16a8f0367ad15737364419", measurementId: "G-Q73X8Q841W" };
-        const fb_app = initializeApp(firebaseConfig);
-        const auth = getAuth(fb_app);
-        const db = getFirestore(fb_app);
+        const fb = initializeApp(firebaseConfig);
+        const auth = getAuth(fb);
+        const db = getFirestore(fb);
 
-        let userRole = 'customer', map, driverMarker, watchID, allJobs = [];
+        let uRole = 'customer', map, dMarker, watchID, shipments = [];
 
         window.ui = {
             changeView: (v) => {
                 document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
                 document.getElementById('view-'+v).classList.remove('hidden');
-                ['tracking', 'driver', 'profile'].forEach(n => {
+                ['home', 'driver', 'account'].forEach(n => {
                     const el = document.getElementById('n-'+n);
-                    if(el) { el.classList.toggle('opacity-100', n===v); el.classList.toggle('active', n===v); el.classList.toggle('opacity-30', n!==v); }
+                    if(el) { el.classList.toggle('opacity-100', n===v); el.classList.toggle('active', n===v); el.classList.toggle('opacity-20', n!==v); }
                 });
                 ui.closeModal();
             },
-            toggleForm: (login) => {
-                document.getElementById('loginForm').classList.toggle('hidden', !login);
-                document.getElementById('regForm').classList.toggle('hidden', login);
+            toggleAuth: (login) => {
+                document.getElementById('loginSection').classList.toggle('hidden', !login);
+                document.getElementById('registerSection').classList.toggle('hidden', login);
             },
             closeModal: () => document.getElementById('modal').classList.add('hidden'),
             hideLoader: () => { document.getElementById('loader').classList.add('opacity-0'); setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 700); },
             updateTimeline: (status) => {
                 const steps = { 'pending': 1, 'preparing': 2, 'shipping': 3, 'delivered': 4 };
-                const step = steps[status] || 1;
-                document.getElementById('lineActive').style.width = `${(step-1) * 33.33}%`;
-                for(let i=1; i<=4; i++) document.getElementById('n'+i).classList.toggle('active', step >= i);
-                const labels = { 'pending': 'รอยืนยันออเดอร์', 'preparing': 'เจ้าหน้าที่เตรียมสินค้า', 'shipping': 'กำลังนำส่งพัสดุ', 'delivered': 'จัดส่งสำเร็จเรียบร้อย' };
-                document.getElementById('statusLabel').innerText = labels[status] || status.toUpperCase();
+                const s = steps[status] || 1;
+                document.getElementById('trackActive').style.width = `${(s-1) * 33.33}%`;
+                for(let i=1; i<=4; i++) document.getElementById('s'+i).classList.toggle('active', s >= i);
+                const labels = { 'pending': 'รอยืนยันรายการ', 'preparing': 'กำลังจัดเตรียมพัสดุ', 'shipping': 'อยู่ระหว่างนำส่งสินค้า', 'delivered': 'สินค้าจัดส่งถึงมือแล้ว' };
+                document.getElementById('shipStatus').innerText = labels[status] || status.toUpperCase();
             }
         };
 
         window.app = {
-            selectRole: (r) => {
-                userRole = r;
-                document.querySelectorAll('#regForm button').forEach(b => b.classList.remove('bg-brand', 'text-white', 'border-brand'));
-                document.getElementById(r==='customer'?'roleC':'roleD').classList.add('bg-brand', 'text-white', 'border-brand');
+            setRole: (r) => {
+                uRole = r;
+                document.getElementById('roleCustomer').className = `role-btn p-4 rounded-2xl font-black text-xs leading-tight ${r==='customer'?'active border-brand bg-blue-50 text-brand':'border-slate-100 bg-white'}`;
+                document.getElementById('roleDriver').className = `role-btn p-4 rounded-2xl font-black text-xs leading-tight ${r==='driver'?'active border-brand bg-blue-50 text-brand':'border-slate-100 bg-white'}`;
             },
             login: async () => {
                 const em = document.getElementById('lEmail').value.trim();
                 const ps = document.getElementById('lPass').value.trim();
-                if(!em || !ps) return Swal.fire('Error', 'กรุณาระบุอีเมลและรหัสผ่าน', 'warning');
+                if(!em || !ps) return Swal.fire('Error','กรุณาระบุข้อมูล','warning');
                 Swal.showLoading();
-                try { await signInWithEmailAndPassword(auth, em, ps); } catch(e) { Swal.fire('Security Error', 'ไม่พบบัญชีสมาชิก หรือข้อมูลผิดพลาด', 'error'); }
+                try { await signInWithEmailAndPassword(auth, em, ps); } catch(e) { Swal.fire('Error','ไม่พบข้อมูลผู้ใช้','error'); }
             },
             register: async () => {
                 const em = document.getElementById('rEmail').value.trim();
                 const ps = document.getElementById('rPass').value.trim();
                 const nm = document.getElementById('rName').value.trim();
                 const ad = document.getElementById('rAddr').value.trim();
-                if(!em || !ps || !nm || !ad) return Swal.fire('Error', 'กรุณากรอกข้อมูลให้ครบถ้วนครับ', 'warning');
-                
+                if(!em || !ps || !nm || !ad) return Swal.fire('Error','กรุณากรอกข้อมูลให้ครบ','warning');
                 Swal.showLoading();
                 try {
                     const res = await createUserWithEmailAndPassword(auth, em, ps);
-                    // เงื่อนไข: ถ้าสมัครเป็น Customer อนุมัติเลย, ถ้า Driver ต้องรอแอดมิน
                     await setDoc(doc(db, "users", res.user.uid), {
-                        displayName: nm, email: em, address: ad, role: userRole, 
-                        isApproved: userRole === 'customer' ? true : false, 
+                        displayName: nm, email: em, address: ad, role: uRole,
+                        isApproved: uRole === 'customer' ? true : false,
                         createdAt: serverTimestamp()
                     });
                     location.reload();
-                } catch(e) { Swal.fire('Critical Error', e.message, 'error'); }
+                } catch(e) { Swal.fire('Error', e.message, 'error'); }
             },
             logout: () => signOut(auth).then(()=>location.reload()),
             openOrderModal: () => document.getElementById('modal').classList.remove('hidden'),
             submitOrder: async () => {
                 const pu = document.getElementById('mPickup').value.trim();
                 const dr = document.getElementById('mDrop').value.trim();
-                if(!pu || !dr) return Swal.fire('Error','กรุณาระบุที่รับ-ที่ส่ง','warning');
+                if(!pu || !dr) return Swal.fire('Error','ระบุพิกัดให้ครบ','warning');
                 Swal.showLoading();
                 await addDoc(collection(db, "shipments"), {
-                    customerID: auth.currentUser.uid, pickupAddress: pu, deliveryAddress: dr, 
+                    customerID: auth.currentUser.uid, pickup: pu, drop: dr,
                     status: 'pending', timestamp: serverTimestamp()
                 });
-                Swal.fire({icon:'success',title:'แจ้งจัดส่งสำเร็จ',timer:2000,showConfirmButton:false});
+                Swal.fire({icon:'success',title:'Order Created',timer:2000,showConfirmButton:false});
                 ui.closeModal();
             }
         };
 
-        // 🚛 Driver Hub Logic
-        window.driver = {
-            isOnline: false,
+        window.worker = {
+            gps: false,
             toggleGPS: () => {
-                driver.isOnline = !driver.isOnline;
+                worker.gps = !worker.gps;
                 const btn = document.getElementById('gpsBtn');
-                const pulse = document.getElementById('gpsPulse');
+                const node = document.getElementById('gpsNode');
                 const label = document.getElementById('gpsLabel');
-                
-                if(driver.isOnline) {
-                    btn.innerText = "Go Offline"; btn.classList.replace('bg-brand', 'bg-rose-500');
-                    pulse.classList.replace('bg-slate-500', 'bg-brand'); pulse.classList.add('pulse-loc');
-                    label.innerText = "Live Sharing On"; label.classList.replace('text-slate-500', 'text-brand');
-                    driver.startTracking();
+                if(worker.gps) {
+                    btn.innerText = "Go Offline"; btn.classList.replace('bg-brand','bg-rose-500');
+                    node.classList.replace('bg-slate-500','bg-brand'); node.classList.add('pulse-loc');
+                    label.innerText = "Live Sharing On"; label.classList.replace('text-slate-500','text-brand');
+                    worker.start();
                 } else {
-                    btn.innerText = "Go Online"; btn.classList.replace('bg-rose-500', 'bg-brand');
-                    pulse.classList.replace('bg-brand', 'bg-slate-500'); pulse.classList.remove('pulse-loc');
-                    label.innerText = "System Offline"; label.classList.replace('text-brand', 'text-slate-500');
-                    driver.stopTracking();
+                    btn.innerText = "Go Online"; btn.classList.replace('bg-rose-500','bg-brand');
+                    node.classList.replace('bg-brand','bg-slate-500'); node.classList.remove('pulse-loc');
+                    label.innerText = "System Offline"; label.classList.replace('text-brand','text-slate-500');
+                    worker.stop();
                 }
             },
-            startTracking: () => {
+            start: () => {
                 if ("geolocation" in navigator) {
                     watchID = navigator.geolocation.watchPosition(async (pos) => {
-                        const { latitude, longitude } = pos.coords;
-                        // อัปเดตพิกัดลงในออเดอร์ที่กำลัง Shipping อยู่
-                        const activeWork = allJobs.find(j => j.status === 'shipping');
-                        if(activeWork) {
-                            await updateDoc(doc(db, "shipments", activeWork.id), { driverLat: latitude, driverLng: longitude });
-                        }
-                    }, (e) => console.error(e), { enableHighAccuracy: true });
+                        const activeJob = shipments.find(j => j.status === 'shipping' && j.driverID === auth.currentUser.uid);
+                        if(activeJob) await updateDoc(doc(db, "shipments", activeJob.id), { driverLat: pos.coords.latitude, driverLng: pos.coords.longitude });
+                    }, e => console.error(e), { enableHighAccuracy: true });
                 }
             },
-            stopTracking: () => { if(watchID) navigator.geolocation.clearWatch(watchID); },
-            updateJobStatus: async (id, status) => {
+            stop: () => { if(watchID) navigator.geolocation.clearWatch(watchID); },
+            updateJob: async (id, status) => {
                 Swal.showLoading();
-                const updateData = { status: status };
-                if(status === 'preparing') updateData.driverID = auth.currentUser.uid;
-                await updateDoc(doc(db, "shipments", id), updateData);
+                const data = { status: status };
+                if(status === 'preparing') data.driverID = auth.currentUser.uid;
+                await updateDoc(doc(db, "shipments", id), data);
                 Swal.fire({icon:'success',title:'Updated',toast:true,position:'top',showConfirmButton:false,timer:2000});
             }
         };
 
-        // 🗺️ Google Maps Logic
         window.initMap = () => {
             map = new google.maps.Map(document.getElementById("map"), {
                 center: { lat: 13.7563, lng: 100.5018 }, zoom: 15, disableDefaultUI: true,
                 styles: [{ "featureType": "water", "elementType": "all", "color": "#f0f4f8" }]
             });
-            driverMarker = new google.maps.Marker({ 
-                map: map, 
-                icon: { url: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png', scaledSize: new google.maps.Size(42, 42) } 
-            });
+            dMarker = new google.maps.Marker({ map: map, icon: { url: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png', scaledSize: new google.maps.Size(42, 42) } });
         };
 
-        // 🔗 Global Nexus Logic
         onAuthStateChanged(auth, u => {
             if(u) {
                 onSnapshot(doc(db, "users", u.uid), s => {
                     const data = s.data();
                     if(!data) return;
                     if(!data.isApproved) {
-                        document.getElementById('waitScreen').classList.remove('hidden');
+                        document.getElementById('waitPage').classList.remove('hidden');
                         document.getElementById('loader').classList.add('hidden');
                     } else {
-                        document.getElementById('waitScreen').classList.add('hidden');
+                        document.getElementById('waitPage').classList.add('hidden');
                         document.getElementById('navName').innerText = data.displayName;
                         document.getElementById('pName').innerText = data.displayName;
                         document.getElementById('pRole').innerText = data.role.toUpperCase();
                         document.getElementById('pAddr').innerText = data.address;
                         document.getElementById('pImg').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
-                        document.getElementById('driverImg').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
                         if(data.role === 'driver') document.getElementById('n-driver').classList.remove('hidden');
                         document.getElementById('mainPage').classList.remove('hidden');
                         document.getElementById('authPage').classList.add('hidden');
@@ -416,63 +402,50 @@
                     }
                 });
 
-                // Listen for shipments
                 onSnapshot(collection(db, "shipments"), s => {
-                    allJobs = s.docs.map(d => ({id: d.id, ...d.data()}));
+                    shipments = s.docs.map(d => ({id: d.id, ...d.data()}));
+                    const myJobs = shipments.filter(x => x.customerID === u.uid || x.driverID === u.uid || x.status === 'pending');
                     
-                    // Filter for Dashboard
-                    const myJobs = allJobs.filter(x => x.customerID === u.uid || x.driverID === u.uid || x.status === 'pending');
-                    
-                    // Render Jobs for Driver
-                    if(document.getElementById('view-driver')) {
-                        const jl = document.getElementById('jobList'); jl.innerHTML = '';
-                        myJobs.forEach(job => {
-                            const isPending = job.status === 'pending';
-                            jl.innerHTML += `
-                            <div class="luxury-card p-6 space-y-4 fade-slide shadow-sm">
-                                <div class="flex justify-between items-start">
-                                    <span class="text-[9px] font-black text-brand bg-blue-50 px-3 py-1 rounded-full uppercase italic leading-none shadow-sm shadow-blue-100">Order #${job.id.slice(0,6).toUpperCase()}</span>
-                                    <span class="text-[10px] font-black text-slate-400 uppercase leading-none">${job.status}</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-[9px] font-black text-slate-300 uppercase italic">ที่รับและที่ส่ง</p>
-                                    <p class="text-xs font-bold text-luxury italic leading-relaxed">📦 ${job.pickupAddress} <br> 📍 ${job.deliveryAddress}</p>
-                                </div>
-                                <div class="grid grid-cols-2 gap-3 pt-2">
-                                    ${isPending ? `<button onclick="driver.updateJobStatus('${job.id}', 'preparing')" class="col-span-2 py-3.5 bg-brand text-white rounded-2xl text-[10px] font-black uppercase shadow-lg shadow-blue-100">Accept Order</button>` : `
-                                        <button onclick="driver.updateJobStatus('${job.id}', 'shipping')" class="py-3 bg-luxury text-white rounded-2xl text-[9px] font-black uppercase">Start Shipping</button>
-                                        <button onclick="driver.updateJobStatus('${job.id}', 'delivered')" class="py-3 bg-emerald-500 text-white rounded-2xl text-[9px] font-black uppercase shadow-lg shadow-emerald-100">Delivered</button>
-                                    `}
-                                </div>
-                            </div>`;
-                        });
-                    }
+                    // Render Worker Jobs
+                    const jl = document.getElementById('jobList'); if(jl) jl.innerHTML = '';
+                    myJobs.forEach(job => {
+                        if(jl) jl.innerHTML += `
+                        <div class="luxury-card p-6 space-y-4 fade-slide">
+                            <div class="flex justify-between items-center"><span class="text-[9px] font-black text-brand bg-blue-50 px-3 py-1 rounded-full uppercase italic">ORDER #${job.id.slice(0,6)}</span><span class="status-pill text-[10px] font-black uppercase text-slate-400">${job.status}</span></div>
+                            <p class="text-xs font-bold text-luxury italic leading-relaxed">📍 ${job.pickup} <br> 📦 ${job.drop}</p>
+                            <div class="grid grid-cols-2 gap-3 pt-2">
+                                ${job.status === 'pending' ? `<button onclick="worker.updateJob('${job.id}', 'preparing')" class="col-span-2 py-4 bg-luxury text-white rounded-2xl text-[10px] font-black uppercase shadow-xl">รับงานจัดส่ง (Accept)</button>` : `
+                                    <button onclick="worker.updateJob('${job.id}', 'shipping')" class="py-3 bg-brand text-white rounded-xl text-[9px] font-black uppercase">กำลังไปส่ง</button>
+                                    <button onclick="worker.updateJob('${job.id}', 'delivered')" class="py-3 bg-emerald-500 text-white rounded-xl text-[9px] font-black uppercase">ส่งงานสำเร็จ</button>
+                                `}
+                            </div>
+                        </div>`;
+                    });
 
-                    // Render Tracking for Customer
+                    // Render Tracking
                     const active = myJobs.find(x => x.status !== 'delivered');
                     if(active) {
-                        document.getElementById('shipID').innerText = '#' + active.id.slice(0, 8).toUpperCase();
-                        document.getElementById('pickupTxt').innerText = active.pickupAddress;
-                        document.getElementById('dropTxt').innerText = active.deliveryAddress;
-                        document.getElementById('driverName').innerText = active.driverName || 'กำลังรอมอบหมาย...';
+                        document.getElementById('orderCode').innerText = 'ORDER #' + active.id.slice(0, 8).toUpperCase();
+                        document.getElementById('driverName').innerText = active.driverID ? 'พนักงานจัดส่งกำลังทำงาน' : 'รอมอบหมายงาน...';
+                        document.getElementById('driverPic').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${active.driverID || 'empty'}`;
                         ui.updateTimeline(active.status);
                         if(active.driverLat) {
                             const pos = { lat: active.driverLat, lng: active.driverLng };
-                            driverMarker.setPosition(pos); map.panTo(pos);
+                            dMarker.setPosition(pos); map.panTo(pos);
                         }
                     }
                 });
-
             } else {
                 document.getElementById('authPage').classList.remove('hidden');
                 ui.hideLoader();
             }
         });
 
-        // 🛡️ Loader Lock Release
+        // 🛡️ Auto-Unlock (5s Timeout)
         setTimeout(() => { if(!document.getElementById('loader').classList.contains('hidden')) ui.hideLoader(); }, 5000);
     </script>
 
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </body>
 </html>
+
