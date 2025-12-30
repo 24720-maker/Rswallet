@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RS TRACKING | ระบบติดตามสินค้าอัจฉริยะ</title>
+    <title>RS TRACKING | ระบบขนส่งอัจฉริยะ</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/th.min.js"></script>
 
     <script>
         tailwind.config = {
@@ -27,317 +26,276 @@
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none !important; }
         body { background-color: #FFFFFF; color: #1E293B; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
         .font-title { font-family: 'Prompt', sans-serif; }
-
-        .luxury-card {
-            background: #FFFFFF;
-            box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05);
-            border-radius: 2.5rem;
-            border: 1px solid #F1F5F9;
-        }
-
-        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
-
+        .luxury-card { background: white; box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.05); border-radius: 2.5rem; border: 1px solid #F1F5F9; }
         .btn-luxury { transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
         .btn-luxury:active { transform: scale(0.95); opacity: 0.8; }
-
-        /* Timeline Style */
-        .step-dot { width: 12px; height: 12px; border-radius: 50%; background: #E2E8F0; position: relative; z-index: 2; transition: 0.5s; }
-        .step-dot.active { background: #0052FF; box-shadow: 0 0 10px rgba(0,82,255,0.5); }
-        .step-line { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #F1F5F9; z-index: 1; transform: translateY(-50%); }
-        .step-line-active { position: absolute; top: 50%; left: 0; height: 2px; background: #0052FF; z-index: 1; transform: translateY(-50%); transition: 0.5s; width: 0%; }
-
-        .fade-slide { animation: fadeSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
-        @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .pulse-driver { animation: pulse 2s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(0, 82, 255, 0.4); } 70% { box-shadow: 0 0 0 15px rgba(0, 82, 255, 0); } 100% { box-shadow: 0 0 0 0 rgba(0, 82, 255, 0); } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .fade-in { animation: fadeIn 0.5s ease-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
     </style>
 </head>
 <body class="flex flex-col">
 
     <div id="loader" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center transition-all duration-700">
-        <div class="w-20 h-20 bg-luxury rounded-[1.8rem] flex items-center justify-center shadow-2xl animate-pulse mb-6">
-            <span class="text-white font-black italic text-xl font-title">RS</span>
-        </div>
-        <p class="text-slate-400 font-bold tracking-[0.3em] text-[10px] uppercase animate-pulse">Initializing Real-time GPS...</p>
+        <div class="w-16 h-16 border-4 border-slate-100 border-t-brand rounded-full animate-spin"></div>
+        <p class="mt-6 text-slate-400 font-bold tracking-[0.3em] text-[10px] uppercase animate-pulse">กำลังเชื่อมต่อฐานข้อมูลความปลอดภัย...</p>
     </div>
 
-    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-white flex flex-col justify-center items-center p-10">
-        <div class="w-full max-w-sm text-center fade-slide">
-            <h1 class="text-3xl font-black text-luxury italic tracking-tighter uppercase mb-2 font-title">RS <span class="text-brand">TRACKING</span></h1>
-            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.2em] mb-12">เข้าสู่ระบบติดตามสินค้า</p>
-            <form onsubmit="app.login(event)" class="space-y-4">
-                <input id="lEmail" type="email" required class="w-full px-7 py-4 bg-bgSoft border-none rounded-2xl font-bold outline-none focus:ring-2 focus:ring-brand/10" placeholder="อีเมล">
-                <input id="lPass" type="password" required class="w-full px-7 py-4 bg-bgSoft border-none rounded-2xl font-bold outline-none focus:ring-2 focus:ring-brand/10" placeholder="รหัสผ่าน">
-                <button class="w-full bg-luxury text-white py-5 rounded-2xl font-black uppercase text-xs shadow-2xl mt-6 btn-luxury">Verify Identity</button>
-            </form>
+    <div id="waitPage" class="hidden fixed inset-0 z-[800] bg-white flex flex-col justify-center items-center p-10 text-center">
+        <div class="w-24 h-24 bg-amber-50 text-amber-500 rounded-full flex items-center justify-center mb-8 animate-bounce shadow-xl shadow-amber-100">
+            <i class="fas fa-clock-rotate-left text-4xl"></i>
+        </div>
+        <h2 class="text-2xl font-black text-luxury font-title mb-4">รอการอนุมัติสมาชิก</h2>
+        <p class="text-sm text-slate-500 leading-relaxed max-w-xs mb-8">บัญชีของคุณอยู่ในระหว่างการตรวจสอบข้อมูลโดยแอดมิน กรุณารอสักครู่เพื่อเข้าใช้งานระบบครับ</p>
+        <button onclick="app.logout()" class="text-brand font-bold text-sm underline uppercase">สลับบัญชีใหม่</button>
+    </div>
+
+    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-white flex flex-col justify-center items-center p-8 overflow-y-auto no-scrollbar">
+        <div class="w-full max-w-sm text-center fade-in py-10">
+            <h1 class="text-4xl font-black text-luxury italic font-title mb-2">RS <span class="text-brand">TRACK</span></h1>
+            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mb-10">เข้าใช้งานระบบติดตามสินค้า</p>
+
+            <div id="loginForm" class="space-y-4">
+                <input id="lEmail" type="email" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none border border-slate-50 focus:border-brand" placeholder="อีเมล">
+                <input id="lPass" type="password" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none border border-slate-50 focus:border-brand" placeholder="รหัสผ่าน">
+                <button onclick="app.login()" class="w-full bg-luxury text-white py-5 rounded-2xl font-bold uppercase text-xs shadow-xl btn-luxury">เข้าสู่ระบบ</button>
+                <button onclick="ui.toggleAuth(false)" class="text-slate-400 text-xs font-bold mt-4 uppercase">ยังไม่มีบัญชี? สมัครใหม่</button>
+            </div>
+
+            <div id="registerForm" class="hidden space-y-4 text-left">
+                <p class="text-[10px] font-black text-brand uppercase tracking-widest ml-2">ข้อมูลส่วนตัว</p>
+                <input id="rName" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none border border-slate-50" placeholder="ชื่อ-นามสกุล">
+                <input id="rEmail" type="email" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none border border-slate-50" placeholder="ระบุอีเมล">
+                <input id="rPass" type="password" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none border border-slate-50" placeholder="กำหนดรหัสผ่าน">
+                
+                <p class="text-[10px] font-black text-brand uppercase tracking-widest ml-2 mt-4">ที่อยู่ปัจจุบัน (สำหรับรับงาน/ส่งของ)</p>
+                <textarea id="rAddr" rows="3" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none border border-slate-50" placeholder="บ้านเลขที่, ถนน, แขวง, เขต, จังหวัด"></textarea>
+
+                <p class="text-[10px] font-black text-brand uppercase tracking-widest ml-2 mt-4">ประเภทสมาชิก</p>
+                <div class="grid grid-cols-2 gap-4">
+                    <button id="roleUser" onclick="app.setRole('customer')" class="role-btn p-4 rounded-xl border-2 border-slate-100 font-bold text-xs text-center active-role">ผู้ใช้งาน<br>(Customer)</button>
+                    <button id="roleDriver" onclick="app.setRole('driver')" class="role-btn p-4 rounded-xl border-2 border-slate-100 font-bold text-xs text-center">คนส่งของ<br>(Shipper)</button>
+                </div>
+
+                <button onclick="app.register()" class="w-full bg-brand text-white py-5 rounded-2xl font-bold uppercase text-xs shadow-xl btn-luxury mt-4">สมัครและรออนุมัติ</button>
+                <button onclick="ui.toggleAuth(true)" class="w-full text-center text-slate-400 text-xs font-bold uppercase mt-2">ยกเลิก</button>
+            </div>
         </div>
     </div>
 
-    <div id="mainPage" class="hidden flex-1 flex flex-col overflow-hidden">
-        
+    <div id="mainPage" class="hidden flex-1 flex flex-col overflow-hidden bg-white">
         <main id="view-tracking" class="flex-1 relative overflow-hidden">
-            <div id="map"></div> <div class="absolute top-8 left-0 w-full px-6 z-10 fade-slide">
-                <div class="glass-pill h-16 rounded-[1.5rem] flex items-center justify-between px-6 bg-white/90 backdrop-blur-md border border-white">
+            <div id="map"></div>
+            <div class="absolute top-8 left-0 w-full px-6 z-10">
+                <div class="luxury-card h-16 flex items-center justify-between px-6 bg-white/90 backdrop-blur-md border-white">
                     <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 bg-luxury rounded-xl flex items-center justify-center text-white text-[10px] font-black italic shadow-lg">RS</div>
-                        <div>
-                            <h2 class="font-black text-luxury text-sm leading-none font-title uppercase">Order <span id="displayOrderID">#...</span></h2>
-                            <p id="displayStatus" class="text-[9px] font-bold text-brand uppercase tracking-widest mt-1.5 animate-pulse">กำลังดึงข้อมูล...</p>
-                        </div>
+                        <div class="w-9 h-9 bg-luxury rounded-lg flex items-center justify-center text-white text-[9px] font-black italic">RS</div>
+                        <h2 class="font-black text-luxury text-sm font-title uppercase">ติดตามสินค้า <span id="trackID">#...</span></h2>
                     </div>
-                    <button onclick="app.logout()" class="text-slate-300 hover:text-danger transition-colors"><i class="fas fa-power-off"></i></button>
                 </div>
             </div>
 
             <div class="absolute bottom-32 left-0 w-full px-6 z-10">
-                <div class="luxury-card p-8 bg-white fade-slide">
-                    <div class="relative flex justify-between items-center mb-8 px-2">
-                        <div class="step-line"></div>
-                        <div id="timelineProgress" class="step-line-active"></div>
-                        <div class="flex flex-col items-center gap-2"><div id="dot1" class="step-dot active"></div><span class="text-[8px] font-bold uppercase text-slate-400">Order</span></div>
-                        <div class="flex flex-col items-center gap-2"><div id="dot2" class="step-dot"></div><span class="text-[8px] font-bold uppercase text-slate-400">Prepare</span></div>
-                        <div class="flex flex-col items-center gap-2"><div id="dot3" class="step-dot"></div><span class="text-[8px] font-bold uppercase text-slate-400">Ship</span></div>
-                        <div class="flex flex-col items-center gap-2"><div id="dot4" class="step-dot"></div><span class="text-[8px] font-bold uppercase text-slate-400">Done</span></div>
+                <div class="luxury-card p-6 fade-in">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="space-y-1">
+                            <p class="text-[9px] text-slate-400 uppercase font-black tracking-widest">จุดรับพัสดุ</p>
+                            <p id="pickupTxt" class="text-xs font-bold text-luxury truncate w-32">...</p>
+                        </div>
+                        <i class="fas fa-arrow-right text-slate-200 text-xs"></i>
+                        <div class="space-y-1 text-right">
+                            <p class="text-[9px] text-slate-400 uppercase font-black tracking-widest">จุดส่งพัสดุ</p>
+                            <p id="dropTxt" class="text-xs font-bold text-luxury truncate w-32">...</p>
+                        </div>
                     </div>
-
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center gap-4">
-                            <div class="w-14 h-14 rounded-2xl bg-bgSoft border border-slate-100 flex items-center justify-center overflow-hidden">
-                                <img id="driverImg" src="" class="w-full h-full object-cover">
-                            </div>
+                    <div class="flex items-center justify-between border-t border-slate-50 pt-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-xl bg-slate-50 overflow-hidden"><img id="driverPic" src="" class="w-full h-full object-cover"></div>
                             <div>
-                                <p class="text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-none mb-1.5">คนขับที่กำลังส่ง</p>
-                                <h3 id="driverName" class="font-black text-luxury text-base font-title leading-none uppercase">...</h3>
+                                <p id="driverName" class="text-sm font-black text-luxury leading-none">กำลังค้นหา...</p>
+                                <p class="text-[9px] text-brand font-bold uppercase mt-1 leading-none">สถานะ: <span id="shipStatusText">รออัปเดต</span></p>
                             </div>
                         </div>
-                        <a id="callDriver" href="#" class="w-12 h-12 bg-emerald-50 text-emerald-500 rounded-2xl flex items-center justify-center shadow-sm border border-emerald-100 btn-luxury"><i class="fas fa-phone-alt"></i></a>
+                        <button id="addOrderBtn" onclick="app.openOrderModal()" class="px-5 py-2.5 bg-brand text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand/20 btn-luxury">สร้างงานใหม่</button>
                     </div>
                 </div>
             </div>
         </main>
 
-        <main id="view-driver" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-10 no-scrollbar pb-40 fade-slide">
-            <div class="space-y-2">
-                <h1 class="text-3xl font-black text-luxury italic uppercase font-title leading-none">Driver <span class="text-brand">Panel</span></h1>
-                <p class="text-slate-400 text-xs font-bold uppercase tracking-widest">แผงควบคุมการอัปเดตสถานะขนส่ง</p>
-            </div>
-
-            <div id="driverStatusCard" class="p-8 rounded-[2.5rem] bg-bgSoft border border-slate-100 flex items-center justify-between">
-                <div class="flex items-center gap-4">
-                    <div id="statusPulse" class="w-3 h-3 bg-slate-300 rounded-full"></div>
-                    <div>
-                        <p id="onlineText" class="text-xs font-black text-slate-600 uppercase italic leading-none">Offline</p>
-                        <p class="text-[9px] font-bold text-slate-400 uppercase mt-1">ระบบแชร์ตำแหน่ง</p>
-                    </div>
-                </div>
-                <button id="toggleOnline" onclick="driver.toggleOnline()" class="px-6 py-2.5 bg-luxury text-white rounded-full font-black text-[10px] uppercase tracking-widest btn-luxury shadow-xl">Go Online</button>
-            </div>
-
-            <div class="space-y-6">
-                <h3 class="text-xs font-black text-slate-400 uppercase tracking-[0.2em] border-l-2 border-brand pl-4">งานที่ได้รับมอบหมาย</h3>
-                <div id="jobList" class="space-y-4">
-                    </div>
-            </div>
-        </main>
-
-        <main id="view-profile" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-8 no-scrollbar pb-40 fade-slide">
-            <div class="bg-bgSoft p-12 rounded-[4rem] text-center border border-slate-50 shadow-inner">
-                <div class="w-32 h-32 bg-white rounded-[3rem] mx-auto mb-6 border-4 border-white shadow-2xl flex items-center justify-center overflow-hidden">
-                    <img id="pImgMain" src="" class="w-full h-full object-cover">
+        <main id="view-profile" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-8 no-scrollbar pb-40 fade-in">
+            <div class="bg-bgSoft p-12 rounded-[4rem] text-center border border-slate-100 shadow-inner">
+                <div class="w-32 h-32 bg-white rounded-full mx-auto mb-6 border-8 border-white shadow-2xl overflow-hidden">
+                    <img id="pImg" src="" class="w-full h-full object-cover">
                 </div>
                 <h2 id="pName" class="text-2xl font-black text-luxury italic uppercase font-title leading-tight">...</h2>
-                <div class="mt-4 flex flex-col items-center">
-                    <div class="bg-white px-5 py-2 rounded-xl border border-slate-100 flex items-center gap-4">
-                        <span class="text-[9px] font-bold text-slate-400 uppercase">Role</span>
-                        <p id="pRole" class="text-[10px] font-black text-brand uppercase tracking-widest">...</p>
-                    </div>
+                <div class="bg-white px-6 py-2.5 rounded-full border border-slate-100 inline-block mt-4">
+                    <p id="pRole" class="text-[10px] font-black text-brand uppercase tracking-widest">...</p>
                 </div>
             </div>
-            
-            <button onclick="app.logout()" class="w-full bg-rose-50 text-rose-500 py-6 rounded-[2rem] font-black text-xs uppercase tracking-widest border border-rose-100 btn-luxury">Log Out from Secure Hub</button>
+            <div class="space-y-4">
+                <div class="p-6 bg-white rounded-3xl border border-slate-100 space-y-1">
+                    <p class="text-[9px] font-black text-slate-400 uppercase tracking-widest leading-none mb-1">ที่อยู่จดทะเบียน</p>
+                    <p id="pAddr" class="text-sm font-bold text-luxury leading-relaxed italic">...</p>
+                </div>
+                <button onclick="app.logout()" class="w-full bg-rose-50 text-rose-500 py-6 rounded-[2.5rem] font-black text-xs uppercase tracking-widest border border-rose-100 btn-luxury">ออกจากระบบ</button>
+            </div>
         </main>
-        
-        <nav class="bg-white/90 backdrop-blur-xl fixed bottom-0 w-full px-12 py-5 pb-12 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[4rem] shadow-[0_-15px_50px_rgba(0,0,0,0.04)]">
-            <button onclick="ui.changeView('tracking')" id="n-tracking" class="nav-link active flex flex-col items-center gap-2 transition-all opacity-100">
-                <i class="fas fa-location-dot text-xl"></i><span class="text-[9px] font-bold uppercase">Tracking</span>
-            </button>
-            <button onclick="ui.changeView('driver')" id="n-driver" class="hidden nav-link flex flex-col items-center gap-2 transition-all opacity-30">
-                <i class="fas fa-truck-fast text-xl"></i><span class="text-[9px] font-bold uppercase">Driver</span>
-            </button>
-            <button onclick="ui.changeView('profile')" id="n-profile" class="nav-link flex flex-col items-center gap-2 opacity-30 transition-all">
-                <i class="fas fa-circle-user text-xl"></i><span class="text-[9px] font-bold uppercase">Profile</span>
-            </button>
+
+        <nav class="bg-white/90 backdrop-blur-xl fixed bottom-0 w-full px-12 py-5 pb-12 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[3.5rem] shadow-2xl">
+            <button onclick="ui.changeView('tracking')" id="n-tracking" class="active opacity-100 flex flex-col items-center gap-1.5"><i class="fas fa-map-location-dot text-2xl"></i><span class="text-[8px] font-black uppercase">Tracking</span></button>
+            <button onclick="ui.changeView('profile')" id="n-profile" class="opacity-30 flex flex-col items-center gap-1.5"><i class="fas fa-circle-user text-2xl"></i><span class="text-[8px] font-black uppercase">Account</span></button>
         </nav>
+    </div>
+
+    <div id="modal" class="hidden fixed inset-0 z-[1000] bg-luxury/80 backdrop-blur-md flex items-end justify-center transition-all duration-500">
+        <div class="bg-white w-full rounded-t-[5rem] p-10 pb-24 shadow-2xl relative max-w-2xl">
+            <button onclick="ui.closeModal()" class="absolute top-10 right-14 w-11 h-11 bg-bgSoft rounded-full flex items-center justify-center text-slate-400"><i class="fas fa-times"></i></button>
+            <div id="modalContent" class="space-y-6 text-left">
+                <h2 class="text-2xl font-black text-luxury font-title leading-none italic uppercase">สร้างคำสั่งขนส่ง</h2>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase">1. จุดรับสินค้า (Pickup)</label>
+                    <input id="mPickup" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none" placeholder="ระบุตำแหน่งจุดรับ">
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-black text-slate-400 ml-4 uppercase">2. จุดส่งสินค้า (Drop-off)</label>
+                    <input id="mDrop" class="w-full px-7 py-4 bg-bgSoft rounded-2xl font-bold outline-none" placeholder="ระบุตำแหน่งจุดส่ง">
+                </div>
+                <button onclick="app.submitOrder()" class="w-full bg-brand text-white py-6 rounded-[2.5rem] font-black uppercase text-xs tracking-widest shadow-xl btn-luxury mt-4">ยืนยันคำสั่งซื้อ</button>
+            </div>
+        </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, updateDoc, collection, query, where } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 🔥 FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0", authDomain: "fafada-d9899.firebaseapp.com", projectId: "fafada-d9899", storageBucket: "fafada-d9899.firebasestorage.app", messagingSenderId: "484777586908", appId: "1:484777586908:web:16a8f0367ad15737364419" };
-        const app_fb = initializeApp(firebaseConfig);
-        const auth = getAuth(app_fb);
-        const db = getFirestore(app_fb);
+        const fb_app = initializeApp(firebaseConfig);
+        const auth = getAuth(fb_app);
+        const db = getFirestore(fb_app);
 
-        let user = null, userData = null, map = null, driverMarker = null, watchID = null, activeShipment = null;
+        let userRole = 'customer', map, driverMarker;
 
         window.ui = {
             changeView: (v) => {
                 document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
                 document.getElementById('view-'+v).classList.remove('hidden');
-                ['tracking', 'driver', 'profile'].forEach(nav => {
-                    const el = document.getElementById('n-'+nav);
-                    if(el) { el.classList.toggle('active', nav===v); el.classList.toggle('opacity-100', nav===v); el.classList.toggle('opacity-30', nav!==v); }
-                });
+                document.getElementById('n-tracking').style.opacity = v === 'tracking' ? "1" : "0.3";
+                document.getElementById('n-profile').style.opacity = v === 'profile' ? "1" : "0.3";
+                ui.closeModal();
             },
-            hideLoader: () => { document.getElementById('loader').classList.add('opacity-0'); setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 700); },
-            updateTimeline: (status) => {
-                const steps = { 'pending': 1, 'preparing': 2, 'shipping': 3, 'delivered': 4 };
-                const step = steps[status] || 1;
-                document.getElementById('timelineProgress').style.width = `${(step-1) * 33.33}%`;
-                for(let i=1; i<=4; i++) document.getElementById('dot'+i).classList.toggle('active', step >= i);
-                const statusTexts = { 'pending': 'รับออเดอร์แล้ว', 'preparing': 'กำลังเตรียมสินค้า', 'shipping': 'กำลังนำส่ง', 'delivered': 'ส่งสำเร็จแล้ว' };
-                document.getElementById('displayStatus').innerText = statusTexts[status] || status;
+            toggleAuth: (login) => {
+                document.getElementById('loginForm').classList.toggle('hidden', !login);
+                document.getElementById('registerForm').classList.toggle('hidden', login);
+            },
+            closeModal: () => document.getElementById('modal').classList.add('hidden'),
+            hideLoader: () => {
+                document.getElementById('loader').classList.add('opacity-0');
+                setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 700);
             }
         };
 
         window.app = {
-            logout: ()=>signOut(auth).then(()=>location.reload()),
-            login: async (e) => {
-                e.preventDefault();
+            setRole: (r) => {
+                userRole = r;
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active-role', 'border-brand', 'text-brand'));
+                document.getElementById(r==='customer'?'roleUser':'roleDriver').classList.add('active-role', 'border-brand', 'text-brand');
+            },
+            login: async () => {
+                const em = document.getElementById('lEmail').value.trim();
+                const ps = document.getElementById('lPass').value.trim();
+                if(!em || !ps) return Swal.fire('Error', 'กรุณากรอกอีเมลและรหัสผ่าน', 'warning');
                 Swal.showLoading();
-                try { await signInWithEmailAndPassword(auth, document.getElementById('lEmail').value.trim(), document.getElementById('lPass').value.trim()); } 
-                catch(err) { Swal.fire('Error', 'ไม่พบข้อมูลสมาชิก หรือรหัสผ่านผิด', 'error'); }
-            }
-        };
-
-        // 🚛 Driver-Specific Functions
-        window.driver = {
-            isOnline: false,
-            toggleOnline: () => {
-                driver.isOnline = !driver.isOnline;
-                const btn = document.getElementById('toggleOnline');
-                const pulse = document.getElementById('statusPulse');
-                const txt = document.getElementById('onlineText');
+                try { await signInWithEmailAndPassword(auth, em, ps); } catch(e) { Swal.fire('Error', 'เข้าสู่ระบบล้มเหลว', 'error'); }
+            },
+            register: async () => {
+                const em = document.getElementById('rEmail').value.trim();
+                const ps = document.getElementById('rPass').value.trim();
+                const nm = document.getElementById('rName').value.trim();
+                const ad = document.getElementById('rAddr').value.trim();
+                if(!em || !ps || !nm || !ad) return Swal.fire('Error', 'กรุณากรอกข้อมูลให้ครบทุกช่อง', 'warning');
                 
-                if(driver.isOnline) {
-                    btn.innerText = "Go Offline"; btn.classList.replace('bg-luxury', 'bg-rose-500');
-                    pulse.classList.replace('bg-slate-300', 'bg-brand'); pulse.classList.add('pulse-driver');
-                    txt.innerText = "Online"; txt.classList.replace('text-slate-600', 'text-brand');
-                    driver.startTracking();
-                } else {
-                    btn.innerText = "Go Online"; btn.classList.replace('bg-rose-500', 'bg-luxury');
-                    pulse.classList.replace('bg-brand', 'bg-slate-300'); pulse.classList.remove('pulse-driver');
-                    txt.innerText = "Offline"; txt.classList.replace('text-brand', 'text-slate-600');
-                    driver.stopTracking();
-                }
-            },
-            startTracking: () => {
-                if ("geolocation" in navigator) {
-                    watchID = navigator.geolocation.watchPosition(async (pos) => {
-                        const { latitude, longitude } = pos.coords;
-                        // อัปเดตพิกัดคนขับใน DB (สมมติอัปเดต shipment แรกที่กำลังทำอยู่)
-                        const activeJob = allShipments.find(s => s.status === 'shipping');
-                        if(activeJob) {
-                            await updateDoc(doc(db, "shipments", activeJob.id), { driverLat: latitude, driverLng: longitude });
-                        }
-                    }, (err) => console.error(err), { enableHighAccuracy: true });
-                }
-            },
-            stopTracking: () => { if(watchID) navigator.geolocation.clearWatch(watchID); },
-            updateJob: async (shipID, nextStatus) => {
                 Swal.showLoading();
-                await updateDoc(doc(db, "shipments", shipID), { status: nextStatus });
-                Swal.fire({ icon:'success', title:'Updated Status', toast:true, position:'top', showConfirmButton:false, timer:2000 });
+                try {
+                    const res = await createUserWithEmailAndPassword(auth, em, ps);
+                    await setDoc(doc(db, "users", res.user.uid), {
+                        displayName: nm, email: em, address: ad, role: userRole, isApproved: false, createdAt: serverTimestamp()
+                    });
+                    location.reload();
+                } catch(e) { Swal.fire('Error', 'สมัครสมาชิกไม่สำเร็จ', 'error'); }
+            },
+            logout: () => signOut(auth).then(()=>location.reload()),
+            openOrderModal: () => document.getElementById('modal').classList.remove('hidden'),
+            submitOrder: async () => {
+                const pu = document.getElementById('mPickup').value.trim();
+                const dr = document.getElementById('mDrop').value.trim();
+                if(!pu || !dr) return Swal.fire('Error','กรุณาระบุที่รับ-ส่ง','warning');
+                Swal.showLoading();
+                await addDoc(collection(db, "shipments"), {
+                    customerID: auth.currentUser.uid, pickupAddress: pu, deliveryAddress: dr, status: 'pending', timestamp: serverTimestamp()
+                });
+                Swal.fire({icon:'success',title:'ส่งออเดอร์สำเร็จ',timer:2000,showConfirmButton:false});
+                ui.closeModal();
             }
         };
 
-        // 🗺️ Google Maps Initialization
+        // 🗺️ Map Init
         window.initMap = () => {
-            const defaultPos = { lat: 13.7563, lng: 100.5018 }; // Bangkok
             map = new google.maps.Map(document.getElementById("map"), {
-                center: defaultPos, zoom: 15, disableDefaultUI: true,
-                styles: [ { "featureType": "all", "elementType": "labels.text.fill", "color": "#1e293b" }, { "featureType": "water", "elementType": "all", "color": "#f0f4f8" } ]
+                center: { lat: 13.7563, lng: 100.5018 }, zoom: 15, disableDefaultUI: true,
+                styles: [{ "featureType": "water", "elementType": "all", "color": "#f0f4f8" }]
             });
             driverMarker = new google.maps.Marker({ map: map, icon: { url: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png', scaledSize: new google.maps.Size(40, 40) } });
         };
 
-        let allShipments = [];
+        // 🔗 Real-time Logic
         onAuthStateChanged(auth, u => {
             if(u) {
-                user = u;
-                document.getElementById('authPage').classList.add('hidden');
-                
-                onSnapshot(doc(db,"users",u.uid), s => {
-                    if(s.exists()){
-                        userData = s.data();
-                        document.getElementById('navName').innerText = userData.displayName || 'Client';
-                        document.getElementById('pName').innerText = userData.displayName || 'Client';
-                        document.getElementById('pRole').innerText = userData.role || 'Customer';
-                        document.getElementById('navAvatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
-                        document.getElementById('pImgMain').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
-                        
-                        // ปรับ UI ตามบทบาท
-                        if(userData.role === 'driver') {
-                            document.getElementById('n-driver').classList.remove('hidden');
-                            ui.changeView('driver');
-                        }
+                onSnapshot(doc(db, "users", u.uid), s => {
+                    const data = s.data();
+                    if(!data) return;
+                    if(!data.isApproved) {
+                        document.getElementById('waitPage').classList.remove('hidden');
+                        document.getElementById('loader').classList.add('hidden');
+                    } else {
+                        document.getElementById('waitPage').classList.add('hidden');
+                        document.getElementById('navName').innerText = data.displayName;
+                        document.getElementById('pName').innerText = data.displayName;
+                        document.getElementById('pRole').innerText = data.role === 'customer' ? 'ผู้ใช้งานทั่วไป' : 'เจ้าหน้าที่ขนส่ง';
+                        document.getElementById('pAddr').innerText = data.address;
+                        document.getElementById('pImg').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
+                        document.getElementById('mainPage').classList.remove('hidden');
+                        document.getElementById('authPage').classList.add('hidden');
                         ui.hideLoader();
                     }
                 });
 
                 // Listen for shipments
-                const q = (userData?.role === 'driver') ? query(collection(db,"shipments"), where("driverID","==",u.uid)) : query(collection(db,"shipments"), where("customerID","==",u.uid));
                 onSnapshot(collection(db, "shipments"), s => {
-                    allShipments = []; s.forEach(d => { const data = d.data(); data.id = d.id; allShipments.push(data); });
-                    
-                    // อัปเดตงานในหน้า Driver
-                    if(userData?.role === 'driver') {
-                        const jl = document.getElementById('jobList'); jl.innerHTML = '';
-                        allShipments.forEach(job => {
-                            jl.innerHTML += `
-                            <div class="luxury-card p-6 flex flex-col gap-4">
-                                <div class="flex justify-between">
-                                    <span class="text-[10px] font-black text-brand uppercase tracking-tighter">ID: #${job.id.slice(0,6)}</span>
-                                    <span class="status-pill status-${job.status}">${job.status}</span>
-                                </div>
-                                <div class="space-y-1">
-                                    <p class="text-[10px] text-slate-400 uppercase font-bold">ที่อยู่จัดส่ง</p>
-                                    <p class="text-sm font-bold text-luxury">${job.address}</p>
-                                </div>
-                                <div class="grid grid-cols-2 gap-3 mt-2">
-                                    <button onclick="driver.updateJob('${job.id}', 'shipping')" class="py-3 bg-brand text-white rounded-xl text-[10px] font-black uppercase">Start Shipping</button>
-                                    <button onclick="driver.updateJob('${job.id}', 'delivered')" class="py-3 bg-emerald-500 text-white rounded-xl text-[10px] font-black uppercase">Delivered</button>
-                                </div>
-                            </div>`;
-                        });
-                    }
-
-                    // อัปเดตแผนที่ในหน้า Tracking
-                    const activeJob = allShipments.find(ship => ship.status !== 'delivered');
-                    if(activeJob) {
-                        document.getElementById('displayOrderID').innerText = '#' + activeJob.id.slice(0, 8).toUpperCase();
-                        ui.updateTimeline(activeJob.status);
-                        document.getElementById('driverName').innerText = activeJob.driverName || 'กำลังรอมอบหมาย';
-                        document.getElementById('driverImg').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${activeJob.driverID}`;
-                        
-                        if(activeJob.driverLat && activeJob.driverLng) {
-                            const driverPos = { lat: activeJob.driverLat, lng: activeJob.driverLng };
-                            driverMarker.setPosition(driverPos);
-                            map.panTo(driverPos);
+                    const list = s.docs.map(d => ({id: d.id, ...d.data()})).filter(x => x.customerID === u.uid || x.driverID === u.uid);
+                    if(list.length > 0) {
+                        const active = list[list.length-1];
+                        document.getElementById('trackID').innerText = '#' + active.id.slice(0,6).toUpperCase();
+                        document.getElementById('pickupTxt').innerText = active.pickupAddress;
+                        document.getElementById('dropTxt').innerText = active.deliveryAddress;
+                        document.getElementById('shipStatusText').innerText = active.status.toUpperCase();
+                        if(active.driverLat) {
+                            const pos = { lat: active.driverLat, lng: active.driverLng };
+                            driverMarker.setPosition(pos); map.panTo(pos);
                         }
-                    } else {
-                        document.getElementById('noData').classList.remove('hidden');
                     }
                 });
-
-            } else { document.getElementById('authPage').classList.remove('hidden'); ui.hideLoader(); }
+            } else {
+                document.getElementById('authPage').classList.remove('hidden');
+                ui.hideLoader();
+            }
         });
-    </script>
 
+        // Failsafe
+        setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 5000);
+    </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </body>
 </html>
