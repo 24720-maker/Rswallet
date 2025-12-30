@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>RS SUPREME | ระบบวิเคราะห์การเทรดอัจฉริยะ</title>
+    <title>RS NEURAL QUANTUM | ระบบนำเทรดอัจฉริยะ</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@100;200;300;400;500;600&family=Prompt:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
@@ -24,60 +24,67 @@
     </script>
 
     <style>
+        /* 🎨 Master Aesthetics */
         :root { --brand: #F0B90B; --cyber: #0052FF; }
         * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none !important; }
         body { background-color: #010409; color: #E6EDF3; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
-        
-        /* Premium UI Components */
-        .luxury-card { background: rgba(13, 17, 23, 0.98); border: 1px solid rgba(48, 54, 61, 0.8); border-radius: 2.5rem; }
-        .btn-neural { border: 1.5px solid #30363d; background: #0d1117; transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); border-radius: 1.5rem; cursor: pointer; }
-        .btn-neural.active { border-color: var(--brand); background: rgba(240, 185, 11, 0.1); box-shadow: 0 0 20px rgba(240, 185, 11, 0.2); }
+        .font-title { font-family: 'Prompt', sans-serif; }
 
-        /* Scanning Animation */
-        .scan-wrapper { position: relative; width: 160px; height: 160px; border-radius: 2rem; border: 2px solid rgba(0, 82, 255, 0.1); overflow: hidden; display: flex; align-items: center; justify-content: center; }
-        .scan-laser { position: absolute; width: 100%; height: 4px; background: var(--brand); box-shadow: 0 0 15px var(--brand); animation: laserScan 2.5s infinite ease-in-out; }
+        /* Premium Components */
+        .luxury-card { background: rgba(13, 17, 23, 0.98); border: 1px solid rgba(48, 54, 61, 0.7); border-radius: 2.5rem; }
+        .btn-neural { border: 1.5px solid #30363d; background: #0d1117; transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); border-radius: 1.5rem; cursor: pointer; }
+        .btn-neural.active { border-color: var(--brand); background: rgba(240, 185, 11, 0.12); box-shadow: 0 0 20px rgba(240, 185, 11, 0.15); }
+
+        /* 🧠 Neural Scanning Animation */
+        .scan-wrapper { position: relative; width: 170px; height: 170px; border-radius: 2rem; border: 2px solid rgba(240, 185, 11, 0.15); overflow: hidden; display: flex; align-items: center; justify-content: center; background: #0b0e11; }
+        .scan-laser { position: absolute; width: 100%; height: 5px; background: var(--brand); box-shadow: 0 0 25px var(--brand); animation: laserScan 2.5s infinite ease-in-out; z-index: 10; }
         @keyframes laserScan { 0%, 100% { top: 0%; opacity: 0; } 50% { top: 100%; opacity: 1; } }
 
-        .fade-slide { animation: fadeSlide 0.5s ease-out; }
+        .fade-slide { animation: fadeSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
         @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .auth-input { width: 100%; padding: 1.2rem 1.5rem; background: #161b22; border-radius: 1.5rem; border: 1.5px solid transparent; font-weight: 600; color: white; transition: 0.3s; }
-        .auth-input:focus { border-color: var(--brand); }
+        .glow-gold { filter: drop-shadow(0 0 10px rgba(240, 185, 11, 0.4)); }
+
+        /* Custom Input Styling */
+        .auth-input { width: 100%; padding: 1.3rem 1.6rem; background: #161b22; border-radius: 1.6rem; border: 1.5px solid transparent; font-weight: 600; color: white; transition: 0.3s; }
+        .auth-input:focus { border-color: var(--brand); box-shadow: 0 0 0 5px rgba(240, 185, 11, 0.05); }
+
+        .sub-badge { padding: 4px 12px; border-radius: 8px; font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body class="flex flex-col">
 
-    <div id="loader" class="fixed inset-0 z-[1000] bg-bgDark flex flex-col items-center justify-center transition-all duration-700">
+    <div id="loader" class="fixed inset-0 z-[1000] bg-bgDark flex flex-col items-center justify-center transition-all duration-1000">
         <div class="relative w-36 h-36 mb-10 flex items-center justify-center">
-            <div class="absolute inset-0 border-2 border-slate-800 rounded-full animate-pulse"></div>
-            <div class="absolute inset-0 border-2 border-brand rounded-full border-t-transparent animate-spin"></div>
-            <i class="fas fa-atom text-brand text-5xl"></i>
+            <div class="absolute inset-0 border-[3px] border-slate-900 rounded-[2.5rem] rotate-45"></div>
+            <div class="absolute inset-0 border-[3px] border-brand rounded-[2.5rem] rotate-45 border-t-transparent animate-spin"></div>
+            <i class="fas fa-microchip text-brand text-5xl animate-pulse"></i>
         </div>
-        <p class="text-brand font-black tracking-widest text-xs uppercase animate-pulse">RS QUANTUM BOOTING...</p>
+        <p class="text-brand font-black tracking-[0.5em] text-[12px] uppercase animate-pulse">RS Neural Link Booting...</p>
     </div>
 
-    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-bgDark flex flex-col justify-center items-center p-8 overflow-y-auto no-scrollbar">
-        <div class="w-full max-w-sm text-center fade-slide">
-            <div class="w-20 h-20 bg-brand rounded-3xl flex items-center justify-center mx-auto mb-8 shadow-2xl">
-                <i class="fas fa-fingerprint text-bgDark text-4xl"></i>
+    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-bgDark flex flex-col justify-center items-center p-10 overflow-y-auto no-scrollbar">
+        <div class="w-full max-w-sm text-center fade-slide py-10">
+            <div class="w-20 h-20 bg-brand rounded-3xl flex items-center justify-center mx-auto mb-10 shadow-2xl">
+                <i class="fas fa-lock-open text-bgDark text-4xl"></i>
             </div>
-            <h1 class="text-4xl font-black text-white italic tracking-tighter uppercase mb-2 font-title leading-none">RS <span class="text-brand">QUANTUM</span></h1>
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em] mb-10">Premium Member Access</p>
+            <h1 class="text-5xl font-black text-white italic tracking-tighter uppercase mb-2 font-title">RS <span class="text-brand">NEURAL</span></h1>
+            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em] mb-12 italic">Premium AI Trading Hub</p>
             
             <div id="loginForm" class="space-y-4">
-                <input id="lEmail" type="email" class="auth-input" placeholder="อีเมล">
-                <input id="lPass" type="password" class="auth-input" placeholder="รหัสผ่าน">
-                <button onclick="app.login()" class="w-full bg-brand text-bgDark py-6 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl">เข้าระบบ</button>
-                <button onclick="ui.toggleForm(false)" class="text-slate-500 text-[10px] font-black uppercase mt-8 underline underline-offset-8">สมัครสมาชิกพรีเมียม</button>
+                <input id="lEmail" type="email" class="auth-input shadow-inner" placeholder="ระบุอีเมลผู้ใช้งาน">
+                <input id="lPass" type="password" class="auth-input shadow-inner" placeholder="รหัสผ่านเข้าถึง">
+                <button onclick="app.login()" class="w-full bg-brand text-bgDark py-7 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl btn-luxury mt-4">ยืนยันตัวตนเข้าระบบ</button>
+                <button onclick="ui.toggleAuth(false)" class="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-10 underline underline-offset-8">สมัครสมาชิกพรีเมียมที่นี่</button>
             </div>
 
-            <div id="regForm" class="hidden space-y-4">
-                <input id="rName" class="auth-input" placeholder="ชื่อ">
+            <div id="regForm" class="hidden space-y-4 text-left">
+                <input id="rName" class="auth-input" placeholder="ชื่อที่ใช้แสดง">
                 <input id="rEmail" type="email" class="auth-input" placeholder="อีเมล">
                 <input id="rPass" type="password" class="auth-input" placeholder="รหัสผ่าน">
-                <button onclick="app.register()" class="w-full bg-white text-bgDark py-6 rounded-[2rem] font-black uppercase text-xs shadow-xl">สร้างบัญชี</button>
-                <button onclick="ui.toggleForm(true)" class="text-slate-500 text-[10px] font-black mt-6">ย้อนกลับ</button>
+                <button onclick="app.register()" class="w-full bg-white text-bgDark py-7 rounded-[2rem] font-black uppercase text-xs shadow-xl mt-4">สร้างบัญชีสมาชิก</button>
+                <button onclick="ui.toggleAuth(true)" class="w-full text-center text-slate-500 text-[10px] font-black mt-6">ย้อนกลับ</button>
             </div>
         </div>
     </div>
@@ -86,53 +93,59 @@
         
         <header class="px-8 pt-8 pb-3 flex justify-between items-center z-10">
             <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-brand rounded-2xl flex items-center justify-center text-bgDark shadow-2xl italic font-black text-xs">RS</div>
+                <div class="w-12 h-12 bg-brand rounded-2xl flex items-center justify-center text-bgDark shadow-2xl italic font-black text-xs border border-brand/20">RS</div>
                 <div>
                     <h2 id="navName" class="font-black text-white text-lg leading-none font-title italic uppercase tracking-tighter">...</h2>
-                    <div class="flex items-center gap-2 mt-2">
-                        <span id="subLabel" class="px-2 py-0.5 bg-slate-800 text-slate-500 text-[9px] font-black rounded italic">None</span>
-                        <p id="expiryLabel" class="text-[9px] font-bold text-slate-500 uppercase leading-none">Syncing Access...</p>
+                    <div class="flex items-center gap-2.5 mt-2">
+                        <span id="subLabel" class="sub-badge bg-brand text-bgDark italic leading-none">None</span>
+                        <p id="expiryLabel" class="text-[9px] font-bold text-slate-500 uppercase tracking-widest leading-none">Syncing Access...</p>
                     </div>
                 </div>
             </div>
-            <button onclick="app.logout()" class="w-11 h-11 rounded-2xl bg-cardDark text-slate-400 flex items-center justify-center border border-slate-800"><i class="fas fa-power-off text-sm"></i></button>
+            <button onclick="app.logout()" class="w-11 h-11 rounded-2xl bg-cardDark text-slate-400 flex items-center justify-center btn-luxury border border-slate-800 shadow-sm"><i class="fas fa-power-off text-sm"></i></button>
         </header>
 
         <main id="view-home" class="flex-1 overflow-y-auto px-6 py-6 space-y-10 no-scrollbar pb-48">
             
-            <div class="luxury-card h-80 overflow-hidden relative shadow-2xl border-none fade-slide">
+            <div class="luxury-card h-72 overflow-hidden relative shadow-2xl border-none fade-slide">
                 <div id="chart-mount" class="w-full h-full"></div>
             </div>
 
             <div class="space-y-4">
                 <div class="flex justify-between items-end px-2">
-                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] italic">Market Node</h3>
+                    <h3 class="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em] italic leading-none text-brand">Market Station</h3>
                     <p id="livePrice" class="text-xl font-black text-white font-title tracking-tighter leading-none italic">Syncing...</p>
                 </div>
                 <div class="grid grid-cols-3 gap-3">
-                    <button onclick="app.select('BTCUSDT', 'Bitcoin')" class="btn-neural p-5 flex flex-col items-center gap-3 active" id="btn-BTCUSDT">
-                        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="w-7 h-7">
-                        <span class="text-[10px] font-black uppercase">BTC</span>
+                    <button onclick="app.select('BTCUSDT', 'Bitcoin')" class="btn-neural p-5 flex flex-col items-center gap-3 active shadow-lg" id="btn-BTCUSDT">
+                        <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="w-7 h-7 glow-gold">
+                        <span class="text-[10px] font-black uppercase tracking-widest leading-none">BTC</span>
                     </button>
-                    <button onclick="app.select('XAUUSD', 'Gold Spot')" class="btn-neural p-5 flex flex-col items-center gap-3" id="btn-XAUUSD">
+                    <button onclick="app.select('XAUUSD', 'Gold Spot')" class="btn-neural p-5 flex flex-col items-center gap-3 shadow-lg" id="btn-XAUUSD">
                         <i class="fas fa-coins text-brand text-2xl mb-0.5"></i>
-                        <span class="text-[10px] font-black uppercase">GOLD</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest leading-none">GOLD</span>
                     </button>
-                    <button onclick="app.select('ETHUSDT', 'Ethereum')" class="btn-neural p-5 flex flex-col items-center gap-3" id="btn-ETHUSDT">
+                    <button onclick="app.select('ETHUSDT', 'Ethereum')" class="btn-neural p-5 flex flex-col items-center gap-3 shadow-lg" id="btn-ETHUSDT">
                         <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="w-7 h-7">
-                        <span class="text-[10px] font-black uppercase">ETH</span>
+                        <span class="text-[10px] font-black uppercase tracking-widest leading-none">ETH</span>
                     </button>
                 </div>
             </div>
 
             <div class="luxury-card p-14 text-center space-y-10 relative overflow-hidden fade-slide">
                 <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-brand to-transparent opacity-40"></div>
-                <h2 class="text-3xl font-black text-white font-title uppercase tracking-tighter italic leading-none">วิเคราะห์สัญญาณ AI</h2>
+                <div class="space-y-3">
+                    <p class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.5em]">Quantum Prediction Core v8.2</p>
+                    <h2 class="text-3xl font-black text-white font-title uppercase tracking-tighter italic leading-none">พร้อมประมวลผลข้อมูล</h2>
+                </div>
+
                 <div class="flex justify-center">
-                    <button onclick="app.runAnalysis()" class="w-56 h-56 bg-bgDark border-[8px] border-cardDark rounded-full flex flex-col items-center justify-center gap-4 shadow-inner btn-neural group relative overflow-hidden">
+                    <button onclick="app.runAnalysis()" class="w-56 h-56 bg-bgDark border-[8px] border-cardDark rounded-full flex flex-col items-center justify-center gap-4 shadow-inner btn-luxury group relative overflow-hidden">
                         <div class="absolute inset-0 bg-brand/5 animate-pulse"></div>
-                        <i class="fas fa-brain text-brand text-5xl z-10 shadow-2xl"></i>
-                        <span class="text-[11px] font-black text-brand uppercase tracking-[0.2em] leading-none z-10">วิเคราะห์ AI ทันที</span>
+                        <div class="w-20 h-20 bg-brand/10 rounded-full flex items-center justify-center group-hover:scale-110 transition-all border border-brand/20 z-10 shadow-2xl">
+                            <i class="fas fa-brain text-brand text-5xl"></i>
+                        </div>
+                        <span class="text-[11px] font-black text-brand uppercase tracking-[0.2em] leading-none z-10">วิเคราะห์ AI</span>
                     </button>
                 </div>
             </div>
@@ -140,41 +153,43 @@
         </main>
 
         <main id="view-history" class="hidden flex-1 overflow-y-auto px-8 py-10 space-y-12 no-scrollbar pb-48 fade-slide bg-bgDark">
-            <h1 class="text-5xl font-black text-white font-title italic uppercase leading-none">Signal <span class="text-brand">Logs</span></h1>
+            <h1 class="text-5xl font-black text-white font-title italic uppercase leading-none">Registry <span class="text-brand">Logs</span></h1>
             <div id="historyList" class="space-y-4 px-1"></div>
-            <div id="noHistory" class="hidden py-40 text-center opacity-10"><i class="fas fa-history text-8xl mb-8"></i><p class="text-[12px] font-black uppercase tracking-[0.5em]">No Temporal Records</p></div>
+            <div id="noHistory" class="hidden py-40 text-center opacity-10"><i class="fas fa-history text-6xl mb-6"></i><p class="text-[11px] font-bold uppercase">No Data Records</p></div>
         </main>
 
-        <nav class="bg-bgDark/95 backdrop-blur-3xl fixed bottom-0 w-full px-12 py-8 pb-12 border-t border-slate-800/50 flex justify-between items-center z-40 rounded-t-[4rem] shadow-[0_-20px_60px_rgba(0,0,0,1)]">
-            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active opacity-100 flex flex-col items-center gap-3 transition-all"><i class="fas fa-wave-square text-2xl"></i><span class="text-[9px] font-black uppercase font-title">HUB</span></button>
-            <button onclick="ui.changeView('history')" id="n-history" class="nav-link opacity-20 flex flex-col items-center gap-3 transition-all"><i class="fas fa-list-ul text-2xl"></i><span class="text-[9px] font-black uppercase font-title">LOGS</span></button>
+        <nav class="bg-bgDark/95 backdrop-blur-3xl fixed bottom-0 w-full px-12 py-8 pb-12 border-t border-slate-800/50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-20px_60px_rgba(0,0,0,1)]">
+            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active opacity-100 flex flex-col items-center gap-2.5 transition-all"><i class="fas fa-microchip text-2xl"></i><span class="text-[9px] font-black uppercase font-title">TERMINAL</span></button>
+            <button onclick="ui.changeView('history')" id="n-history" class="nav-link opacity-20 flex flex-col items-center gap-2.5 transition-all"><i class="fas fa-list-ul text-2xl"></i><span class="text-[9px] font-black uppercase font-title">RECORDS</span></button>
         </nav>
     </div>
 
     <div id="aiModal" class="hidden fixed inset-0 z-[1000] bg-bgDark/98 backdrop-blur-3xl flex flex-col items-center justify-center p-8 text-center overflow-hidden">
         <div class="relative w-full max-w-sm">
+            
             <div id="ai-scanning" class="space-y-12">
                 <div class="scan-wrapper mx-auto shadow-[0_0_50px_rgba(240,185,11,0.2)] border border-brand/20">
                     <div class="scan-laser"></div>
                     <i class="fas fa-atom text-brand text-5xl animate-spin-slow"></i>
                 </div>
                 <div class="space-y-4">
-                    <h2 class="text-4xl font-black text-white font-title italic uppercase tracking-tighter">กำลังวิเคราะห์กราฟ...</h2>
-                    <p id="aiLogText" class="text-brand text-[10px] font-black uppercase tracking-widest mt-4 opacity-70 italic leading-relaxed">Neural Handshaking Protocol...</p>
+                    <h2 class="text-4xl font-black text-white font-title italic uppercase tracking-tighter leading-none">กำลังสแกนตลาด...</h2>
+                    <p id="aiLogText" class="text-brand text-[10px] font-black uppercase tracking-widest mt-4 opacity-70 italic leading-relaxed">Analyzing Price Momentum...</p>
                 </div>
             </div>
 
             <div id="ai-result" class="hidden space-y-8 fade-slide">
                 <h2 id="resAssetName" class="text-5xl font-black text-white font-title italic tracking-tighter leading-none uppercase glow-gold">...</h2>
-                <div id="signalPill" class="p-12 rounded-[4.5rem] text-center shadow-2xl relative overflow-hidden border border-white/5">
-                    <div class="absolute top-6 right-10 flex items-center gap-2 bg-black/50 px-3 py-1.5 rounded-full border border-white/10 shadow-xl">
+                <div id="signalPill" class="p-12 rounded-[4rem] text-center shadow-2xl relative overflow-hidden border border-white/5 bg-gradient-to-br from-cardDark to-bgDark">
+                    <div class="absolute top-6 right-10 flex items-center gap-2 bg-black/40 px-3 py-1.5 rounded-full border border-white/10 shadow-xl">
                         <div class="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse shadow-[0_0_12px_red]"></div>
                         <p id="countdown" class="text-[11px] font-black text-white font-mono">00:00</p>
                     </div>
+                    <p class="text-[10px] font-black text-white/30 uppercase mb-4 leading-none italic tracking-widest">Recommended Signal</p>
                     <h3 id="resType" class="text-[10rem] font-black italic font-title tracking-tighter leading-none drop-shadow-2xl">...</h3>
                     <div class="mt-14 grid grid-cols-2 gap-4">
-                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 italic">Enter (ซื้อที่)</p><p id="entryT" class="text-xs font-black text-brand italic">00:00:00</p></div>
-                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 italic">Exit (ปิดที่)</p><p id="exitT" class="text-xs font-black text-white italic">00:00:00</p></div>
+                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 italic">Enter (เวลาซื้อ)</p><p id="entryT" class="text-xs font-black text-brand italic">00:00:00</p></div>
+                        <div class="bg-white/5 p-5 rounded-2xl border border-white/5"><p class="text-[8px] font-bold text-slate-400 uppercase mb-1 italic">Exit (เวลาปิด)</p><p id="exitT" class="text-xs font-black text-white italic">00:00:00</p></div>
                     </div>
                 </div>
                 <button onclick="ui.closeAI()" class="w-full bg-white text-bgDark py-7 rounded-[2.5rem] font-black uppercase text-[12px] shadow-2xl active:scale-95 transition-all">ดูผลลัพธ์การประมวลผล AI</button>
@@ -187,7 +202,7 @@
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
         import { getFirestore, doc, onSnapshot, collection, addDoc, serverTimestamp, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 🔥 FIREBASE CONSOLE CONFIG (ใส่ให้ถูกต้อง ห้ามเว้นว่าง!)
+        // 🔥 FIREBASE CONSOLE CONFIG (ห้ามลืมใส่!)
         const firebaseConfig = { 
             apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0", 
             authDomain: "fafada-d9899.firebaseapp.com", 
@@ -201,8 +216,6 @@
         const db = getFirestore(fb_app);
 
         let user = null, userData = null, curAsset = 'BTCUSDT', curName = 'Bitcoin', timerInt;
-        
-        // 🔊 Siri Audio
         const sfx = { click: new Audio('https://www.soundjay.com/buttons/sounds/button-16.mp3'), scan: new Audio('https://www.soundjay.com/communication/sounds/digital-scanning-1.mp3'), success: new Audio('https://www.soundjay.com/human/sounds/applause-01.mp3') };
 
         window.ui = {
@@ -214,10 +227,10 @@
                     if(el) { el.classList.toggle('opacity-100', n===v); el.classList.toggle('active', n===v); el.classList.toggle('opacity-20', n!==v); }
                 });
             },
-            toggleForm: (login) => { document.getElementById('loginForm').classList.toggle('hidden', !login); document.getElementById('regForm').classList.toggle('hidden', login); },
+            toggleAuth: (login) => { document.getElementById('loginForm').classList.toggle('hidden', !login); document.getElementById('regForm').classList.toggle('hidden', login); },
             closeAI: () => { document.getElementById('aiModal').classList.add('hidden'); clearInterval(timerInt); sfx.click.play(); },
             hideLoader: () => { document.getElementById('loader').classList.add('opacity-0'); setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 1000); },
-            speak: (txt) => { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(txt); msg.lang = 'th-TH'; msg.rate = 1.1; window.speechSynthesis.speak(msg); } },
+            speak: (txt) => { if ('speechSynthesis' in window) { window.speechSynthesis.cancel(); const msg = new SpeechSynthesisUtterance(txt); msg.lang = 'th-TH'; msg.rate = 1.05; window.speechSynthesis.speak(msg); } },
             startTimer: (sec) => {
                 let t = sec; clearInterval(timerInt);
                 timerInt = setInterval(() => {
@@ -244,7 +257,6 @@
                     location.reload();
                 } catch(e) { Swal.fire('Error', e.message, 'error'); }
             },
-            setTf: (min) => { curTf = min; sfx.click.play(); document.querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active')); document.getElementById('tf-'+min).classList.add('active'); app.updateChart(curAsset); },
             select: (s, n) => {
                 curAsset = s; curName = n; sfx.click.play();
                 document.querySelectorAll('.btn-neural').forEach(b => b.classList.remove('active'));
@@ -262,19 +274,21 @@
             },
             fetchPrice: async (s) => {
                 try {
-                    const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${s === 'XAUUSD' ? 'PAXGUSDT' : s}`);
+                    const ticker = s === 'XAUUSD' ? 'PAXGUSDT' : s;
+                    const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}`);
                     const d = await res.json();
                     document.getElementById('livePrice').innerText = `$ ${parseFloat(d.price).toLocaleString(undefined, {minimumFractionDigits: 2})}`;
                 } catch(e) { document.getElementById('livePrice').innerText = 'Sync Error'; }
             },
 
+            // 🧠 QUANTUM AI ANALYSIS ENGINE (STABLE RE-BUILD)
             runAnalysis: async () => {
-                // Subscription Guard
+                // Subscription Check
                 const nowTS = new Date().getTime();
                 const expiryTS = userData?.expiryDate ? userData.expiryDate.seconds * 1000 : 0;
                 if(!userData || userData.subType === 'none' || nowTS > expiryTS) {
-                    ui.speak("ขออภัยค่ะ อายุการใช้งานของคุณหมดแล้ว กรุณาติดต่อแอดมินนะคะ");
-                    return Swal.fire('Subscription Denied', 'กรุณาต่ออายุสมาชิกเพื่อใช้งาน', 'warning');
+                    ui.speak("ขออภัยค่ะ อายุการใช้งานของคุณหมดแล้ว กรุณาติดต่อแอดมินเพื่อต่ออายุสมาชิกนะคะ");
+                    return Swal.fire('Subscription Required', 'กรุณาต่ออายุสมาชิกเพื่อใช้งาน', 'warning');
                 }
 
                 sfx.click.play();
@@ -283,7 +297,7 @@
                 document.getElementById('ai-result').classList.add('hidden');
                 sfx.scan.loop = true; sfx.scan.play();
 
-                const logs = ["Syncing Atomic Clocks...", "Establishing WebSocket...", "Calculating RSI-14...", "Mapping Entry Nodes...", "Finalizing Verdict..."];
+                const logs = ["Syncing Atomic Clocks...", "Establishing Market Link...", "Calculating Price Momentum...", "Finalizing Verdict..."];
                 for (let l of logs) { document.getElementById('aiLogText').innerText = l; await new Promise(r => setTimeout(r, 900)); }
 
                 try {
@@ -301,12 +315,13 @@
                     document.getElementById('ai-result').classList.remove('hidden');
                     document.getElementById('resAssetName').innerText = curName;
                     document.getElementById('resType').innerText = type;
-                    document.getElementById('resType').className = `text-9xl font-black italic drop-shadow-2xl ${type==='BUY'?'text-success':'text-danger'}`;
+                    document.getElementById('resType').className = `text-[10rem] font-black italic drop-shadow-2xl ${type==='BUY'?'text-success':'text-danger'}`;
                     document.getElementById('entryT').innerText = entryT;
                     document.getElementById('exitT').innerText = exitT;
 
                     ui.startTimer(900);
-                    ui.speak(`วิเคราะห์ผลสำเร็จค่ะ แนะนำให้เปิดสถานะ ${type==='BUY'?'บาย':'เซล'} สกุลเงิน ${curName} ค่ะ ให้เข้าซื้อเวลา ${entryT} และปิดออเดอร์ในเวลา ${exitT} ค่ะ`);
+                    ui.speak(`วิเคราะห์พิกัดสำเร็จค่ะ แนะนำให้เปิดสถานะ ${type==='BUY'?'บาย':'เซล'} สกุลเงิน ${curName} ค่ะ ให้เข้าซื้อทันทีเวลา ${entryT} และปิดออเดอร์ในเวลา ${exitT} ค่ะ`);
+
                     if(type === 'BUY') { confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } }); sfx.success.play(); }
 
                     await addDoc(collection(db, "signals"), { uid: auth.currentUser.uid, name: curName, type: type, entryTime: entryT, exitTime: exitT, timestamp: serverTimestamp() });
@@ -324,8 +339,8 @@
                         document.getElementById('navName').innerText = userData.displayName || 'TRADER';
                         const expiry = userData.expiryDate ? moment(userData.expiryDate.seconds*1000).format('DD/MM/YY HH:mm') : 'None';
                         const sub = userData.subType.toUpperCase();
-                        document.getElementById('subTypeLabel').innerText = sub;
-                        document.getElementById('expiryLabel').innerText = sub === 'NONE' ? 'ยังไม่ได้เปิดใช้งาน' : `หมดอายุ: ${expiry}`;
+                        document.getElementById('subLabel').innerText = sub;
+                        document.getElementById('expiryLabel').innerText = sub === 'NONE' ? 'ยังไม่ได้เปิดใช้งานสมาชิก' : `หมดอายุ: ${expiry}`;
                         
                         document.getElementById('mainPage').classList.remove('hidden');
                         document.getElementById('authPage').classList.add('hidden');
@@ -343,7 +358,7 @@
                     document.getElementById('noHistory').classList.toggle('hidden', list.length > 0);
                     list.forEach(sig => {
                         const isBuy = sig.type === 'BUY';
-                        container.innerHTML += `<div class="luxury-card p-6 flex justify-between items-center mb-4 transition-all hover:border-brand/30"><div class="flex items-center gap-6"><div class="w-14 h-14 rounded-2xl flex items-center justify-center ${isBuy?'bg-success/10 text-success':'bg-danger/10 text-danger'} border border-white/5"><i class="fas ${isBuy?'fa-arrow-trend-up':'fa-arrow-trend-down'} text-xl"></i></div><div><p class="font-black text-white text-lg leading-none mb-3 uppercase tracking-tighter">${sig.name}</p><div class="flex gap-4"><p class="text-[10px] text-slate-500 font-black uppercase tracking-widest">Enter: ${sig.entryTime}</p><p class="text-[10px] text-brand font-black uppercase tracking-widest">Exit: ${sig.exitTime}</p></div></div></div><div class="text-right"><p class="text-xs font-black uppercase ${isBuy?'text-success':'text-danger'} mb-2 underline underline-offset-8 decoration-2">${sig.type}</p></div></div>`;
+                        container.innerHTML += `<div class="luxury-card p-6 flex justify-between items-center mb-4 shadow-sm transition-all hover:border-brand/30"><div class="flex items-center gap-5"><div class="w-14 h-14 rounded-2xl flex items-center justify-center ${isBuy?'bg-success/10 text-success':'bg-danger/10 text-danger'} border border-white/5"><i class="fas ${isBuy?'fa-arrow-trend-up':'fa-arrow-trend-down'} text-xl"></i></div><div><p class="font-black text-white text-base leading-none mb-2 uppercase tracking-widest">${sig.name}</p><div class="flex gap-4"><p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">Enter: ${sig.entryTime}</p><p class="text-[9px] text-brand font-bold uppercase tracking-widest">Exit: ${sig.exitTime}</p></div></div></div><div class="text-right"><p class="text-xs font-black uppercase ${isBuy?'text-success':'text-danger'} mb-2 underline underline-offset-8 decoration-2">${sig.type}</p></div></div>`;
                     });
                 });
             } else {
@@ -352,9 +367,9 @@
                 ui.hideLoader();
             }
         });
-
-        // 🛡️ Loader Failsafe
-        setTimeout(() => { if(!document.getElementById('loader').classList.contains('hidden')) ui.hideLoader(); }, 4000);
+        
+        // 🛡️ Loader Failsafe Exit (After 5 seconds)
+        setTimeout(() => { if(!document.getElementById('loader').classList.contains('hidden')) ui.hideLoader(); }, 5000);
     </script>
 </body>
 </html>
