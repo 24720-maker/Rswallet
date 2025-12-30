@@ -38,58 +38,20 @@
 
     <style>
         body { background-color: #050505; color: #fff; height: 100vh; overflow: hidden; -webkit-tap-highlight-color: transparent; }
-        
-        /* 💎 PREMIUM GLASS UI */
-        .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            -webkit-backdrop-filter: blur(25px);
-            border: 1px solid var(--border);
-            border-radius: 1.5rem;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
-        }
-
-        .gold-gradient-text {
-            background: linear-gradient(to bottom, #FFD700, #FDB931);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .btn-main {
-            background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%);
-            color: #000; font-weight: 700; border-radius: 1rem;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative; overflow: hidden;
-            box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-        }
+        .glass-panel { background: var(--glass); backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px); border: 1px solid var(--border); border-radius: 1.5rem; box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5); }
+        .gold-gradient-text { background: linear-gradient(to bottom, #FFD700, #FDB931); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .btn-main { background: linear-gradient(135deg, #FFD700 0%, #B8860B 100%); color: #000; font-weight: 700; border-radius: 1rem; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); position: relative; overflow: hidden; box-shadow: 0 0 20px rgba(255, 215, 0, 0.3); }
         .btn-main:active { transform: scale(0.95); box-shadow: 0 0 10px rgba(255, 215, 0, 0.1); }
-
         .nav-item { transition: 0.3s; color: #666; }
         .nav-item.active { color: #FFD700; transform: translateY(-5px); }
         .nav-item.active i { filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6)); }
-
-        .coin-card {
-            background: linear-gradient(145deg, #1a1a1a, #0f0f0f);
-            border: 1px solid #333; transition: 0.3s;
-        }
+        .coin-card { background: linear-gradient(145deg, #1a1a1a, #0f0f0f); border: 1px solid #333; transition: 0.3s; }
         .coin-card:active { transform: scale(0.95); border-color: #FFD700; }
-
-        /* Custom Scroll & Input */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .input-dark { background: #111; border: 1px solid #333; color: white; border-radius: 12px; padding: 14px; width: 100%; outline: none; transition: 0.3s; }
         .input-dark:focus { border-color: #FFD700; box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1); }
-
-        /* Membership Card */
-        .member-card {
-            background: linear-gradient(135deg, #1c1c1c 0%, #000000 100%);
-            border: 1px solid rgba(255, 215, 0, 0.3);
-            position: relative; overflow: hidden;
-        }
-        .member-card::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 60%);
-            animation: rotate 10s linear infinite;
-        }
+        .member-card { background: linear-gradient(135deg, #1c1c1c 0%, #000000 100%); border: 1px solid rgba(255, 215, 0, 0.3); position: relative; overflow: hidden; }
+        .member-card::before { content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,215,0,0.1) 0%, transparent 60%); animation: rotate 10s linear infinite; }
         @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
@@ -107,10 +69,8 @@
     <div id="authPage" class="hidden fixed inset-0 z-[5000] bg-bg flex flex-col justify-center items-center p-8 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')]">
         <div class="w-full max-w-sm glass-panel p-8 text-center relative overflow-hidden">
             <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-gold to-transparent"></div>
-            
             <h1 class="text-4xl font-black text-white italic mb-2">WELCOME</h1>
             <p class="text-zinc-500 text-xs mb-8">เข้าสู่ระบบเพื่อใช้งาน RS INTELLIGENCE</p>
-            
             <div id="loginForm" class="space-y-4">
                 <input id="lEmail" type="email" class="input-dark" placeholder="อีเมล">
                 <input id="lPass" type="password" class="input-dark" placeholder="รหัสผ่าน">
@@ -120,7 +80,6 @@
                     <button onclick="ui.toggleAuth(false)" class="text-gold font-bold hover:underline">สมัครสมาชิก</button>
                 </div>
             </div>
-
             <div id="regForm" class="hidden space-y-4">
                 <input id="rName" class="input-dark" placeholder="ชื่อเล่น (Display Name)">
                 <input id="rEmail" type="email" class="input-dark" placeholder="อีเมล">
@@ -132,7 +91,6 @@
     </div>
 
     <div id="mainApp" class="hidden flex-1 flex flex-col h-screen relative bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]">
-        
         <header class="pt-12 pb-4 px-6 flex justify-between items-center bg-gradient-to-b from-black/90 to-transparent z-20">
             <div>
                 <h1 class="text-xl font-black italic tracking-tighter text-white">RS <span class="text-gold">INFINITY</span></h1>
@@ -146,7 +104,6 @@
         </header>
 
         <main id="view-home" class="flex-1 overflow-y-auto px-6 pb-32 no-scrollbar">
-            
             <div onclick="ui.openSearch()" class="glass-panel p-5 mb-6 flex items-center justify-between cursor-pointer active:scale-95 transition-transform group">
                 <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-full bg-zinc-900 border border-zinc-700 flex items-center justify-center text-2xl group-hover:border-gold transition-colors">
@@ -170,7 +127,7 @@
                 </div>
                 <div class="grid grid-cols-4 gap-3">
                     <button onclick="app.setTime(1)" class="time-btn bg-zinc-900 border border-zinc-800 rounded-xl py-3 text-sm font-bold hover:border-gold focus:bg-gold focus:text-black transition">1m</button>
-                    <button onclick="app.setTime(5)" class="time-btn bg-zinc-900 border border-zinc-800 rounded-xl py-3 text-sm font-bold hover:border-gold focus:bg-gold focus:text-black transition active-time">5m</button>
+                    <button onclick="app.setTime(5)" class="time-btn bg-gold text-black border-gold rounded-xl py-3 text-sm font-bold hover:border-gold focus:bg-gold focus:text-black transition active-time">5m</button>
                     <button onclick="app.setTime(15)" class="time-btn bg-zinc-900 border border-zinc-800 rounded-xl py-3 text-sm font-bold hover:border-gold focus:bg-gold focus:text-black transition">15m</button>
                     <button onclick="app.setTime(30)" class="time-btn bg-zinc-900 border border-zinc-800 rounded-xl py-3 text-sm font-bold hover:border-gold focus:bg-gold focus:text-black transition">30m</button>
                 </div>
@@ -215,6 +172,13 @@
                     <h3 id="pName" class="text-2xl font-bold text-white tracking-tight">Loading...</h3>
                     <p id="pEmail" class="text-xs text-zinc-400 font-mono mb-4">...</p>
                     
+                    <div class="mb-4 bg-black/60 rounded-xl p-4 border border-white/10 backdrop-blur-md">
+                        <p class="text-[10px] text-zinc-500 uppercase font-bold mb-1">Time Remaining</p>
+                        <div id="expireCountdown" class="text-xl font-tech font-bold text-white tracking-wider">
+                            00D : 00H : 00M : 00S
+                        </div>
+                    </div>
+
                     <div class="flex items-center gap-2 bg-black/40 rounded-lg p-2 backdrop-blur-sm inline-flex border border-white/10">
                         <div id="pStatusIcon" class="w-2 h-2 rounded-full bg-zinc-500"></div>
                         <span id="pPlan" class="text-xs font-bold text-white uppercase">CHECKING</span>
@@ -234,9 +198,7 @@
                         </div>
                         <i class="fas fa-chevron-right text-zinc-600 text-xs"></i>
                     </button>
-                    
                     <div class="h-[1px] bg-white/5 mx-4"></div>
-
                     <button onclick="app.logout()" class="w-full p-4 rounded-xl flex items-center justify-between hover:bg-red-500/10 group transition">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-red-500/20 text-red-500 flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition"><i class="fas fa-power-off text-lg"></i></div>
@@ -248,23 +210,12 @@
                     </button>
                 </div>
             </div>
-            
-            <p class="text-center text-[10px] text-zinc-700 mt-8">VERSION 3.0.1 (BETA) | SECURED BY RS</p>
         </main>
 
         <nav class="fixed bottom-0 w-full px-6 py-4 bg-black/90 backdrop-blur-xl border-t border-white/10 flex justify-between items-end z-40 rounded-t-3xl pb-8">
-            <button onclick="ui.view('home')" id="nav-home" class="nav-item flex-1 flex flex-col items-center gap-1 active">
-                <i class="fas fa-home text-2xl mb-1"></i>
-                <span class="text-[9px] font-bold tracking-widest">หน้าหลัก</span>
-            </button>
-            <button onclick="ui.view('chart')" id="nav-chart" class="nav-item flex-1 flex flex-col items-center gap-1">
-                <i class="fas fa-chart-line text-2xl mb-1"></i>
-                <span class="text-[9px] font-bold tracking-widest">กราฟ</span>
-            </button>
-            <button onclick="ui.view('profile')" id="nav-profile" class="nav-item flex-1 flex flex-col items-center gap-1">
-                <i class="fas fa-user text-2xl mb-1"></i>
-                <span class="text-[9px] font-bold tracking-widest">โปรไฟล์</span>
-            </button>
+            <button onclick="ui.view('home')" id="nav-home" class="nav-item flex-1 flex flex-col items-center gap-1 active"><i class="fas fa-home text-2xl mb-1"></i><span class="text-[9px] font-bold tracking-widest">หน้าหลัก</span></button>
+            <button onclick="ui.view('chart')" id="nav-chart" class="nav-item flex-1 flex flex-col items-center gap-1"><i class="fas fa-chart-line text-2xl mb-1"></i><span class="text-[9px] font-bold tracking-widest">กราฟ</span></button>
+            <button onclick="ui.view('profile')" id="nav-profile" class="nav-item flex-1 flex flex-col items-center gap-1"><i class="fas fa-user text-2xl mb-1"></i><span class="text-[9px] font-bold tracking-widest">โปรไฟล์</span></button>
         </nav>
     </div>
 
@@ -273,116 +224,70 @@
             <button onclick="ui.closeSearch()" class="text-zinc-500 hover:text-white"><i class="fas fa-arrow-left text-xl"></i></button>
             <input id="searchInput" oninput="app.filterAssets(this.value)" class="bg-transparent text-xl font-bold text-white w-full outline-none placeholder-zinc-700" placeholder="ค้นหาชื่อเหรียญ (เช่น BTC)..." autofocus>
         </div>
-        
-        <div class="flex-1 overflow-y-auto p-6">
-            <p class="text-xs text-zinc-500 font-bold uppercase mb-4">ยอดนิยม (Popular)</p>
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <button onclick="app.selectAsset('BTCUSDT')" class="coin-card rounded-xl p-3 flex flex-col items-center gap-2">
-                    <i class="fab fa-bitcoin text-gold text-2xl"></i> <span class="text-xs font-bold text-white">BTC</span>
-                </button>
-                <button onclick="app.selectAsset('ETHUSDT')" class="coin-card rounded-xl p-3 flex flex-col items-center gap-2">
-                    <i class="fab fa-ethereum text-indigo-400 text-2xl"></i> <span class="text-xs font-bold text-white">ETH</span>
-                </button>
-                <button onclick="app.selectAsset('XAUUSD')" class="coin-card rounded-xl p-3 flex flex-col items-center gap-2">
-                    <i class="fas fa-coins text-yellow-500 text-2xl"></i> <span class="text-xs font-bold text-white">GOLD</span>
-                </button>
-            </div>
-
-            <p class="text-xs text-zinc-500 font-bold uppercase mb-4">ผลการค้นหา (Results)</p>
-            <div id="searchResults" class="space-y-2">
-                </div>
-        </div>
+        <div class="flex-1 overflow-y-auto p-6"><div id="searchResults" class="space-y-2"></div></div>
     </div>
 
     <div id="aiModal" class="hidden fixed inset-0 z-[7000] bg-black/95 flex flex-col items-center justify-center p-8">
         <div id="scan-ui" class="text-center w-full">
-            <div class="relative w-48 h-48 mx-auto mb-8">
-                <div class="absolute inset-0 rounded-full border border-gold/20 animate-ping"></div>
-                <div class="absolute inset-4 rounded-full border-t-2 border-gold animate-spin"></div>
-                <div class="absolute inset-0 flex items-center justify-center">
-                    <span class="text-6xl">🤖</span>
-                </div>
-            </div>
+            <div class="relative w-48 h-48 mx-auto mb-8"><div class="absolute inset-0 rounded-full border border-gold/20 animate-ping"></div><div class="absolute inset-4 rounded-full border-t-2 border-gold animate-spin"></div><div class="absolute inset-0 flex items-center justify-center"><span class="text-6xl">🤖</span></div></div>
             <h2 class="text-2xl font-black italic text-white animate-pulse">AI PROCESSING...</h2>
-            <p class="text-zinc-500 text-sm mt-2">กำลังคำนวณความน่าจะเป็นของตลาด</p>
         </div>
-
         <div id="result-ui" class="hidden w-full max-w-sm glass-panel p-8 border-gold/50 relative overflow-hidden fade-in-up">
-            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gold/20 rounded-full blur-3xl"></div>
-            
-            <div class="flex justify-between items-center mb-6">
-                <span class="bg-zinc-800 text-zinc-400 px-3 py-1 rounded-full text-[10px] font-bold border border-zinc-700">SIGNAL ID: #<span id="resId">884</span></span>
-                <span id="countdownDisplay" class="text-gold font-mono font-bold text-lg">00:00</span>
-            </div>
-
-            <div class="text-center mb-8">
-                <p class="text-xs text-zinc-500 uppercase tracking-widest mb-2">DIRECTION</p>
-                <h1 id="resType" class="text-7xl font-black italic drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">BUY</h1>
-                <p id="resAsset" class="text-gold font-bold text-xl mt-2">BTCUSDT</p>
-            </div>
-
-            <div class="grid grid-cols-2 gap-4 border-t border-white/10 pt-6 mb-6">
-                <div>
-                    <p class="text-[9px] text-zinc-500">ENTRY TIME</p>
-                    <p id="resEntryTime" class="text-sm font-bold text-white">...</p>
-                </div>
-                <div class="text-right">
-                    <p class="text-[9px] text-zinc-500">EXIT TIME</p>
-                    <p id="resExitTime" class="text-sm font-bold text-white">...</p>
-                </div>
-            </div>
-
-            <button onclick="document.getElementById('aiModal').classList.add('hidden')" class="btn-main w-full py-4 text-sm font-bold uppercase tracking-widest">รับทราบ (ACKNOWLEDGE)</button>
+            <div class="flex justify-between items-center mb-6"><span class="bg-zinc-800 text-zinc-400 px-3 py-1 rounded-full text-[10px] font-bold border border-zinc-700">SIGNAL ID: #<span id="resId">884</span></span><span id="countdownDisplay" class="text-gold font-mono font-bold text-lg">00:00</span></div>
+            <div class="text-center mb-8"><p class="text-xs text-zinc-500 uppercase tracking-widest mb-2">DIRECTION</p><h1 id="resType" class="text-7xl font-black italic">BUY</h1><p id="resAsset" class="text-gold font-bold text-xl mt-2">BTCUSDT</p></div>
+            <button onclick="document.getElementById('aiModal').classList.add('hidden')" class="btn-main w-full py-4 text-sm font-bold uppercase tracking-widest">รับทราบ</button>
         </div>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, onSnapshot, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getFirestore, doc, onSnapshot, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // 🔧 CONFIG
         const firebaseConfig = { apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0", authDomain: "fafada-d9899.firebaseapp.com", projectId: "fafada-d9899", storageBucket: "fafada-d9899.firebasestorage.app", messagingSenderId: "484777586908", appId: "1:484777586908:web:16a8f0367ad15737364419" };
         const fbApp = initializeApp(firebaseConfig);
         const auth = getAuth(fbApp);
         const db = getFirestore(fbApp);
 
-        // 🌍 DATA
-        let curAsset = 'BTCUSDT';
-        let userData = null;
-        let timerInt;
-        
-        const assetsList = [
-            {s:'BTCUSDT', n:'Bitcoin', t:'CRYPTO'}, {s:'ETHUSDT', n:'Ethereum', t:'CRYPTO'}, 
-            {s:'XAUUSD', n:'Gold Spot', t:'FOREX'}, {s:'EURUSD', n:'Euro', t:'FOREX'},
-            {s:'GBPUSD', n:'Pound', t:'FOREX'}, {s:'USDJPY', n:'Yen', t:'FOREX'},
-            {s:'SOLUSDT', n:'Solana', t:'CRYPTO'}, {s:'XRPUSDT', n:'Ripple', t:'CRYPTO'}
-        ];
+        let curAsset = 'BTCUSDT', userData = null, timerInt, countdownInterval;
+        const assetsList = [{s:'BTCUSDT', n:'Bitcoin', t:'CRYPTO'}, {s:'ETHUSDT', n:'Ethereum', t:'CRYPTO'}, {s:'XAUUSD', n:'Gold Spot', t:'FOREX'}, {s:'EURUSD', n:'Euro', t:'FOREX'}];
+
+        // ⏳ ฟังก์ชันนับถอยหลัง Real-time สำหรับวันหมดอายุ
+        const startExpiryCountdown = (expiryDate) => {
+            if (countdownInterval) clearInterval(countdownInterval);
+            const el = document.getElementById('expireCountdown');
+            countdownInterval = setInterval(() => {
+                const now = new Date().getTime();
+                const distance = expiryDate.getTime() - now;
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    el.innerText = "00D : 00H : 00M : 00S";
+                    el.className = "text-xl font-tech font-bold text-red-500 tracking-wider";
+                    return;
+                }
+                const d = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const h = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const m = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const s = Math.floor((distance % (1000 * 60)) / 1000);
+                el.innerText = `${d.toString().padStart(2,'0')}D : ${h.toString().padStart(2,'0')}H : ${m.toString().padStart(2,'0')}M : ${s.toString().padStart(2,'0')}S`;
+            }, 1000);
+        };
 
         window.ui = {
             toggleAuth: (login) => { document.getElementById('loginForm').classList.toggle('hidden', !login); document.getElementById('regForm').classList.toggle('hidden', login); },
             view: (v) => {
-                // Hide all mains
                 document.querySelectorAll('main').forEach(el => el.classList.add('hidden'));
-                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active', 'text-gold'));
-                
-                // Show selected
+                document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
                 document.getElementById('view-'+v).classList.remove('hidden');
                 document.getElementById('nav-'+v).classList.add('active');
-                
                 if(v === 'chart') app.renderChart();
             },
-            openSearch: () => { 
-                document.getElementById('searchModal').classList.remove('hidden'); 
-                document.getElementById('searchInput').value = '';
-                document.getElementById('searchInput').focus();
-                app.filterAssets('');
-            },
+            openSearch: () => { document.getElementById('searchModal').classList.remove('hidden'); app.filterAssets(''); },
             closeSearch: () => document.getElementById('searchModal').classList.add('hidden')
         };
 
         window.app = {
-            login: async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('lEmail').value, document.getElementById('lPass').value); } catch(e){ Swal.fire('Error','เข้าสู่ระบบไม่สำเร็จ','error'); } },
+            login: async () => { try { await signInWithEmailAndPassword(auth, document.getElementById('lEmail').value, document.getElementById('lPass').value); } catch(e){ Swal.fire('Error','ล็อกอินล้มเหลว','error'); } },
             register: async () => {
                 try {
                     const res = await createUserWithEmailAndPassword(auth, document.getElementById('rEmail').value, document.getElementById('rPass').value);
@@ -390,197 +295,105 @@
                     location.reload();
                 } catch(e){ Swal.fire('Error',e.message,'error'); }
             },
-            logout: () => Swal.fire({ title: 'ยืนยันออกจากระบบ?', icon: 'warning', showCancelButton: true, confirmButtonText: 'ออก', cancelButtonText: 'ยกเลิก', background: '#111', color: '#fff' }).then(r => { if(r.isConfirmed) signOut(auth).then(()=>location.reload()); }),
-            
-            contactAdmin: () => window.open('https://m.me/YOUR_FACEBOOK_PAGE_ID', '_blank'),
+            logout: () => signOut(auth).then(()=>location.reload()),
 
-            // 🔎 Asset Logic
+            // 🛠 แก้ไขปุ่มติดต่อแอดมิน ให้ดึงจาก System Config อัตโนมัติ
+            contactAdmin: async () => {
+                try {
+                    const docSnap = await getDoc(doc(db, "system", "config"));
+                    if (docSnap.exists()) {
+                        const link = docSnap.data().fb || docSnap.data().line;
+                        if(link) { window.open(link, '_blank'); return; }
+                    }
+                    Swal.fire('Info', 'แอดมินยังไม่ได้ตั้งค่าลิงก์ติดต่อ', 'info');
+                } catch(e) { window.open('https://m.me/yourpage', '_blank'); }
+            },
+
             filterAssets: (q) => {
                 const list = document.getElementById('searchResults'); list.innerHTML = '';
-                const filtered = assetsList.filter(a => a.s.includes(q.toUpperCase()) || a.n.toUpperCase().includes(q.toUpperCase()));
-                if(filtered.length === 0) list.innerHTML = '<p class="text-zinc-600 text-center text-xs mt-4">ไม่พบข้อมูล</p>';
-                filtered.forEach(a => {
-                    list.innerHTML += `
-                        <div onclick="app.selectAsset('${a.s}')" class="p-3 rounded-xl bg-white/5 border border-white/5 flex justify-between items-center cursor-pointer hover:border-gold hover:bg-white/10 transition">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-[10px] font-bold text-gold">${a.s[0]}</div>
-                                <div><h4 class="text-sm font-bold text-white">${a.s}</h4><p class="text-[10px] text-zinc-500">${a.n}</p></div>
-                            </div>
-                            <span class="text-[9px] bg-zinc-800 px-2 py-1 rounded text-zinc-400">${a.t}</span>
-                        </div>
-                    `;
+                assetsList.filter(a => a.s.includes(q.toUpperCase())).forEach(a => {
+                    list.innerHTML += `<div onclick="app.selectAsset('${a.s}')" class="p-4 rounded-xl bg-white/5 text-white font-bold cursor-pointer">${a.s}</div>`;
                 });
             },
-            selectAsset: (s) => {
-                curAsset = s;
-                document.getElementById('assetName').innerText = s;
-                
-                // Update Icon
-                let iconClass = 'fas fa-coins text-yellow-500';
-                if(s.includes('BTC')) iconClass = 'fab fa-bitcoin text-gold';
-                if(s.includes('ETH')) iconClass = 'fab fa-ethereum text-indigo-400';
-                document.getElementById('assetIcon').className = iconClass;
-
-                ui.closeSearch();
-                app.fetchPrice();
-            },
+            selectAsset: (s) => { curAsset = s; document.getElementById('assetName').innerText = s; ui.closeSearch(); app.fetchPrice(); },
             fetchPrice: async () => {
                 try {
                     const ticker = curAsset === 'XAUUSD' ? 'PAXGUSDT' : curAsset;
                     const res = await fetch(`https://api.binance.com/api/v3/ticker/price?symbol=${ticker}`);
                     const d = await res.json();
                     document.getElementById('livePrice').innerText = parseFloat(d.price).toFixed(2);
-                } catch(e) { console.log('Price fetch error'); }
+                } catch(e) {}
             },
             setTime: (m) => {
                 document.querySelectorAll('.time-btn').forEach(b => {
-                    b.classList.remove('bg-gold', 'text-black', 'border-gold');
-                    b.classList.add('bg-zinc-900', 'text-white', 'border-zinc-800');
-                    if(b.innerText.includes(m)) {
-                        b.classList.remove('bg-zinc-900', 'text-white', 'border-zinc-800');
-                        b.classList.add('bg-gold', 'text-black', 'border-gold');
-                    }
+                    b.classList.remove('bg-gold', 'text-black');
+                    if(b.innerText.includes(m)) b.classList.add('bg-gold', 'text-black');
                 });
                 document.getElementById('selectedTime').value = m;
             },
-
-            // 📈 Chart Logic
             renderChart: () => {
-                const mount = document.getElementById('tv-mount');
-                if(mount.innerHTML !== '') mount.innerHTML = ''; // Reset
-                const script = document.createElement('script');
-                script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
+                const mount = document.getElementById('tv-mount'); mount.innerHTML = '';
+                const script = document.createElement('script'); script.src = "https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js";
                 script.async = true;
-                const symbol = curAsset.includes('USD') && !curAsset.includes('USDT') ? `FX_IDC:${curAsset}` : `BINANCE:${curAsset}`;
-                script.innerHTML = JSON.stringify({
-                    "autosize": true, "symbol": symbol, "interval": "15", "timezone": "Asia/Bangkok", "theme": "dark", "style": "1", "locale": "th",
-                    "enable_publishing": false, "hide_top_toolbar": false, "hide_side_toolbar": false, "save_image": false, "calendar": false, "support_host": "https://www.tradingview.com"
-                });
+                script.innerHTML = JSON.stringify({ "autosize": true, "symbol": "BINANCE:"+curAsset, "interval": "15", "theme": "dark", "style": "1", "locale": "th" });
                 mount.appendChild(script);
             },
-
-            // 🛡️ Subscription & AI
             checkSubscription: () => {
-                const now = new Date();
                 const expiry = userData?.expiryDate ? userData.expiryDate.toDate() : null;
-
-                if (!expiry || expiry < now) {
-                    Swal.fire({
-                        title: 'วันใช้งานหมดอายุ',
-                        text: 'กรุณาต่ออายุสมาชิกกับแอดมิน',
-                        icon: 'error',
-                        confirmButtonText: 'ติดต่อแอดมิน',
-                        confirmButtonColor: '#FFD700',
-                        color: '#000',
-                        background: '#fff'
-                    }).then(r => { if(r.isConfirmed) app.contactAdmin(); });
+                if (!expiry || expiry < new Date()) {
+                    Swal.fire({ title: 'Expired', text: 'กรุณาต่ออายุสมาชิก', icon: 'error', confirmButtonText: 'ติดต่อแอดมิน' }).then(r => { if(r.isConfirmed) app.contactAdmin(); });
                     return;
                 }
                 app.runAI();
             },
-
             runAI: async () => {
                 const mins = parseInt(document.getElementById('selectedTime').value);
                 const modal = document.getElementById('aiModal');
-                const scan = document.getElementById('scan-ui');
-                const res = document.getElementById('result-ui');
-
                 modal.classList.remove('hidden');
-                scan.classList.remove('hidden');
-                res.classList.add('hidden');
-
-                // Fake Process
-                await new Promise(r => setTimeout(r, 2500));
-
-                const type = Math.random() > 0.5 ? 'BUY' : 'SELL';
-                const now = moment();
-                const exit = moment().add(mins, 'minutes');
-
-                scan.classList.add('hidden');
-                res.classList.remove('hidden');
-                
-                document.getElementById('resType').innerText = type;
-                document.getElementById('resType').className = `text-7xl font-black italic drop-shadow-2xl ${type==='BUY'?'text-[#00E096]':'text-[#FF3B30]'}`;
+                document.getElementById('scan-ui').classList.remove('hidden');
+                document.getElementById('result-ui').classList.add('hidden');
+                await new Promise(r => setTimeout(r, 2000));
+                document.getElementById('scan-ui').classList.add('hidden');
+                document.getElementById('result-ui').classList.remove('hidden');
+                document.getElementById('resType').innerText = Math.random() > 0.5 ? 'BUY' : 'SELL';
                 document.getElementById('resAsset').innerText = curAsset;
-                document.getElementById('resEntryTime').innerText = now.format('HH:mm:ss');
-                document.getElementById('resExitTime').innerText = exit.format('HH:mm:ss');
                 document.getElementById('resId').innerText = Math.floor(Math.random()*900)+100;
-
-                // Timer
-                let duration = mins * 60;
-                clearInterval(timerInt);
-                timerInt = setInterval(() => {
-                    duration--;
-                    let m = Math.floor(duration/60), s = duration%60;
-                    document.getElementById('countdownDisplay').innerText = `${m}:${s<10?'0'+s:s}`;
-                    if(duration<=0) clearInterval(timerInt);
-                }, 1000);
             }
         };
 
-        // 🚀 INIT
         onAuthStateChanged(auth, u => {
             if(u) {
                 document.getElementById('authPage').classList.add('hidden');
                 document.getElementById('mainApp').classList.remove('hidden');
-                
                 onSnapshot(doc(db, "users", u.uid), s => {
                     if(s.exists()){
                         userData = s.data();
-                        
-                        // Header Update
                         document.getElementById('headerAvatar').src = `https://ui-avatars.com/api/?name=${userData.displayName}&background=000&color=FFD700`;
-                        
-                        // Profile Update
                         document.getElementById('pName').innerText = userData.displayName;
                         document.getElementById('pEmail').innerText = userData.email;
                         
-                        // Status Logic
                         const now = new Date();
                         const expiry = userData.expiryDate ? userData.expiryDate.toDate() : null;
-                        const isActive = expiry && expiry > now;
-                        
+                        if(expiry) startExpiryCountdown(expiry);
+
                         const badge = document.getElementById('statusBadge');
-                        const pIcon = document.getElementById('pStatusIcon');
-                        const pPlan = document.getElementById('pPlan');
-                        const lock = document.getElementById('lockMessage');
-                        const startBtn = document.getElementById('startBtn');
-
+                        const isActive = expiry && expiry > now;
                         if(isActive) {
-                            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span> ONLINE`;
-                            badge.className = "text-[10px] font-bold text-green-500 uppercase tracking-widest flex items-center gap-2";
-                            
-                            pIcon.className = "w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#00E096]";
-                            pPlan.innerText = `${userData.planName} (Active)`;
-                            pPlan.className = "text-xs font-bold text-green-400 uppercase";
-
-                            lock.classList.add('hidden');
-                            startBtn.disabled = false;
-                            startBtn.classList.remove('opacity-50', 'grayscale');
+                            badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500"></span> ONLINE`;
+                            document.getElementById('pPlan').innerText = userData.planName + " (ACTIVE)";
+                            document.getElementById('lockMessage').classList.add('hidden');
                         } else {
                             badge.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span> EXPIRED`;
-                            badge.className = "text-[10px] font-bold text-red-500 uppercase tracking-widest flex items-center gap-2";
-                            
-                            pIcon.className = "w-2 h-2 rounded-full bg-red-500";
-                            pPlan.innerText = "หมดอายุ (Expired)";
-                            pPlan.className = "text-xs font-bold text-red-500 uppercase";
-
-                            lock.classList.remove('hidden');
-                            startBtn.disabled = true;
-                            startBtn.classList.add('opacity-50', 'grayscale');
+                            document.getElementById('pPlan').innerText = "EXPIRED";
+                            document.getElementById('lockMessage').classList.remove('hidden');
                         }
                     }
                 });
-
-                // Init Price
-                app.fetchPrice();
-                setInterval(app.fetchPrice, 5000);
-
+                app.fetchPrice(); setInterval(app.fetchPrice, 5000);
             } else {
                 document.getElementById('authPage').classList.remove('hidden');
                 document.getElementById('mainApp').classList.add('hidden');
             }
-            // Hide Loader
             setTimeout(() => document.getElementById('loader').classList.add('opacity-0', 'pointer-events-none'), 1500);
         });
     </script>
