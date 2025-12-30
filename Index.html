@@ -2,13 +2,15 @@
 <html lang="th">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>RS ADMIN SUPREME | ระบบจัดการส่วนกลาง</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>RS SUPREME | ระบบจัดการเครดิตและขนส่ง</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@200;300;400;500;600&family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/locale/th.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
     <script>
@@ -16,186 +18,216 @@
             theme: {
                 extend: {
                     fontFamily: { sans: ['Kanit', 'sans-serif'], title: ['Prompt', 'sans-serif'] },
-                    colors: { brand: '#0052FF', luxury: '#0f172a', bgMain: '#F8FAFC', accent: '#D4AF37' }
+                    colors: { brand: '#0052FF', luxury: '#0f172a', soft: '#F8FAFC', success: '#10B981', danger: '#EF4444' }
                 }
             }
         }
     </script>
 
     <style>
-        /* 🎨 Premium Admin Styling */
-        * { touch-action: manipulation; outline: none !important; transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); }
-        body { background-color: #f8fafc; font-family: 'Kanit', sans-serif; height: 100vh; display: flex; overflow: hidden; }
+        /* 🎨 Premium CSS Architecture */
+        :root { --brand: #0052FF; }
+        * { touch-action: manipulation; -webkit-tap-highlight-color: transparent; outline: none !important; }
+        body { background-color: #ffffff; color: #1E293B; height: 100vh; overflow: hidden; font-family: 'Kanit', sans-serif; }
         .font-title { font-family: 'Prompt', sans-serif; }
 
-        /* Sidebar Architecture */
-        .sidebar { width: 300px; background: #0f172a; color: white; display: flex; flex-direction: column; position: relative; z-index: 50; }
-        .nav-item { padding: 1.25rem 2rem; display: flex; items-center: center; gap: 1rem; color: #94a3b8; font-weight: 500; cursor: pointer; border-left: 4px solid transparent; }
-        .nav-item:hover { background: rgba(255,255,255,0.05); color: white; }
-        .nav-item.active { background: linear-gradient(90deg, rgba(0,82,255,0.1) 0%, transparent 100%); color: #0052FF; border-left-color: #0052FF; font-weight: 700; }
+        .luxury-card { background: white; border-radius: 2.5rem; border: 1px solid #f1f5f9; box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.04); }
+        .luxury-bg { background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%); }
+        .btn-luxury { transition: 0.3s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
+        .btn-luxury:active { transform: scale(0.95); opacity: 0.8; }
 
-        /* Content Area */
-        .main-content { flex: 1; overflow-y: auto; padding: 3rem; position: relative; }
-        .stat-card { background: white; border-radius: 2rem; padding: 2rem; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.02); }
-        .data-table { width: 100%; background: white; border-radius: 1.5rem; overflow: hidden; border: 1px solid #f1f5f9; }
+        #map { width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 1; }
+
+        /* Timeline Components */
+        .step-node { width: 12px; height: 12px; border-radius: 50%; background: #e2e8f0; position: relative; z-index: 2; transition: 0.5s; }
+        .step-node.active { background: var(--brand); box-shadow: 0 0 12px rgba(0,82,255,0.4); }
+        .line-track { position: absolute; top: 50%; left: 0; width: 100%; height: 2px; background: #f1f5f9; z-index: 1; transform: translateY(-50%); }
+        .line-active { position: absolute; top: 50%; left: 0; height: 2px; background: var(--brand); z-index: 1; transform: translateY(-50%); transition: 1s ease; width: 0%; }
+
+        .loader-pulse { animation: logoPulse 1.8s infinite ease-in-out; }
+        @keyframes logoPulse { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(0.85); opacity: 0.4; } }
         
-        /* Modern Inputs */
-        .admin-input { width: 100%; padding: 1rem 1.5rem; background: #f8fafc; border-radius: 1rem; border: 1.5px solid #f1f5f9; font-weight: 600; }
-        .admin-input:focus { border-color: #0052FF; background: white; box-shadow: 0 0 0 4px rgba(0,82,255,0.05); }
-
-        .fade-in { animation: fadeIn 0.5s ease-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-slide { animation: fadeSlide 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+        @keyframes fadeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .no-scrollbar::-webkit-scrollbar { display: none; }
-        .loader-spin { animation: spin 1s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .role-btn { border: 2.5px solid #f1f5f9; transition: 0.3s; padding: 20px; border-radius: 1.5rem; text-align: center; }
+        .role-btn.active { border-color: var(--brand); background: #eff6ff; color: var(--brand); }
     </style>
 </head>
-<body>
+<body class="flex flex-col">
 
     <div id="loader" class="fixed inset-0 z-[1000] bg-white flex flex-col items-center justify-center transition-all duration-700">
-        <div class="w-16 h-16 border-4 border-slate-100 border-t-brand rounded-full loader-spin mb-4"></div>
-        <p class="text-brand font-black tracking-widest text-[10px] uppercase animate-pulse">Initializing Master Console</p>
+        <div class="w-24 h-24 luxury-bg rounded-[2.2rem] flex items-center justify-center shadow-2xl loader-pulse mb-8">
+            <span class="text-white font-black italic text-2xl font-title tracking-tighter">RS</span>
+        </div>
+        <p class="text-slate-400 font-bold tracking-[0.3em] text-[10px] uppercase animate-pulse">กำลังตรวจสอบความปลอดภัยระบบ...</p>
     </div>
 
-    <div id="authPage" class="hidden fixed inset-0 z-[900] bg-luxury flex items-center justify-center p-6">
-        <div class="bg-white w-full max-w-sm p-12 rounded-[4rem] text-center shadow-2xl relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-2 bg-brand"></div>
-            <h1 class="text-3xl font-black text-luxury italic font-title mb-2 uppercase">Admin <span class="text-brand">Login</span></h1>
-            <p class="text-slate-400 text-[10px] font-bold uppercase tracking-[0.3em] mb-12">Authorized Entry Points Only</p>
-            
-            <div class="space-y-4">
-                <input id="lEmail" type="email" class="admin-input" placeholder="Admin E-mail">
-                <input id="lPass" type="password" class="admin-input" placeholder="Master Password">
-                <button onclick="admin.login()" class="w-full bg-luxury text-white py-5 rounded-2xl font-black uppercase text-xs tracking-widest shadow-xl mt-6 hover:bg-brand">Access Console</button>
+    <div id="waitPage" class="hidden fixed inset-0 z-[800] bg-white flex flex-col justify-center items-center p-12 text-center">
+        <div class="w-32 h-32 bg-blue-50 text-brand rounded-[3rem] flex items-center justify-center mb-10 shadow-2xl animate-bounce">
+            <i class="fas fa-id-badge text-6xl"></i>
+        </div>
+        <h2 class="text-3xl font-black text-luxury font-title mb-4 italic uppercase">รอดำเนินการอนุมัติ</h2>
+        <p class="text-sm text-slate-500 leading-relaxed max-w-xs mb-12">บัญชีพนักงานรับสินค้าของคุณกำลังอยู่ระหว่างการตรวจสอบ <br>กรุณารอแอดมินอนุมัติก่อนเริ่มต้นรับงานครับ</p>
+        <button onclick="app.logout()" class="text-brand font-black text-xs uppercase tracking-widest underline underline-offset-8">ย้อนกลับ</button>
+    </div>
+
+    <div id="authPage" class="hidden fixed inset-0 z-[600] bg-soft flex flex-col justify-center items-center p-8 overflow-y-auto no-scrollbar">
+        <div class="w-full max-w-sm text-center fade-slide py-10">
+            <div class="mb-14 text-center">
+                <div class="w-16 h-16 luxury-bg rounded-3xl flex items-center justify-center text-white text-xl font-black shadow-2xl italic mx-auto mb-6">RS</div>
+                <h1 class="text-4xl font-black text-luxury italic font-title leading-none uppercase tracking-tighter">Supreme <span class="text-brand">Hub</span></h1>
+            </div>
+
+            <div id="loginForm" class="space-y-4">
+                <input id="lEmail" type="email" class="w-full px-8 py-5 bg-white rounded-[2rem] font-bold outline-none border-2 border-slate-50 focus:border-brand transition-all" placeholder="อีเมลแอดเดรส">
+                <input id="lPass" type="password" class="w-full px-8 py-5 bg-white rounded-[2rem] font-bold outline-none border-2 border-slate-50 focus:border-brand transition-all" placeholder="รหัสผ่าน">
+                <button onclick="app.login()" class="w-full bg-luxury text-white py-6 rounded-[2rem] font-black uppercase text-xs tracking-widest shadow-2xl btn-luxury mt-4">เข้าสู่ระบบความปลอดภัย</button>
+                <button onclick="ui.toggleAuth(false)" class="text-slate-400 text-[10px] font-bold uppercase tracking-widest mt-8">สมัครสมาชิกใหม่เพื่อใช้บริการ</button>
+            </div>
+
+            <div id="regForm" class="hidden space-y-4 text-left">
+                <div class="grid grid-cols-2 gap-4">
+                    <input id="rName" class="w-full px-6 py-4 bg-white rounded-2xl font-bold outline-none border border-slate-100" placeholder="ชื่อ-นามสกุล">
+                    <input id="rEmail" type="email" class="w-full px-6 py-4 bg-white rounded-2xl font-bold outline-none border border-slate-100" placeholder="อีเมล">
+                </div>
+                <input id="rPass" type="password" class="w-full px-6 py-4 bg-white rounded-2xl font-bold outline-none border border-slate-100" placeholder="กำหนดรหัสผ่าน">
+                <textarea id="rAddr" rows="3" class="w-full px-6 py-4 bg-white rounded-2xl font-bold outline-none border border-slate-100" placeholder="ระบุที่อยู่ที่ใช้ในการขนส่งสินค้า"></textarea>
+                
+                <div class="space-y-3 py-4">
+                    <p class="text-[10px] font-black text-brand uppercase ml-4 tracking-widest leading-none">ต้องการสมัครในบทบาท:</p>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div id="roleUser" onclick="app.setRole('customer')" class="role-btn active"><i class="fas fa-user-circle text-xl mb-2"></i><br><span class="text-xs font-black uppercase">ลูกค้า</span></div>
+                        <div id="roleDriver" onclick="app.setRole('driver')" class="role-btn"><i class="fas fa-truck text-xl mb-2"></i><br><span class="text-xs font-black uppercase">ผู้รับสินค้า</span></div>
+                    </div>
+                </div>
+                <button onclick="app.register()" class="w-full bg-brand text-white py-6 rounded-3xl font-black uppercase text-xs shadow-xl btn-luxury">ยืนยันการสมัครสมาชิก</button>
+                <button onclick="ui.toggleAuth(true)" class="w-full text-center text-slate-300 text-[10px] font-bold uppercase mt-2">ยกเลิก</button>
             </div>
         </div>
     </div>
 
-    <aside id="sidebar" class="sidebar hidden lg:flex">
-        <div class="p-10 flex items-center gap-4">
-            <div class="w-11 h-11 bg-brand rounded-2xl flex items-center justify-center text-white font-black italic shadow-2xl shadow-brand/30">RS</div>
-            <div>
-                <h2 class="text-white font-black text-lg font-title tracking-tight leading-none uppercase">Admin <span class="text-brand">Center</span></h2>
-                <p class="text-slate-500 text-[8px] font-bold uppercase tracking-widest mt-1.5">v7.0.5 Master Build</p>
-            </div>
-        </div>
-
-        <nav class="flex-1 mt-4">
-            <div onclick="ui.view('dash')" id="n-dash" class="nav-item active"><i class="fas fa-chart-pie w-6"></i> สรุปผลระบบ</div>
-            <div onclick="ui.view('approve')" id="n-approve" class="nav-item"><i class="fas fa-user-check w-6"></i> อนุมัติคนขับ <span id="badgeApprove" class="hidden ml-auto bg-brand text-white text-[8px] px-2 py-1 rounded-full">0</span></div>
-            <div onclick="ui.view('wallet')" id="n-wallet" class="nav-item"><i class="fas fa-wallet w-6"></i> จัดการยอดเงิน</div>
-            <div onclick="ui.view('shipments')" id="n-shipments" class="nav-item"><i class="fas fa-box-open w-6"></i> รายการสินค้า</div>
-            <div onclick="ui.view('system')" id="n-system" class="nav-item"><i class="fas fa-sliders w-6"></i> ตั้งค่าส่วนกลาง</div>
-        </nav>
-
-        <div class="p-8 mt-auto">
-            <button onclick="admin.logout()" class="w-full py-4 bg-white/5 rounded-2xl text-rose-500 font-black text-[10px] uppercase tracking-widest border border-white/5 hover:bg-rose-500 hover:text-white transition-all"><i class="fas fa-power-off mr-2"></i> Log out</button>
-        </div>
-    </aside>
-
-    <main id="mainDashboard" class="main-content hidden no-scrollbar">
+    <div id="mainPage" class="hidden flex-1 flex flex-col overflow-hidden bg-white">
         
-        <section id="v-dash" class="space-y-12 fade-in">
-            <header>
-                <h1 class="text-4xl font-black text-luxury font-title italic">Analytics Overview</h1>
-                <p class="text-slate-400 font-bold uppercase tracking-widest text-xs mt-2">ข้อมูลสถานะระบบแบบเรียลไทม์</p>
-            </header>
-
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-                <div class="stat-card">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 leading-none">ยอดเครดิตในระบบ</p>
-                    <h3 id="statBal" class="text-3xl font-black text-brand italic tracking-tighter leading-none">฿ 0.00</h3>
-                </div>
-                <div class="stat-card">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 leading-none">สมาชิกทั้งหมด</p>
-                    <h3 id="statUsers" class="text-3xl font-black text-luxury italic tracking-tighter leading-none">0 คน</h3>
-                </div>
-                <div class="stat-card border-l-4 border-l-brand">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 leading-none">คนขับรออนุมัติ</p>
-                    <h3 id="statPending" class="text-3xl font-black text-luxury italic tracking-tighter leading-none">0 คน</h3>
-                </div>
-                <div class="stat-card">
-                    <p class="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-3 leading-none">ออเดอร์ทั้งหมด</p>
-                    <h3 id="statOrders" class="text-3xl font-black text-luxury italic tracking-tighter leading-none">0 งาน</h3>
-                </div>
-            </div>
-        </section>
-
-        <section id="v-approve" class="hidden space-y-10 fade-in">
-            <h1 class="text-3xl font-black text-luxury font-title italic uppercase tracking-tighter">Driver <span class="text-brand">Approval</span></h1>
-            <div class="data-table">
-                <table class="w-full text-left">
-                    <thead class="bg-bgMain text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] border-b border-slate-50">
-                        <tr>
-                            <th class="p-8">รายชื่อผู้สมัคร</th>
-                            <th>ประเภท</th>
-                            <th>อีเมล</th>
-                            <th>สถานะการอนุมัติ</th>
-                            <th class="text-center p-8">คำสั่ง</th>
-                        </tr>
-                    </thead>
-                    <tbody id="approveTable" class="text-sm font-bold text-luxury"></tbody>
-                </table>
-            </div>
-        </section>
-
-        <section id="v-wallet" class="hidden space-y-10 fade-in">
-            <h1 class="text-3xl font-black text-luxury font-title italic uppercase tracking-tighter">Credit <span class="text-brand">Master</span></h1>
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-                <div class="stat-card space-y-8">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest border-l-2 border-brand pl-4">ปรับปรุงยอดเงินด่วน</h3>
-                    <div class="space-y-4">
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-400 ml-4 uppercase">รหัส UID ลูกค้า</label>
-                            <input id="wUID" class="admin-input" placeholder="Paste User UID here">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-400 ml-4 uppercase">จำนวนเงิน (฿)</label>
-                            <input id="wAmount" type="number" class="admin-input text-2xl text-brand" placeholder="0.00">
-                        </div>
-                        <div class="space-y-1">
-                            <label class="text-[10px] font-bold text-slate-400 ml-4 uppercase">ระบุเหตุผล (ลูกค้าจะเห็นในประวัติ)</label>
-                            <textarea id="wReason" rows="3" class="admin-input" placeholder="เช่น เติมเครดิต, หักค่าบริการรายเดือน..."></textarea>
-                        </div>
-                        <div class="grid grid-cols-2 gap-4 pt-4">
-                            <button onclick="admin.adjustCredit('add')" class="py-5 bg-brand text-white rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl shadow-brand/20">+ เติมเงิน</button>
-                            <button onclick="admin.adjustCredit('minus')" class="py-5 bg-rose-500 text-white rounded-2xl font-black uppercase text-[11px] tracking-widest shadow-xl shadow-rose-500/20">- หักเงิน</button>
+        <main id="view-home" class="flex-1 relative overflow-hidden">
+            <div id="map"></div>
+            
+            <div class="absolute top-10 left-0 w-full px-6 z-10 fade-slide">
+                <div class="luxury-card h-16 flex items-center justify-between px-6 bg-white/90 backdrop-blur-xl border-white shadow-2xl">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 luxury-bg rounded-xl flex items-center justify-center text-white text-[10px] font-black italic shadow-2xl">RS</div>
+                        <div>
+                            <h2 class="font-black text-luxury text-sm font-title uppercase tracking-tighter">Live Monitor</h2>
+                            <p id="shipStatus" class="text-[9px] font-black text-brand uppercase tracking-widest mt-2 animate-pulse">กำลังตรวจสอบข้อมูลพัสดุ...</p>
                         </div>
                     </div>
+                    <button onclick="app.logout()" class="text-slate-300 hover:text-danger active:scale-75 transition-all"><i class="fas fa-power-off"></i></button>
                 </div>
+            </div>
 
-                <div class="data-table h-[600px] overflow-y-auto no-scrollbar">
-                    <div class="p-8 border-b border-slate-50 sticky top-0 bg-white z-10 flex justify-between items-center">
-                        <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">ทำเนียบสมาชิก</h3>
+            <div class="absolute bottom-32 left-0 w-full px-6 z-10">
+                <div class="luxury-card p-8 fade-slide shadow-2xl border-2 border-brand/5">
+                    <div class="relative flex justify-between items-center mb-10 px-5">
+                        <div class="line-track"></div>
+                        <div id="lineActive" class="line-active"></div>
+                        <div class="flex flex-col items-center gap-3"><div id="s1" class="step-dot active"></div><span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">รับงาน</span></div>
+                        <div class="flex flex-col items-center gap-3"><div id="s2" class="step-dot"></div><span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">เตรียมของ</span></div>
+                        <div class="flex flex-col items-center gap-3"><div id="s3" class="step-dot"></div><span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">กำลังส่ง</span></div>
+                        <div class="flex flex-col items-center gap-3"><div id="s4" class="step-dot"></div><span class="text-[9px] font-black text-slate-300 uppercase tracking-tighter">สำเร็จ</span></div>
                     </div>
-                    <div id="miniUserList" class="divide-y divide-slate-50"></div>
+
+                    <div class="flex items-center justify-between border-t border-slate-50 pt-8">
+                        <div class="flex items-center gap-5">
+                            <div class="w-16 h-16 rounded-[1.5rem] bg-brand/5 border-2 border-white shadow-inner flex items-center justify-center overflow-hidden">
+                                <img id="driverPic" src="" class="w-full h-full object-cover">
+                            </div>
+                            <div class="overflow-hidden">
+                                <p id="orderCode" class="text-[11px] font-black text-brand uppercase tracking-widest mb-2 italic leading-none">#ORDERING...</p>
+                                <h3 id="driverName" class="font-black text-luxury text-lg font-title leading-none uppercase truncate w-40 italic">รอมอบหมายงาน...</h3>
+                            </div>
+                        </div>
+                        <button onclick="app.openShipModal()" class="w-14 h-14 bg-luxury text-white rounded-[1.5rem] flex items-center justify-center shadow-xl btn-luxury border border-white/20"><i class="fas fa-plus text-xl"></i></button>
+                    </div>
                 </div>
             </div>
-        </section>
+        </main>
 
-        <section id="v-shipments" class="hidden space-y-10 fade-in">
-            <h1 class="text-3xl font-black text-luxury font-title italic uppercase tracking-tighter">Shipment <span class="text-brand">Logs</span></h1>
-            <div id="allOrderList" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
-        </section>
-
-        <section id="v-system" class="hidden space-y-10 fade-in">
-            <h1 class="text-3xl font-black text-luxury font-title italic uppercase tracking-tighter">Global <span class="text-brand">Settings</span></h1>
-            <div class="max-w-3xl stat-card space-y-8">
-                <div class="space-y-4">
-                    <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest">แก้ไขประกาศตัววิ่ง (หน้าแรกสมาชิก)</h3>
-                    <textarea id="sysNews" rows="5" class="admin-input text-lg font-bold italic" placeholder="พิมพ์ข้อความประกาศที่นี่..."></textarea>
+        <main id="view-wallet" class="hidden flex-1 overflow-y-auto px-6 py-10 space-y-10 no-scrollbar pb-48 fade-slide bg-white">
+            <div class="luxury-bg p-10 text-white h-60 rounded-[3rem] shadow-2xl flex flex-col justify-between relative overflow-hidden">
+                <div class="absolute top-[-20%] right-[-10%] w-72 h-72 bg-brand rounded-full blur-[100px] opacity-30"></div>
+                <div>
+                    <p class="text-[10px] text-white/40 font-bold uppercase mb-2 tracking-[0.4em] font-title leading-none">Net Credit Balance</p>
+                    <h1 id="uBal" class="text-6xl font-black italic tracking-tighter leading-tight drop-shadow-2xl font-title">฿ 0.00</h1>
                 </div>
-                <button onclick="admin.updateSystem()" class="w-full bg-brand text-white py-5 rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-brand/20">Apply Configuration</button>
+                <div class="flex justify-between items-end relative z-10">
+                    <p id="navName" class="font-bold text-white text-base italic leading-none">...</p>
+                    <div class="w-11 h-11 rounded-full border border-white/20 bg-white/5 backdrop-blur-md flex items-center justify-center text-[10px] font-black">RS</div>
+                </div>
             </div>
-        </section>
 
-    </main>
+            <div class="grid grid-cols-2 gap-6">
+                <button onclick="app.openMoneyModal('deposit')" class="luxury-card p-6 flex flex-col items-center gap-3 btn-luxury group hover:border-brand">
+                    <div class="w-12 h-12 bg-blue-50 text-brand rounded-2xl flex items-center justify-center"><i class="fas fa-arrow-down-to-bracket text-xl"></i></div>
+                    <span class="text-xs font-black uppercase tracking-widest text-slate-600">เติมเงิน</span>
+                </button>
+                <button onclick="app.openMoneyModal('withdraw')" class="luxury-card p-6 flex flex-col items-center gap-3 btn-luxury group hover:border-brand">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-500 rounded-2xl flex items-center justify-center"><i class="fas fa-arrow-up-from-bracket text-xl"></i></div>
+                    <span class="text-xs font-black uppercase tracking-widest text-slate-600">ถอนเงิน</span>
+                </button>
+            </div>
+
+            <div class="space-y-6">
+                <h3 class="font-black text-luxury text-xl tracking-tighter border-l-4 border-brand pl-5 italic font-title uppercase">Recent Activities</h3>
+                <div id="txList" class="space-y-4 px-1"></div>
+            </div>
+        </main>
+
+        <main id="view-worker" class="hidden flex-1 overflow-y-auto px-8 py-12 space-y-12 no-scrollbar pb-48 fade-slide bg-white">
+            <h1 class="text-4xl font-black text-luxury italic uppercase font-title leading-none">Worker <span class="text-brand">Hub</span></h1>
+            
+            <div class="luxury-bg p-8 rounded-[3rem] text-white flex items-center justify-between shadow-2xl relative overflow-hidden">
+                <div class="relative z-10 flex items-center gap-6">
+                    <div id="gpsNode" class="w-4 h-4 bg-slate-500 rounded-full border-4 border-white/10"></div>
+                    <div><p id="gpsLabel" class="text-sm font-black uppercase italic leading-none">Offline</p><p class="text-[10px] text-white/40 font-bold uppercase mt-2 tracking-widest">Live GPS Sharing</p></div>
+                </div>
+                <button id="gpsBtn" onclick="worker.toggleGPS()" class="px-8 py-3.5 bg-brand rounded-full font-black text-[10px] uppercase tracking-widest btn-luxury shadow-2xl">Go Online</button>
+            </div>
+
+            <div id="jobList" class="space-y-6">
+                </div>
+        </main>
+
+        <main id="view-profile" class="hidden flex-1 overflow-y-auto px-8 py-14 space-y-10 no-scrollbar pb-48 fade-slide bg-white text-center">
+            <div class="w-40 h-40 bg-white rounded-full mx-auto mb-10 border-8 border-bgSoft shadow-2xl overflow-hidden"><img id="pAvatar" src="" class="w-full h-full object-cover"></div>
+            <h2 id="pNameMain" class="text-4xl font-black text-luxury italic uppercase font-title leading-tight mb-4">...</h2>
+            <div class="bg-blue-50 px-8 py-3 rounded-full border border-blue-100 inline-block text-[11px] font-black text-brand uppercase tracking-widest italic" id="pRole">ROLE</div>
+            
+            <div class="mt-14 space-y-4">
+                <button onclick="app.logout()" class="w-full bg-rose-50 text-rose-500 py-7 rounded-[3rem] font-black text-xs uppercase tracking-widest border border-rose-100 btn-luxury">Log Out Securely</button>
+            </div>
+        </main>
+
+        <nav class="bg-white/95 backdrop-blur-2xl fixed bottom-0 w-full px-12 py-7 pb-14 border-t border-slate-50 flex justify-between items-center z-40 rounded-t-[4.5rem] shadow-[0_-25px_60px_rgba(0,0,0,0.06)]">
+            <button onclick="ui.changeView('home')" id="n-home" class="nav-link active opacity-100 flex flex-col items-center gap-2.5"><i class="fas fa-location-crosshairs text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">TRACKING</span></button>
+            <button onclick="ui.changeView('wallet')" id="n-wallet" class="nav-link opacity-20 flex flex-col items-center gap-2.5"><i class="fas fa-wallet text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">WALLET</span></button>
+            <button onclick="ui.changeView('worker')" id="n-worker" class="hidden nav-link opacity-20 flex flex-col items-center gap-2.5"><i class="fas fa-truck-fast text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">WORKER</span></button>
+            <button onclick="ui.changeView('profile')" id="n-profile" class="nav-link opacity-20 flex flex-col items-center gap-2.5"><i class="fas fa-user-circle text-2xl"></i><span class="text-[9px] font-black uppercase tracking-tighter font-title">IDENTITY</span></button>
+        </nav>
+    </div>
+
+    <div id="modal" class="hidden fixed inset-0 z-[1000] bg-luxury/90 backdrop-blur-xl flex items-end justify-center transition-all duration-500">
+        <div class="bg-white w-full rounded-t-[6rem] p-10 pb-32 shadow-2xl relative max-w-2xl fade-slide">
+            <button onclick="ui.closeModal()" class="absolute top-12 right-14 w-12 h-12 bg-bgSoft rounded-full flex items-center justify-center text-slate-400 border-2 border-white btn-luxury shadow-sm"><i class="fas fa-times"></i></button>
+            <div class="w-16 h-1.5 bg-slate-100 rounded-full mx-auto mb-14"></div>
+            <div id="modalContent" class="space-y-10 text-left px-4"></div>
+        </div>
+    </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, onSnapshot, collection, query, where, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection, addDoc, updateDoc, serverTimestamp, query, where, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
         // 🔥 FIREBASE CONFIG
         const firebaseConfig = { apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0", authDomain: "fafada-d9899.firebaseapp.com", projectId: "fafada-d9899", storageBucket: "fafada-d9899.firebasestorage.app", messagingSenderId: "484777586908", appId: "1:484777586908:web:16a8f0367ad15737364419" };
@@ -203,183 +235,149 @@
         const auth = getAuth(fb_app);
         const db = getFirestore(fb_app);
 
-        let currentUser = null, allUsers = [], allShipments = [];
+        let uRole = 'customer', map, dMarker, watchID, jobs = [], lastBal = 0;
 
         window.ui = {
-            view: (v) => {
-                document.querySelectorAll('main section').forEach(s => s.classList.add('hidden'));
-                document.getElementById('v-'+v).classList.remove('hidden');
-                document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-                document.getElementById('n-'+v).classList.add('active');
+            changeView: (v) => {
+                document.querySelectorAll('main').forEach(m => m.classList.add('hidden'));
+                document.getElementById('view-'+v).classList.remove('hidden');
+                ['home', 'wallet', 'worker', 'profile'].forEach(n => {
+                    const el = document.getElementById('n-'+n);
+                    if(el) { el.classList.toggle('opacity-100', n===v); el.classList.toggle('active', n===v); el.classList.toggle('opacity-20', n!==v); }
+                });
+                ui.closeModal();
+            },
+            toggleAuth: (login) => { document.getElementById('loginForm').classList.toggle('hidden', !login); document.getElementById('regForm').classList.toggle('hidden', login); },
+            closeModal: () => document.getElementById('modal').classList.add('hidden'),
+            hideLoader: () => { document.getElementById('loader').classList.add('opacity-0'); setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 700); },
+            animateBalance: (target) => {
+                const el = document.getElementById('uBal');
+                let start = lastBal;
+                const animate = (time) => {
+                    let prog = Math.min((time - start) / 1000, 1);
+                    let curr = start + (target - start) * prog;
+                    if(el) el.innerText = `฿ ${curr.toLocaleString('th-TH', { minimumFractionDigits: 2 })}`;
+                    if (prog < 1) requestAnimationFrame(animate); else lastBal = target;
+                };
+                requestAnimationFrame(animate);
+            },
+            updateShipTimeline: (status) => {
+                const steps = { 'pending': 1, 'preparing': 2, 'shipping': 3, 'delivered': 4 };
+                const s = steps[status] || 1;
+                document.getElementById('lineActive').style.width = `${(s-1) * 33.33}%`;
+                for(let i=1; i<=4; i++) document.getElementById('dot'+i).classList.toggle('active', s >= i);
+                const labels = { 'pending': 'รอยืนยันออเดอร์', 'preparing': 'เตรียมสินค้าเข้าสู่ระบบ', 'shipping': 'อยู่ระหว่างนำส่งพัสดุ', 'delivered': 'สินค้าจัดส่งถึงที่หมายแล้ว' };
+                document.getElementById('shipStatus').innerText = labels[status] || status.toUpperCase();
             }
         };
 
-        window.admin = {
+        window.app = {
+            setRole: (r) => { uRole = r; document.getElementById('roleUser').classList.toggle('active', r==='customer'); document.getElementById('roleDriver').classList.toggle('active', r==='driver'); },
             login: async () => {
                 const em = document.getElementById('lEmail').value.trim();
                 const ps = document.getElementById('lPass').value.trim();
-                if(em !== 'farisxuma1@gmail.com') return Swal.fire('Forbidden', 'คุณไม่มีสิทธิ์เข้าใช้งานในฐานะแอดมิน', 'error');
+                if(!em || !ps) return Swal.fire('Error','ระบุข้อมูลให้ครบ','warning');
                 Swal.showLoading();
-                try { await signInWithEmailAndPassword(auth, em, ps); } 
-                catch(e) { Swal.fire('Error', 'รหัสผ่านแอดมินไม่ถูกต้อง', 'error'); }
+                try { await signInWithEmailAndPassword(auth, em, ps); } catch(e) { Swal.fire('Error','ข้อมูลผิดพลาด','error'); }
             },
-            logout: () => signOut(auth).then(()=>location.reload()),
-            
-            // 👤 Approval Engine
-            approve: async (uid) => {
-                Swal.fire({
-                    title: 'ยืนยันการอนุมัติ',
-                    text: 'บัญชีนี้จะสามารถเริ่มรับงานและแชร์พิกัดได้ทันที',
-                    icon: 'question', showCancelButton: true, confirmButtonColor: '#0052FF'
-                }).then(async (res) => {
-                    if(res.isConfirmed) {
-                        await updateDoc(doc(db, "users", uid), { isApproved: true, balance: 0 });
-                        confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
-                    }
-                });
-            },
-
-            // 💰 Credit Engine
-            adjustCredit: async (type) => {
-                const uid = document.getElementById('wUID').value.trim();
-                const val = parseFloat(document.getElementById('wAmount').value);
-                const reason = document.getElementById('wReason').value;
-                if(!uid || isNaN(val)) return Swal.fire('Warning','ระบุ UID และจำนวนเงินให้ถูกต้อง','warning');
-
+            register: async () => {
+                const em = document.getElementById('rEmail').value.trim();
+                const ps = document.getElementById('rPass').value.trim();
+                const nm = document.getElementById('rName').value.trim();
+                const ad = document.getElementById('rAddr').value.trim();
+                if(!em || !ps || !nm || !ad) return Swal.fire('Error','กรุณาระบุข้อมูลทุกช่อง','warning');
                 Swal.showLoading();
                 try {
-                    await runTransaction(db, async (transaction) => {
-                        const uRef = doc(db, "users", uid);
-                        const uSnap = await transaction.get(uRef);
-                        const cur = Number(uSnap.data().balance || 0);
-                        const newBal = type === 'add' ? cur + val : cur - val;
-                        transaction.update(uRef, { balance: newBal });
-                        
-                        // สร้างรายการประวัติ (Adjustment Record)
-                        const txRef = doc(collection(db, "transactions"));
-                        transaction.set(txRef, {
-                            uid: uid, amount: type === 'add' ? val : -val, type: 'adjustment',
-                            status: 'completed', reason: reason || 'แอดมินปรับปรุงยอดเงิน', 
-                            timestamp: serverTimestamp()
-                        });
-                    });
-                    Swal.fire('Success','ดำเนินการปรับเครดิตเรียบร้อย','success');
-                    document.getElementById('wAmount').value = '';
-                } catch(e) { Swal.fire('System Error', e.message, 'error'); }
+                    const res = await createUserWithEmailAndPassword(auth, em, ps);
+                    await setDoc(doc(db, "users", res.user.uid), { displayName: nm, email: em, address: ad, role: uRole, isApproved: uRole === 'customer', balance: 0, createdAt: serverTimestamp() });
+                    location.reload();
+                } catch(e) { Swal.fire('Critical Error', e.message, 'error'); }
             },
-
-            // ⚙️ Update Announcement
-            updateSystem: async () => {
-                const news = document.getElementById('sysNews').value;
-                await setDoc(doc(db, "announcements", "main"), { content: news, title: 'ADMIN UPDATED' });
-                Swal.fire('Updated','อัปเดตประกาศตัววิ่งสำเร็จ','success');
+            logout: () => signOut(auth).then(()=>location.reload()),
+            openShipModal: () => {
+                document.getElementById('modal').classList.remove('hidden');
+                document.getElementById('modalContent').innerHTML = `
+                    <h2 class="text-4xl font-black text-luxury italic font-title leading-none uppercase">Shipment <span class="text-brand">Request</span></h2>
+                    <div class="space-y-6 pt-4">
+                        <div class="space-y-2"><label class="text-[10px] font-black text-slate-400 ml-4 uppercase tracking-widest">ข้อมูลสินค้าที่ต้องการส่ง</label><input id="mProd" class="w-full px-7 py-4 bg-bgSoft border-none rounded-[1.8rem] font-bold outline-none" placeholder="เช่น กล่องพัสดุ, เอกสาร, ของสด"></div>
+                        <div class="space-y-2"><label class="text-[10px] font-black text-slate-400 ml-4 uppercase tracking-widest">จุดรับ (Pickup)</label><input id="mPick" class="w-full px-7 py-4 bg-bgSoft border-none rounded-[1.8rem] font-bold outline-none" placeholder="ระบุต้นทาง"></div>
+                        <div class="space-y-2"><label class="text-[10px] font-black text-slate-400 ml-4 uppercase tracking-widest">จุดส่ง (Drop-off)</label><input id="mDrop" class="w-full px-7 py-4 bg-bgSoft border-none rounded-[1.8rem] font-bold outline-none" placeholder="ระบุปลายทาง"></div>
+                        <button onclick="app.submitShipment()" class="w-full bg-luxury text-white py-6 rounded-[2.5rem] font-black uppercase text-xs shadow-2xl btn-luxury mt-4">แจ้งรับสินค้าทันที</button>
+                    </div>`;
             },
-
-            deleteShipment: async (id) => {
-                // สำหรับจัดการขยะ
-                Swal.fire({
-                    title: 'ลบรายการ?', text: 'ไม่สามารถกู้คืนข้อมูลได้', icon: 'warning',
-                    showCancelButton: true, confirmButtonColor: '#EF4444'
-                }).then(async (res) => {
-                    if(res.isConfirmed) {
-                        // Logic delete ใน Firebase
-                    }
-                });
+            submitShipment: async () => {
+                const prod = document.getElementById('mProd').value;
+                const pick = document.getElementById('mPick').value;
+                const drop = document.getElementById('mDrop').value;
+                if(!pick || !drop || !prod) return Swal.fire('Error','ระบุที่อยู่และสินค้าให้ครบ','warning');
+                Swal.showLoading();
+                await addDoc(collection(db, "shipments"), { customerID: auth.currentUser.uid, pickup: pick, drop: drop, product: prod, status: 'pending', timestamp: serverTimestamp() });
+                Swal.fire({icon:'success',title:'แจ้งออเดอร์แล้ว',timer:2000,showConfirmButton:false});
+                ui.closeModal();
             }
         };
 
-        // 🔗 Real-time Data Hub
-        onAuthStateChanged(auth, u => {
-            if(u && u.email === 'farisxuma1@gmail.com') {
-                currentUser = u;
-                document.getElementById('authPage').classList.add('hidden');
-                document.getElementById('sidebar').classList.remove('hidden');
-                document.getElementById('mainDashboard').classList.remove('hidden');
-                document.getElementById('loader').classList.add('opacity-0');
-                setTimeout(()=> document.getElementById('loader').classList.add('hidden'), 700);
-
-                // 1. Sync All Users
-                onSnapshot(collection(db, "users"), s => {
-                    allUsers = s.docs.map(d => ({id: d.id, ...d.data()}));
-                    const at = document.getElementById('approveTable'); at.innerHTML = '';
-                    const ml = document.getElementById('miniUserList'); ml.innerHTML = '';
-                    let totalSysBal = 0;
-                    let pendingCount = 0;
-
-                    allUsers.forEach(user => {
-                        totalSysBal += Number(user.balance || 0);
-                        
-                        // Mini List for Wallet Tab
-                        ml.innerHTML += `
-                        <div onclick="document.getElementById('wUID').value='${user.id}'" class="p-6 flex items-center justify-between hover:bg-slate-50 cursor-pointer">
-                            <div class="flex items-center gap-4">
-                                <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}" class="w-10 h-10 rounded-xl bg-slate-100">
-                                <div><p class="font-bold text-luxury leading-none">${user.displayName}</p><p class="text-[9px] font-mono text-slate-400 mt-1 uppercase">${user.id}</p></div>
-                            </div>
-                            <p class="font-black text-brand italic text-xs">฿${(user.balance || 0).toLocaleString()}</p>
-                        </div>`;
-
-                        // Approval Table Logic
-                        if(!user.isApproved && user.role === 'driver') {
-                            pendingCount++;
-                            at.innerHTML += `
-                            <tr class="border-b border-slate-50 hover:bg-slate-50/50 transition-all">
-                                <td class="p-8">
-                                    <div class="flex items-center gap-4">
-                                        <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=${user.id}" class="w-11 h-11 rounded-2xl">
-                                        <div><p class="font-black text-luxury">${user.displayName}</p><p class="text-[9px] text-slate-400 font-mono">${user.id}</p></div>
-                                    </div>
-                                </td>
-                                <td class="text-xs font-black text-brand uppercase italic">${user.role}</td>
-                                <td class="text-xs font-medium text-slate-400">${user.email}</td>
-                                <td><span class="status-badge bg-amber-50 text-amber-500 animate-pulse">Waiting Approval</span></td>
-                                <td class="p-8 text-center"><button onclick="admin.approve('${user.id}')" class="px-6 py-2.5 bg-brand text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-brand/20">Approve User</button></td>
-                            </tr>`;
-                        }
-                    });
-
-                    // Update Stats
-                    document.getElementById('statBal').innerText = `฿ ${totalSysBal.toLocaleString()}`;
-                    document.getElementById('statUsers').innerText = allUsers.length + " คน";
-                    document.getElementById('statPending').innerText = pendingCount + " คน";
-                    const badge = document.getElementById('badgeApprove');
-                    if(pendingCount > 0) { badge.classList.remove('hidden'); badge.innerText = pendingCount; } else { badge.classList.add('hidden'); }
-                });
-
-                // 2. Sync Shipments
-                onSnapshot(collection(db, "shipments"), s => {
-                    allShipments = s.docs.map(d => ({id: d.id, ...d.data()}));
-                    document.getElementById('statOrders').innerText = allShipments.length + " งาน";
-                    const sl = document.getElementById('allOrderList'); sl.innerHTML = '';
-                    
-                    allShipments.forEach(job => {
-                        const statusColors = { 'pending': 'text-amber-500 bg-amber-50', 'shipping': 'text-brand bg-blue-50', 'delivered': 'text-emerald-500 bg-emerald-50' };
-                        sl.innerHTML += `
-                        <div class="stat-card space-y-6">
-                            <div class="flex justify-between items-start">
-                                <div class="flex items-center gap-3">
-                                    <div class="w-10 h-10 bg-luxury rounded-xl flex items-center justify-center text-white text-[9px] font-black italic shadow-lg">JOB</div>
-                                    <div><p class="text-[10px] font-black text-brand uppercase tracking-tighter">Order ID: #${job.id.slice(0,8).toUpperCase()}</p><p class="text-[9px] text-slate-400 font-bold uppercase mt-1 italic">${moment(job.timestamp?.seconds*1000).fromNow()}</p></div>
-                                </div>
-                                <span class="status-badge ${statusColors[job.status] || 'bg-slate-50 text-slate-400'}">${job.status}</span>
-                            </div>
-                            <div class="space-y-3 p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                                <div class="flex gap-4"><i class="fas fa-warehouse text-brand text-xs mt-1"></i><p class="text-xs font-bold text-luxury leading-relaxed italic">${job.pickupAddress}</p></div>
-                                <div class="h-6 border-l-2 border-slate-200 border-dotted ml-1.5"></div>
-                                <div class="flex gap-4"><i class="fas fa-location-dot text-rose-500 text-xs mt-1"></i><p class="text-xs font-bold text-luxury leading-relaxed italic">${job.deliveryAddress}</p></div>
-                            </div>
-                        </div>`;
-                    });
-                });
-
-                // 3. Sync News
-                onSnapshot(doc(db, "announcements", "main"), s => { if(s.exists()) document.getElementById('sysNews').value = s.data().content; });
-
-            } else {
-                document.getElementById('authPage').classList.remove('hidden');
-                document.getElementById('loader').classList.add('hidden');
+        window.worker = {
+            active: false,
+            toggleLive: () => {
+                worker.active = !worker.active;
+                const btn = document.getElementById('gpsAction');
+                const node = document.getElementById('gpsNode');
+                const label = document.getElementById('gpsLabel');
+                if(worker.active) {
+                    btn.innerText = "Go Offline"; btn.classList.replace('bg-brand','bg-rose-500');
+                    node.classList.replace('bg-slate-500','bg-brand'); label.innerText = "Active Syncing";
+                    driver.startGPS();
+                } else {
+                    btn.innerText = "Go Online"; btn.classList.replace('bg-rose-500','bg-brand');
+                    node.classList.replace('bg-brand','bg-slate-500'); label.innerText = "System Offline";
+                    driver.stopGPS();
+                }
             }
+        };
+
+        // Initialize Real-time Map
+        window.initMap = () => {
+            map = new google.maps.Map(document.getElementById("map"), { center: { lat: 13.7563, lng: 100.5018 }, zoom: 16, disableDefaultUI: true, styles: [{ "featureType": "water", "elementType": "all", "color": "#f0f4f8" }] });
+            dMarker = new google.maps.Marker({ map: map, icon: { url: 'https://cdn-icons-png.flaticon.com/512/2830/2830284.png', scaledSize: new google.maps.Size(48, 48) } });
+        };
+
+        onAuthStateChanged(auth, u => {
+            if(u) {
+                onSnapshot(doc(db, "users", u.uid), s => {
+                    const data = s.data(); if(!data) return;
+                    if(!data.isApproved) { document.getElementById('waitPage').classList.remove('hidden'); document.getElementById('loader').classList.add('hidden'); }
+                    else {
+                        document.getElementById('waitPage').classList.add('hidden');
+                        document.getElementById('navName').innerText = data.displayName;
+                        document.getElementById('pNameMain').innerText = data.displayName;
+                        document.getElementById('pRole').innerText = data.role.toUpperCase();
+                        document.getElementById('pAddress').innerText = data.address;
+                        document.getElementById('pAvatar').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${u.uid}`;
+                        if(data.role === 'driver') document.getElementById('n-worker').classList.remove('hidden');
+                        ui.animateBalance(data.balance || 0);
+                        document.getElementById('mainPage').classList.remove('hidden'); document.getElementById('authPage').classList.add('hidden'); ui.hideLoader();
+                    }
+                });
+
+                onSnapshot(collection(db, "shipments"), s => {
+                    jobs = s.docs.map(d => ({id: d.id, ...d.data()}));
+                    const filtered = jobs.filter(x => x.customerID === u.uid || x.driverID === u.uid || x.status === 'pending');
+                    
+                    // Render Tracking
+                    const active = filtered.find(x => x.status !== 'delivered');
+                    if(active) {
+                        document.getElementById('orderCode').innerText = 'ORDER #' + active.id.slice(0, 8).toUpperCase();
+                        document.getElementById('driverDisplay').innerText = active.driverName ? 'เจ้าหน้าที่กำลังจัดส่ง' : 'รอมอบหมายงาน...';
+                        document.getElementById('driverPic').src = `https://api.dicebear.com/7.x/avataaars/svg?seed=${active.driverID || 'RS'}`;
+                        ui.updateShipTimeline(active.status);
+                        if(active.lat) { const pos = { lat: active.lat, lng: active.lng }; dMarker.setPosition(pos); map.panTo(pos); }
+                    }
+                });
+            } else { document.getElementById('authPage').classList.remove('hidden'); ui.hideLoader(); }
         });
+        setTimeout(() => { if(!document.getElementById('loader').classList.contains('hidden')) ui.hideLoader(); }, 5000);
     </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap" async defer></script>
 </body>
 </html>
