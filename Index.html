@@ -3,390 +3,360 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>RS INFINITY V7 PRO</title>
+    <title>RS INFINITY - PRO TRADER</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
 
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        gold: '#D4AF37',
+                        'gold-light': '#FEDC56',
+                        'gold-dark': '#A67C00',
+                        dark: '#050505',
+                        glass: 'rgba(20, 20, 20, 0.85)',
+                    },
+                    fontFamily: {
+                        sans: ['Kanit', 'sans-serif'],
+                        tech: ['Rajdhani', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
     <style>
-        /* --- CORE THEME --- */
-        :root {
-            --gold: #FFD700;
-            --gold-glow: rgba(255, 215, 0, 0.4);
-            --bg-deep: #050505;
-            --glass: rgba(18, 18, 18, 0.85);
-            --neon-green: #00ff9d;
-            --neon-red: #ff0055;
-        }
-
+        /* --- CORE STYLES --- */
         body {
-            font-family: 'Kanit', sans-serif;
-            background-color: var(--bg-deep);
-            background-image: radial-gradient(circle at 50% 10%, #1a1a1a 0%, #000 100%);
-            color: white;
-            height: 100dvh;
-            overflow: hidden;
+            background-color: #000;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #1a1a1a 0%, transparent 70%),
+                repeating-linear-gradient(45deg, #0a0a0a 0, #0a0a0a 1px, transparent 0, transparent 50%);
+            background-size: 100% 100%, 20px 20px;
+            color: #fff;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        .font-tech { font-family: 'Rajdhani', sans-serif; }
-        .hide-scroll::-webkit-scrollbar { display: none; }
-
-        /* --- UI COMPONENTS --- */
+        /* Glassmorphism Ultra */
         .glass-panel {
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(18, 18, 18, 0.6);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 16px;
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
         }
 
-        /* ปุ่มกด Animation (Click Effect) */
-        .btn-effect {
-            transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-        .btn-effect:active {
-            transform: scale(0.95);
-        }
-        .btn-effect::after {
-            content: '';
-            position: absolute;
-            top: 50%; left: 50%;
-            width: 0; height: 0;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 50%;
-            transform: translate(-50%, -50%);
-            transition: width 0.3s, height 0.3s;
-        }
-        .btn-effect:active::after {
-            width: 200%; height: 200%;
+        .glass-gold {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(0,0,0,0));
+            border: 1px solid rgba(212, 175, 55, 0.3);
         }
 
-        /* Gold Button */
-        .btn-gold {
-            background: linear-gradient(135deg, #FFD700 0%, #d4af37 100%);
-            color: black;
-            font-weight: bold;
-            box-shadow: 0 0 15px var(--gold-glow);
+        /* Text Gradients */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #D4AF37, #FEDC56, #D4AF37);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% auto;
+            animation: shine 3s linear infinite;
         }
 
-        /* --- ANIMATIONS --- */
-        @keyframes pulse-glow {
-            0%, 100% { box-shadow: 0 0 10px var(--gold-glow); }
-            50% { box-shadow: 0 0 25px var(--gold-glow); }
-        }
-        @keyframes scan-line {
-            0% { top: 0%; opacity: 0; }
-            50% { opacity: 1; }
-            100% { top: 100%; opacity: 0; }
+        @keyframes shine { to { background-position: 200% center; } }
+
+        /* Custom Animations */
+        .btn-press:active { transform: scale(0.96); transition: 0.1s; }
+        
+        .scan-circle {
+            background: conic-gradient(from 0deg, transparent 0%, #D4AF37 50%, transparent 100%);
+            animation: spin 2s linear infinite;
         }
         
-        .animate-scan {
-            animation: scan-line 2s linear infinite;
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Loader */
+        .loader-orbit {
+            width: 50px; height: 50px; border-radius: 50%;
+            border: 2px solid #333; border-top-color: #D4AF37;
+            animation: spin 1s infinite linear;
         }
 
-        /* Chart Fullscreen Fix */
-        .full-chart-height {
-            height: calc(100dvh - 80px); /* ลบความสูง Nav bar */
-        }
+        /* Scrollbar Hide */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .hidden-page { display: none !important; }
     </style>
 </head>
-<body class="flex flex-col">
+<body class="flex flex-col h-screen text-gray-100 font-sans">
 
-    <div id="auth-screen" class="fixed inset-0 z-50 bg-black flex flex-col justify-center items-center p-6 bg-[url('https://www.transparenttextures.com/patterns/black-scales.png')]">
-        <div class="mb-8 text-center relative">
-            <div class="absolute inset-0 bg-yellow-500 blur-[60px] opacity-20 rounded-full"></div>
-            <i class="fa-solid fa-microchip text-6xl text-yellow-500 mb-4 relative z-10 drop-shadow-[0_0_15px_rgba(255,215,0,0.8)]"></i>
-            <h1 class="text-4xl font-black italic tracking-tighter relative z-10">RS <span class="text-yellow-500">INFINITY</span></h1>
-            <p class="text-xs text-gray-400 font-tech tracking-[0.5em] mt-2">AI TRADING V7 PRO</p>
-        </div>
+    <div id="loading-screen" class="fixed inset-0 z-[100] bg-black flex flex-col items-center justify-center">
+        <div class="loader-orbit mb-4"></div>
+        <div class="text-xl font-bold italic tracking-widest text-gradient-gold">SYSTEM LOADING</div>
+        <p id="loading-text" class="text-xs text-gray-500 mt-2 font-tech">Connecting to Server...</p>
+    </div>
 
-        <div class="glass-panel w-full max-w-sm p-8">
-            <h2 id="auth-title" class="text-xl font-bold text-center mb-6">เข้าระบบสมาชิก</h2>
-            <form id="auth-form" class="space-y-4">
-                <div id="field-username" class="hidden">
-                    <input type="text" id="inp-username" placeholder="ตั้งชื่อผู้ใช้" class="w-full bg-black/50 border border-gray-700 p-3 rounded-xl text-white focus:border-yellow-500 outline-none">
+    <div id="auth-screen" class="hidden-page fixed inset-0 z-50 flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="w-full max-w-sm glass-panel p-8 rounded-3xl relative overflow-hidden border-t border-gold/20">
+            <div class="absolute -top-10 -right-10 w-32 h-32 bg-gold/20 blur-[50px] rounded-full"></div>
+            
+            <h2 class="text-3xl font-bold text-center mb-1 text-white">WELCOME</h2>
+            <p class="text-center text-gray-400 text-sm mb-8">เข้าสู่ระบบเพื่อใช้งาน AI Scanner</p>
+            
+            <form id="login-form" class="space-y-4">
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center gap-3">
+                    <i class="fa-solid fa-envelope text-gold/70 ml-2"></i>
+                    <input type="email" id="email" class="bg-transparent w-full outline-none text-white placeholder-gray-500" placeholder="Email Address" required>
                 </div>
-                <input type="email" id="inp-email" required placeholder="อีเมล" class="w-full bg-black/50 border border-gray-700 p-3 rounded-xl text-white focus:border-yellow-500 outline-none">
-                <input type="password" id="inp-password" required placeholder="รหัสผ่าน" class="w-full bg-black/50 border border-gray-700 p-3 rounded-xl text-white focus:border-yellow-500 outline-none">
+                <div class="bg-white/5 rounded-xl p-3 border border-white/10 flex items-center gap-3">
+                    <i class="fa-solid fa-lock text-gold/70 ml-2"></i>
+                    <input type="password" id="password" class="bg-transparent w-full outline-none text-white placeholder-gray-500" placeholder="Password" required>
+                </div>
                 
-                <button type="submit" id="btn-submit" class="btn-effect btn-gold w-full py-3 rounded-xl">เข้าสู่ระบบ</button>
+                <button type="submit" class="w-full bg-gradient-to-r from-gold-dark to-gold text-black font-bold py-3.5 rounded-xl mt-4 btn-press shadow-lg shadow-gold/20">
+                    เข้าสู่ระบบ
+                </button>
             </form>
-            <div class="mt-4 text-center">
-                <button onclick="toggleAuth()" id="auth-toggle" class="text-sm text-yellow-500/80 hover:text-white underline">สมัครสมาชิกใหม่</button>
+
+            <div class="mt-6 text-center text-sm text-gray-400">
+                <span id="auth-mode-text">ยังไม่มีบัญชี?</span> 
+                <button onclick="toggleAuthMode()" class="text-gold font-medium ml-1 underline">สมัครสมาชิก</button>
             </div>
+            <div id="auth-error" class="text-red-400 text-xs text-center mt-3 hidden"></div>
         </div>
     </div>
 
-    <div id="app-container" class="hidden flex flex-col h-full relative">
+    <div id="app-container" class="hidden-page flex-1 flex flex-col h-full relative">
         
-        <header class="flex justify-between items-center p-4 bg-black/40 backdrop-blur-md border-b border-white/5 sticky top-0 z-20">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-yellow-600 to-yellow-400 p-[2px]">
-                    <img src="https://api.dicebear.com/7.x/bottts/svg?seed=RS" class="w-full h-full bg-black rounded-full">
-                </div>
-                <div>
-                    <div id="disp-username" class="font-bold text-sm">Guest</div>
-                    <div class="flex items-center gap-1">
-                        <div id="status-dot" class="w-2 h-2 rounded-full bg-red-500"></div>
-                        <span id="status-text" class="text-[10px] text-gray-400 uppercase">EXPIRED</span>
-                    </div>
-                </div>
+        <header class="px-6 pt-10 pb-4 flex justify-between items-center z-20 bg-gradient-to-b from-black via-black/90 to-transparent">
+            <div>
+                <div class="text-[10px] text-gray-400 font-tech tracking-wider mb-[-2px]">AI TRADING SYSTEM</div>
+                <div class="text-xl font-bold italic tracking-wide text-white">RS <span class="text-gradient-gold">INFINITY</span></div>
             </div>
-            
-            <div class="glass-panel px-3 py-1 flex items-center gap-2">
-                <i class="fa-regular fa-clock text-yellow-500 text-xs"></i>
-                <span id="header-timer" class="font-tech text-yellow-500 font-bold text-sm">00:00:00</span>
+            <div class="flex items-center gap-3">
+                <div id="status-pill" class="flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+                    <div class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span class="text-[10px] text-gray-300 font-medium">ONLINE</span>
+                </div>
             </div>
         </header>
 
-        <main class="flex-1 overflow-y-auto hide-scroll bg-[url('https://www.transparenttextures.com/patterns/stardust.png')]">
+        <main class="flex-1 overflow-y-auto no-scrollbar pb-28 px-4 relative">
             
-            <div id="tab-home" class="p-5 space-y-6 pb-24">
+            <div id="home-page" class="space-y-6 animate-fade-in">
                 
-                <div class="glass-panel p-4 border-l-4 border-yellow-500 relative overflow-hidden">
-                    <div class="flex justify-between items-start mb-2">
-                        <h3 class="text-xs font-bold text-yellow-500 uppercase flex items-center gap-2">
-                            <i class="fa-solid fa-brain"></i> AI Market Insight
-                        </h3>
-                        <span class="text-[10px] text-gray-500 animate-pulse">LIVE UPDATING</span>
+                <div class="glass-panel p-1 rounded-2xl flex items-center justify-between pl-4 pr-1">
+                    <div class="flex flex-col">
+                        <span class="text-[10px] text-gray-400">SELECTED ASSET</span>
+                        <div class="flex items-center gap-2 cursor-pointer" onclick="openSearchModal()">
+                            <span id="current-asset-name" class="font-bold text-lg text-white">BTC/USDT</span>
+                            <i class="fa-solid fa-chevron-down text-xs text-gold"></i>
+                        </div>
                     </div>
-                    <p id="ai-insight-text" class="text-sm text-gray-200 leading-relaxed">
-                        วิเคราะห์ตลาด: สภาพคล่องเริ่มสูงในคู่เงิน EUR/USD และ Gold แนะนำให้จับตา Timeframe 15m มีโอกาสกลับตัวสูง...
-                    </p>
+                    <button onclick="openSearchModal()" class="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-gold btn-press">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </button>
                 </div>
 
-                <div class="flex flex-col items-center justify-center py-4">
-                    <div class="relative group">
-                        <div class="absolute inset-0 bg-yellow-500/20 rounded-full blur-xl group-hover:bg-yellow-500/40 transition-all duration-500"></div>
-                        <div class="absolute inset-[-10px] border border-yellow-500/30 rounded-full animate-[spin_8s_linear_infinite]"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="glass-panel p-3 rounded-xl border-l-2 border-gold/50">
+                        <div class="text-[10px] text-gray-400">CURRENT PRICE</div>
+                        <div id="main-price" class="text-xl font-tech font-bold text-white">$...</div>
+                    </div>
+                    <div class="glass-panel p-3 rounded-xl border-l-2 border-gray-600">
+                        <div class="text-[10px] text-gray-400">24H CHANGE</div>
+                        <div id="price-change" class="text-xl font-tech font-bold text-green-400">...%</div>
+                    </div>
+                </div>
+
+                <div class="py-6 flex flex-col items-center">
+                    <div class="relative w-64 h-64 flex items-center justify-center">
+                        <div class="absolute inset-0 border border-white/5 rounded-full"></div>
+                        <div class="absolute inset-4 border border-white/5 rounded-full"></div>
+                        <div class="absolute inset-0 rounded-full scan-circle opacity-20"></div>
                         
-                        <button onclick="openAssetSelect()" id="btn-scan-main" class="btn-effect relative w-44 h-44 rounded-full bg-gradient-to-b from-[#222] to-[#000] border-2 border-[#333] flex flex-col items-center justify-center z-10 shadow-2xl">
-                            <i class="fa-solid fa-fingerprint text-5xl text-gray-500 group-hover:text-yellow-500 transition-colors duration-300"></i>
-                            <span class="mt-3 text-lg font-bold text-white tracking-widest">START SCAN</span>
-                            <span class="text-[10px] text-gray-500 font-tech">AI ALGORITHM V7</span>
-                            
-                            <div id="lock-overlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm rounded-full flex flex-col items-center justify-center z-20">
-                                <i class="fa-solid fa-lock text-2xl text-red-500 mb-1"></i>
-                                <span class="text-xs text-red-500 font-bold">EXPIRED</span>
-                            </div>
+                        <button onclick="openTimeframeModal()" id="scan-btn" class="relative z-10 w-48 h-48 rounded-full bg-gradient-to-br from-gray-900 to-black border-2 border-gold/30 shadow-[0_0_40px_rgba(212,175,55,0.15)] flex flex-col items-center justify-center btn-press">
+                            <i class="fa-solid fa-fingerprint text-5xl text-gradient-gold mb-2"></i>
+                            <span class="text-white font-bold text-lg tracking-wide">SCAN AI</span>
+                            <span class="text-gray-500 text-[10px] font-tech uppercase mt-1">Tap to Analyze</span>
                         </button>
                     </div>
                 </div>
 
-                <div>
-                    <h3 class="text-gray-400 text-xs uppercase font-bold mb-3 tracking-wider">Last AI Signals</h3>
-                    <div class="space-y-3">
-                        <div class="glass-panel p-3 flex items-center justify-between border-l-2 border-green-500">
-                            <div class="flex items-center gap-3">
-                                <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="w-8 h-8 rounded-full">
-                                <div>
-                                    <div class="font-bold text-sm">BTC/USDT</div>
-                                    <div class="text-[10px] text-green-400">TP HIT (+1.5%)</div>
-                                </div>
-                            </div>
-                            <span class="text-xs font-tech text-gray-400">5 min ago</span>
-                        </div>
-                        <div class="glass-panel p-3 flex items-center justify-between border-l-2 border-green-500">
-                            <div class="flex items-center gap-3">
-                                <div class="w-8 h-8 rounded-full bg-yellow-500/20 flex items-center justify-center border border-yellow-500/50 text-[10px] font-bold text-yellow-500">GLD</div>
-                                <div>
-                                    <div class="font-bold text-sm">XAU/USD</div>
-                                    <div class="text-[10px] text-green-400">TP HIT (+0.8%)</div>
-                                </div>
-                            </div>
-                            <span class="text-xs font-tech text-gray-400">12 min ago</span>
-                        </div>
-                    </div>
+                <div class="text-center">
+                    <p class="text-xs text-gray-500">ระบบ AI วิเคราะห์แนวโน้มตลาดอัจฉริยะ</p>
+                    <p class="text-[10px] text-gray-600 mt-1">Powered by RS Infinity Neural Network</p>
                 </div>
             </div>
 
-            <div id="tab-chart" class="hidden h-full flex flex-col">
-                <div class="bg-black/80 p-2 flex gap-2 overflow-x-auto border-b border-white/10">
-                    <button onclick="changeChart('BTCUSDT')" class="px-3 py-1 rounded bg-gray-800 text-xs text-gray-300 hover:text-yellow-500">BTC</button>
-                    <button onclick="changeChart('ETHUSDT')" class="px-3 py-1 rounded bg-gray-800 text-xs text-gray-300 hover:text-yellow-500">ETH</button>
-                    <button onclick="changeChart('XAUUSD')" class="px-3 py-1 rounded bg-gray-800 text-xs text-gray-300 hover:text-yellow-500">GOLD</button>
-                    <button onclick="changeChart('EURUSD')" class="px-3 py-1 rounded bg-gray-800 text-xs text-gray-300 hover:text-yellow-500">EURUSD</button>
-                </div>
-                <div id="tv-chart-container" class="flex-1 bg-black w-full relative"></div>
+            <div id="chart-page" class="hidden-page h-full flex flex-col">
+                <div id="tv_chart_container" class="flex-1 rounded-2xl overflow-hidden glass-panel border border-white/10"></div>
             </div>
 
-            <div id="tab-profile" class="hidden p-5 space-y-6 pb-24">
-                <div class="glass-panel p-6 text-center relative overflow-hidden">
-                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-yellow-500 to-transparent"></div>
-                    <div class="w-24 h-24 mx-auto rounded-full p-1 border-2 border-dashed border-yellow-500 mb-4">
-                        <img src="https://api.dicebear.com/7.x/bottts/svg?seed=RS" class="w-full h-full rounded-full bg-gray-900">
+            <div id="profile-page" class="hidden-page space-y-5 animate-fade-in">
+                
+                <div class="relative w-full aspect-[1.586/1] rounded-2xl overflow-hidden p-6 flex flex-col justify-between shadow-2xl">
+                    <div class="absolute inset-0 bg-gradient-to-br from-[#1a1a1a] via-[#000] to-[#111]"></div>
+                    <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-30"></div>
+                    <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-gold/10 rounded-full blur-3xl"></div>
+                    
+                    <div class="relative flex justify-between items-start z-10">
+                        <div>
+                            <div class="text-gold font-bold italic tracking-wider text-sm">RS INFINITY</div>
+                            <div class="text-[10px] text-gray-400 tracking-[0.2em] uppercase">Private Member</div>
+                        </div>
+                        <i class="fa-solid fa-wifi text-gray-600 rotate-90"></i>
                     </div>
-                    <h2 id="profile-name" class="text-xl font-bold text-white">Loading...</h2>
-                    <div class="inline-block mt-2 px-3 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/30 text-yellow-500 text-xs font-bold tracking-wider">
-                        PREMIUM MEMBER
+
+                    <div class="relative z-10 w-10 h-8 bg-gradient-to-br from-yellow-200 to-yellow-600 rounded-md border border-yellow-700/50 mb-2 opacity-80"></div>
+
+                    <div class="relative z-10">
+                        <div id="profile-email-card" class="font-tech text-lg text-gray-200 tracking-widest mb-4 drop-shadow-md">LOADING...</div>
+                        
+                        <div class="flex justify-between items-end">
+                            <div>
+                                <div class="text-[8px] text-gray-500 uppercase">Current Package</div>
+                                <div id="package-name" class="text-gold font-bold text-sm">VIP TRADER</div>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-[8px] text-gray-500 uppercase">Valid Thru</div>
+                                <div id="expiry-date-text" class="text-white font-tech font-bold">--/--/--</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
-                    <a id="btn-line" href="#" target="_blank" class="btn-effect glass-panel p-4 flex flex-col items-center justify-center gap-2 hover:border-green-500 transition">
-                        <i class="fa-brands fa-line text-3xl text-green-500"></i>
-                        <span class="text-xs font-bold">ติดต่อ LINE</span>
-                    </a>
-                    <a id="btn-fb" href="#" target="_blank" class="btn-effect glass-panel p-4 flex flex-col items-center justify-center gap-2 hover:border-blue-500 transition">
-                        <i class="fa-brands fa-facebook text-3xl text-blue-500"></i>
-                        <span class="text-xs font-bold">ติดต่อ Facebook</span>
-                    </a>
+                <div class="glass-panel p-4 rounded-xl text-center">
+                    <div class="text-xs text-gray-400 mb-1">เวลาใช้งานคงเหลือ (Time Remaining)</div>
+                    <div id="countdown" class="text-3xl font-tech font-bold text-gradient-gold">Loading...</div>
                 </div>
 
-                <button onclick="logout()" class="btn-effect w-full glass-panel p-4 flex items-center justify-center gap-2 text-red-500 border-red-900/30 hover:bg-red-900/10">
-                    <i class="fa-solid fa-power-off"></i>
-                    <span class="font-bold">ออกจากระบบ</span>
+                <div id="expired-alert" class="hidden p-4 rounded-xl bg-red-900/20 border border-red-500/30 text-center">
+                    <i class="fa-solid fa-triangle-exclamation text-red-500 text-xl mb-2"></i>
+                    <h3 class="text-red-400 font-bold">แพ็กเกจหมดอายุ</h3>
+                    <p class="text-xs text-gray-400">กรุณาติดต่อแอดมินเพื่อต่ออายุ</p>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3 mt-4">
+                    <button id="btn-line" class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2 btn-press hover:bg-[#06C755]/10 hover:border-[#06C755]/30 transition-all">
+                        <i class="fa-brands fa-line text-3xl text-[#06C755]"></i>
+                        <span class="text-xs font-medium">ติดต่อ LINE</span>
+                    </button>
+                    <button id="btn-fb" class="glass-panel p-4 rounded-xl flex flex-col items-center gap-2 btn-press hover:bg-[#1877F2]/10 hover:border-[#1877F2]/30 transition-all">
+                        <i class="fa-brands fa-facebook text-3xl text-[#1877F2]"></i>
+                        <span class="text-xs font-medium">ติดต่อ Facebook</span>
+                    </button>
+                </div>
+                
+                <button onclick="logout()" class="w-full py-3 rounded-xl border border-red-900/50 text-red-500/70 text-sm mt-2 btn-press">
+                    <i class="fa-solid fa-power-off mr-2"></i> ออกจากระบบ
                 </button>
             </div>
+
         </main>
 
-        <nav class="h-[80px] bg-[#020202] border-t border-white/10 grid grid-cols-3 items-center pb-4 px-2 z-30">
-            <button onclick="nav('home')" id="nav-home" class="btn-effect flex flex-col items-center gap-1 text-yellow-500">
-                <i class="fa-solid fa-house text-xl mb-1"></i>
-                <span class="text-[10px] font-medium">หน้าหลัก</span>
+        <nav class="fixed bottom-4 left-4 right-4 h-16 bg-[#111]/90 backdrop-blur-xl border border-white/10 rounded-2xl flex justify-around items-center px-2 z-30 shadow-2xl">
+            <button onclick="switchTab('home')" class="nav-item active flex flex-col items-center gap-1 w-16 p-2 btn-press" id="nav-home">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[9px]">Home</span>
             </button>
-            <button onclick="nav('chart')" id="nav-chart" class="btn-effect flex flex-col items-center gap-1 text-gray-600">
-                <i class="fa-solid fa-chart-simple text-xl mb-1"></i>
-                <span class="text-[10px] font-medium">กราฟเต็มจอ</span>
+            <button onclick="switchTab('chart')" class="nav-item text-gray-500 flex flex-col items-center gap-1 w-16 p-2 btn-press" id="nav-chart">
+                <i class="fa-solid fa-chart-pie text-lg"></i>
+                <span class="text-[9px]">Chart</span>
             </button>
-            <button onclick="nav('profile')" id="nav-profile" class="btn-effect flex flex-col items-center gap-1 text-gray-600">
-                <i class="fa-solid fa-user-gear text-xl mb-1"></i>
-                <span class="text-[10px] font-medium">โปรไฟล์</span>
+            <button onclick="switchTab('profile')" class="nav-item text-gray-500 flex flex-col items-center gap-1 w-16 p-2 btn-press" id="nav-profile">
+                <i class="fa-solid fa-id-card text-lg"></i>
+                <span class="text-[9px]">Profile</span>
             </button>
         </nav>
     </div>
 
-    <div id="modal-assets" class="hidden fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-end sm:items-center justify-center">
-        <div class="w-full sm:w-[400px] bg-[#111] rounded-t-3xl border-t border-yellow-500/30 p-6 animate-[slideInUp_0.3s]">
+    <div id="search-modal" class="hidden fixed inset-0 z-[60] bg-black/95 flex flex-col">
+        <div class="p-4 border-b border-gray-800 flex items-center gap-3">
+            <button onclick="closeModal('search-modal')" class="text-gray-400 p-2"><i class="fa-solid fa-arrow-left"></i></button>
+            <input type="text" id="asset-search-input" placeholder="ค้นหาคู่เงิน (เช่น BTC, XAU, EUR...)" class="flex-1 bg-transparent outline-none text-white placeholder-gray-600 font-sans">
+        </div>
+        <div class="flex-1 overflow-y-auto p-4 space-y-2" id="asset-list">
+            </div>
+    </div>
+
+    <div id="tf-modal" class="hidden fixed inset-0 z-[60] bg-black/80 backdrop-blur-sm flex items-end sm:items-center justify-center">
+        <div class="w-full sm:w-96 bg-[#1a1a1a] border-t sm:border border-gray-800 rounded-t-3xl sm:rounded-3xl p-6 pb-10 slide-up">
             <div class="flex justify-between items-center mb-6">
-                <h3 class="text-lg font-bold text-white"><i class="fa-solid fa-earth-americas text-yellow-500 mr-2"></i>เลือกสินทรัพย์</h3>
-                <button onclick="closeModal('modal-assets')" class="text-gray-500"><i class="fa-solid fa-xmark text-xl"></i></button>
+                <h3 class="text-lg font-bold text-white">เลือก Timeframe</h3>
+                <button onclick="closeModal('tf-modal')" class="text-gray-500"><i class="fa-solid fa-xmark"></i></button>
             </div>
-
-            <div class="grid grid-cols-3 gap-3 mb-6">
-                <button onclick="selectAsset('BTCUSDT', 'Bitcoin')" class="btn-effect glass-panel p-3 flex flex-col items-center gap-2 hover:border-yellow-500">
-                    <img src="https://cryptologos.cc/logos/bitcoin-btc-logo.png" class="w-8 h-8">
-                    <span class="text-xs font-bold">BTC</span>
-                </button>
-                <button onclick="selectAsset('ETHUSDT', 'Ethereum')" class="btn-effect glass-panel p-3 flex flex-col items-center gap-2 hover:border-yellow-500">
-                    <img src="https://cryptologos.cc/logos/ethereum-eth-logo.png" class="w-8 h-8">
-                    <span class="text-xs font-bold">ETH</span>
-                </button>
-                <button onclick="selectAsset('XRPUSDT', 'Ripple')" class="btn-effect glass-panel p-3 flex flex-col items-center gap-2 hover:border-yellow-500">
-                    <img src="https://cryptologos.cc/logos/xrp-xrp-logo.png" class="w-8 h-8">
-                    <span class="text-xs font-bold">XRP</span>
-                </button>
-                <button onclick="selectAsset('XAUUSD', 'Gold')" class="btn-effect glass-panel p-3 flex flex-col items-center gap-2 border-yellow-500/20 hover:border-yellow-500">
-                    <div class="w-8 h-8 rounded-full bg-yellow-500 flex items-center justify-center text-black font-bold text-[10px]">GOLD</div>
-                    <span class="text-xs font-bold text-yellow-500">GOLD</span>
-                </button>
-                <button onclick="selectAsset('EURUSD', 'EUR/USD')" class="btn-effect glass-panel p-3 flex flex-col items-center gap-2 hover:border-yellow-500">
-                    <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white font-bold text-[10px]">$</div>
-                    <span class="text-xs font-bold">EU</span>
-                </button>
-                <button onclick="selectAsset('GBPUSD', 'GBP/USD')" class="btn-effect glass-panel p-3 flex flex-col items-center gap-2 hover:border-yellow-500">
-                    <div class="w-8 h-8 rounded-full bg-purple-600 flex items-center justify-center text-white font-bold text-[10px]">$</div>
-                    <span class="text-xs font-bold">GU</span>
-                </button>
+            
+            <div class="grid grid-cols-2 gap-3 mb-4">
+                <button onclick="selectTF('1m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">1 นาที (1m)</button>
+                <button onclick="selectTF('5m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">5 นาที (5m)</button>
+                <button onclick="selectTF('15m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">15 นาที (15m)</button>
+                <button onclick="selectTF('30m')" class="p-4 rounded-xl bg-gray-800 text-gray-300 hover:bg-gold hover:text-black transition text-sm font-bold">30 นาที (30m)</button>
             </div>
-
-            <div class="space-y-4">
-                <div>
-                    <label class="text-xs text-gray-500 mb-2 block">Timeframe</label>
-                    <div class="flex gap-2">
-                        <button class="flex-1 py-2 bg-gray-800 rounded text-xs border border-gray-700 focus:bg-yellow-500 focus:text-black focus:border-yellow-500 transition">5M</button>
-                        <button class="flex-1 py-2 bg-gray-800 rounded text-xs border border-gray-700 focus:bg-yellow-500 focus:text-black focus:border-yellow-500 transition">15M</button>
-                        <button class="flex-1 py-2 bg-gray-800 rounded text-xs border border-gray-700 focus:bg-yellow-500 focus:text-black focus:border-yellow-500 transition">1H</button>
-                    </div>
-                </div>
-                <button id="btn-start-process" class="btn-effect btn-gold w-full py-4 rounded-xl text-lg flex items-center justify-center gap-2">
-                    <i class="fa-solid fa-bolt"></i> เริ่มวิเคราะห์ทันที
-                </button>
-            </div>
+            
+            <button onclick="startAIScan()" class="w-full py-4 bg-gradient-to-r from-gold-dark to-gold text-black font-bold rounded-xl btn-press">
+                <i class="fa-solid fa-robot mr-2"></i> เริ่มวิเคราะห์ (Start AI)
+            </button>
         </div>
     </div>
 
-    <div id="screen-process" class="hidden fixed inset-0 z-[60] bg-black flex flex-col font-tech">
-        <div class="h-16 flex items-center justify-between px-6 border-b border-gray-800">
-            <span class="text-yellow-500 font-bold animate-pulse">AI PROCESSING...</span>
-            <span id="proc-target" class="text-white font-bold">BTC/USDT</span>
+    <div id="result-modal" class="hidden fixed inset-0 z-[70] bg-black flex flex-col overflow-y-auto">
+        <div class="p-4 flex justify-between items-center bg-gray-900 border-b border-gray-800">
+            <h2 class="text-gold font-bold italic">AI ANALYSIS RESULT</h2>
+            <button onclick="closeModal('result-modal')" class="w-8 h-8 rounded-full bg-gray-800 text-gray-400 flex items-center justify-center"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <div class="flex-1 p-6 flex flex-col items-center">
+            
+            <div id="res-signal-box" class="w-full p-6 rounded-2xl bg-green-500/10 border border-green-500/50 text-center mb-6 relative overflow-hidden">
+                <div class="absolute inset-0 bg-green-500/10 blur-xl"></div>
+                <div class="relative z-10">
+                    <div id="res-action" class="text-4xl font-black text-green-500 mb-1 tracking-wider">BUY NOW</div>
+                    <div class="text-xs text-green-300 uppercase tracking-widest">High Probability Signal</div>
+                </div>
+            </div>
+
+            <div class="text-center mb-8">
+                <div id="res-pair" class="text-2xl font-bold text-white">BTC/USDT</div>
+                <div id="res-tf-badge" class="inline-block px-3 py-1 rounded bg-gray-800 text-xs text-gray-400 mt-1">Timeframe: 5m</div>
+            </div>
+
+            <div class="w-full grid grid-cols-2 gap-4 mb-6">
+                <div class="glass-panel p-4 rounded-xl">
+                    <div class="text-[10px] text-gray-500 uppercase">ราคาเข้า (Entry)</div>
+                    <div id="res-entry" class="text-lg font-tech font-bold text-white">...</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl">
+                    <div class="text-[10px] text-gray-500 uppercase">เวลาปิดออเดอร์</div>
+                    <div id="res-close-time" class="text-lg font-tech font-bold text-gold">...</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-2 border-green-500">
+                    <div class="text-[10px] text-gray-500 uppercase">เป้าทำกำไร (TP)</div>
+                    <div id="res-tp" class="text-lg font-tech font-bold text-green-400">...</div>
+                </div>
+                <div class="glass-panel p-4 rounded-xl border-l-2 border-red-500">
+                    <div class="text-[10px] text-gray-500 uppercase">จุดตัดขาดทุน (SL)</div>
+                    <div id="res-sl" class="text-lg font-tech font-bold text-red-400">...</div>
+                </div>
+            </div>
+
+            <div class="w-full bg-gray-900/50 p-4 rounded-xl border border-gray-800">
+                <div class="flex items-center gap-2 mb-2">
+                    <i class="fa-solid fa-circle-info text-blue-400"></i>
+                    <span class="text-sm font-bold text-blue-400">คำแนะนำ (Advice)</span>
+                </div>
+                <p id="res-advice" class="text-xs text-gray-400 leading-relaxed">
+                    กราฟมีแรงซื้อเข้ามาอย่างรุนแรง เส้น EMA ตัดขึ้นและ RSI ยังไม่ Overbought แนะนำให้เปิดออเดอร์ทันทีและถือจนจบเวลา
+                </p>
+            </div>
         </div>
         
-        <div class="h-[35%] w-full relative border-b border-gray-800 bg-[#0a0a0a]">
-            <div id="tv-mini-chart" class="w-full h-full opacity-50 pointer-events-none"></div>
-            <div class="absolute inset-0 w-[2px] bg-yellow-500 h-full left-1/2 blur-[2px] animate-scan shadow-[0_0_15px_#FFD700]"></div>
-            <div class="absolute bottom-2 right-2 text-[10px] text-yellow-500">SCANNING PIVOT POINTS...</div>
-        </div>
-
-        <div class="flex-1 p-6 space-y-3 relative overflow-hidden">
-            <div class="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
-            
-            <div id="logs-container" class="relative z-10 text-xs font-mono space-y-2">
-                <div class="text-green-500">> Connecting to Global Exchange API... [OK]</div>
-                <div id="log-1" class="text-gray-400 opacity-0 transition">> Fetching Volatility Index...</div>
-                <div id="log-2" class="text-gray-400 opacity-0 transition">> Analyzing EMA (50, 200) Crossover...</div>
-                <div id="log-3" class="text-yellow-500 opacity-0 transition">> DETECTED: Bullish Divergence on RSI</div>
-                <div id="log-4" class="text-blue-400 opacity-0 transition">> Calculating Optimal Entry/Exit...</div>
-                <div id="log-5" class="text-white font-bold border-t border-gray-700 pt-2 opacity-0 transition mt-4">> GENERATING SIGNAL [100%]</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="modal-result" class="hidden fixed inset-0 z-[70] bg-black/95 backdrop-blur-xl flex items-center justify-center p-4">
-        <div class="w-full max-w-md glass-panel border border-yellow-500/50 relative overflow-hidden animate-[zoomIn_0.4s]">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 via-yellow-500 to-green-500"></div>
-
-            <div class="p-6">
-                <div class="flex justify-between items-center mb-6">
-                    <div class="text-xs text-gray-400">AI RECOMMENDATION</div>
-                    <div class="px-2 py-0.5 rounded bg-yellow-500/20 text-yellow-500 text-[10px] border border-yellow-500/50">CONFIDENCE 96%</div>
-                </div>
-
-                <div class="text-center mb-6">
-                    <div id="res-pair-name" class="text-xl font-bold text-white mb-2">BTC/USDT</div>
-                    <div id="res-action-bg" class="inline-flex items-center gap-3 px-6 py-2 rounded-full bg-green-500/20 border border-green-500 text-green-500 mb-2">
-                        <i id="res-icon" class="fa-solid fa-arrow-up text-2xl"></i>
-                        <span id="res-action-text" class="text-3xl font-black italic">BUY</span>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    <div class="bg-black/40 p-3 rounded-lg border border-white/5">
-                        <div class="text-[10px] text-gray-500">ENTRY (จุดเข้า)</div>
-                        <div class="text-lg font-bold text-white">Market Price</div>
-                    </div>
-                    <div class="bg-black/40 p-3 rounded-lg border border-white/5">
-                        <div class="text-[10px] text-gray-500">DURATION (ระยะเวลา)</div>
-                        <div class="text-lg font-bold text-yellow-500 font-tech">15 - 30 Min</div>
-                    </div>
-                </div>
-
-                <div class="space-y-2 mb-6">
-                    <div class="flex justify-between items-center p-2 rounded bg-green-900/10 border border-green-500/20">
-                        <span class="text-xs text-green-400">TP (จุดทำกำไร)</span>
-                        <span id="res-tp" class="text-sm font-bold text-white">Target +1.5%</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2 rounded bg-red-900/10 border border-red-500/20">
-                        <span class="text-xs text-red-400">SL (จุดตัดขาดทุน)</span>
-                        <span id="res-sl" class="text-sm font-bold text-white">Low of prev candle</span>
-                    </div>
-                </div>
-
-                <div class="mb-6">
-                    <div class="text-[10px] text-gray-500 mb-1">TECHNICAL REASON (เหตุผล)</div>
-                    <p id="res-reason" class="text-xs text-gray-300 leading-relaxed">
-                        กราฟเกิดรูปแบบกลับตัว Bullish Engulfing ที่แนวรับสำคัญ RSI เริ่มยกตัวออกจากโซน Oversold พร้อม Volume ซื้อกลับเข้ามาสนับสนุน
-                    </p>
-                </div>
-
-                <button onclick="closeResult()" class="btn-effect w-full py-3 bg-gray-800 hover:bg-gray-700 rounded-xl text-white font-bold">รับทราบ</button>
-            </div>
+        <div class="p-4 pb-8 bg-black">
+            <button onclick="closeModal('result-modal')" class="w-full py-4 bg-gray-800 text-white font-bold rounded-xl">รับทราบ (Acknowledged)</button>
         </div>
     </div>
 
@@ -395,6 +365,7 @@
         import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js";
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js";
 
+        // FIREBASE CONFIG
         const firebaseConfig = {
             apiKey: "AIzaSyBNfTBQthLLRbJP9BXZ-UQptFsdU324Mv0",
             authDomain: "fafada-d9899.firebaseapp.com",
@@ -408,229 +379,312 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- STATE VARIABLES ---
+        // STATE
+        let currentUser = null;
         let isExpired = true;
-        let selectedPair = "";
-        let selectedPairName = "";
+        let currentAsset = { symbol: 'BTCUSDT', name: 'BTC/USDT', type: 'CRYPTO' };
+        let selectedTimeframe = '5m';
+        let expiryTimer = null;
 
-        // --- AUTH ---
-        let isRegister = false;
-        window.toggleAuth = () => {
-            isRegister = !isRegister;
-            document.getElementById('field-username').classList.toggle('hidden');
-            document.getElementById('auth-title').innerText = isRegister ? "สมัครสมาชิกใหม่" : "เข้าระบบสมาชิก";
-            document.getElementById('btn-submit').innerText = isRegister ? "ยืนยันการสมัคร" : "เข้าสู่ระบบ";
-            document.getElementById('auth-toggle').innerText = isRegister ? "มีบัญชีอยู่แล้ว? เข้าสู่ระบบ" : "สมัครสมาชิกใหม่";
-        }
+        // --- ASSET DATABASE (MOCK) ---
+        const assets = [
+            { id: 'BTCUSDT', name: 'Bitcoin (BTC)', type: 'CRYPTO' },
+            { id: 'ETHUSDT', name: 'Ethereum (ETH)', type: 'CRYPTO' },
+            { id: 'XAUUSD', name: 'Gold (XAU)', type: 'FOREX' },
+            { id: 'EURUSD', name: 'EUR/USD', type: 'FOREX' },
+            { id: 'GBPUSD', name: 'GBP/USD', type: 'FOREX' },
+            { id: 'USDJPY', name: 'USD/JPY', type: 'FOREX' },
+            { id: 'BNBUSDT', name: 'Binance Coin', type: 'CRYPTO' },
+            { id: 'SOLUSDT', name: 'Solana', type: 'CRYPTO' },
+        ];
 
-        document.getElementById('auth-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const email = document.getElementById('inp-email').value;
-            const pass = document.getElementById('inp-password').value;
-            const btn = document.getElementById('btn-submit');
-            
-            try {
-                btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> รอสักครู่...';
-                if(isRegister) {
-                    const name = document.getElementById('inp-username').value;
-                    const cred = await createUserWithEmailAndPassword(auth, email, pass);
-                    // Register = Expired by default
-                    const past = new Date(); past.setDate(past.getDate() - 1);
-                    await setDoc(doc(db, "users", cred.user.uid), {
-                        username: name, email, expiryDate: past, createdAt: serverTimestamp()
-                    });
-                } else {
-                    await signInWithEmailAndPassword(auth, email, pass);
-                }
-            } catch(err) {
-                alert(err.message);
-                btn.innerText = "ลองใหม่";
+        // --- AUTH LOGIC ---
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                initApp(user.uid);
+            } else {
+                showAuth();
             }
         });
+
+        const loginForm = document.getElementById('login-form');
+        let isLoginMode = true;
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('auth-error');
+            
+            document.getElementById('loading-screen').classList.remove('hidden-page');
+            
+            try {
+                if (isLoginMode) {
+                    await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    const cred = await createUserWithEmailAndPassword(auth, email, password);
+                    await setDoc(doc(db, "users", cred.user.uid), {
+                        email: email,
+                        createdAt: serverTimestamp(),
+                        expiryDate: new Date(), // Expired by default
+                        packageType: "FREE MEMBER"
+                    });
+                }
+            } catch (error) {
+                document.getElementById('loading-screen').classList.add('hidden-page');
+                errorDiv.innerText = "Error: " + error.code;
+                errorDiv.classList.remove('hidden');
+            }
+        });
+
+        window.toggleAuthMode = () => {
+            isLoginMode = !isLoginMode;
+            document.querySelector('#auth-screen h2').innerText = isLoginMode ? "WELCOME" : "REGISTER";
+            document.querySelector('#auth-screen button').innerText = isLoginMode ? "เข้าสู่ระบบ" : "สมัครสมาชิกทันที";
+            document.getElementById('auth-mode-text').innerText = isLoginMode ? "ยังไม่มีบัญชี?" : "มีบัญชีแล้ว?";
+            document.querySelector('#auth-screen .underline').innerText = isLoginMode ? "สมัครสมาชิก" : "เข้าสู่ระบบ";
+        };
 
         window.logout = () => signOut(auth);
 
         // --- APP LOGIC ---
-        onAuthStateChanged(auth, (user) => {
-            if(user) {
-                document.getElementById('auth-screen').classList.add('hidden');
-                document.getElementById('app-container').classList.remove('hidden');
-                loadUserData(user.uid);
-            } else {
-                document.getElementById('auth-screen').classList.remove('hidden');
-                document.getElementById('app-container').classList.add('hidden');
-            }
-        });
-
-        function loadUserData(uid) {
-            // User Data
-            onSnapshot(doc(db, "users", uid), (snap) => {
-                if(snap.exists()) {
-                    const d = snap.data();
-                    document.getElementById('disp-username').innerText = d.username || "User";
-                    document.getElementById('profile-name').innerText = d.username || "User";
-                    checkExpiry(d.expiryDate.toDate());
+        function initApp(uid) {
+            // Listen to User Data
+            onSnapshot(doc(db, "users", uid), (docSnap) => {
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+                    updateProfileUI(data);
+                    showMainApp();
                 }
             });
 
-            // System Config (Admin Links)
-            onSnapshot(doc(db, "system", "config"), (snap) => {
-                if(snap.exists()) {
-                    const cfg = snap.data();
-                    document.getElementById('btn-line').href = cfg.lineLink || "#";
-                    document.getElementById('btn-fb').href = cfg.fbLink || "#";
+            // Listen to Admin Config
+            onSnapshot(doc(db, "system", "config"), (docSnap) => {
+                if (docSnap.exists()) {
+                    const conf = docSnap.data();
+                    setupContactButtons(conf.lineLink, conf.facebookLink);
                 }
             });
-
-            // Load Initial Chart
-            loadChart('BTCUSDT', 'tv-chart-container');
-            
-            // Randomize AI Insight Text
-            setInterval(updateInsight, 10000);
-            updateInsight();
         }
 
-        function checkExpiry(date) {
-            const now = new Date();
-            const diff = date - now;
+        function showAuth() {
+            document.getElementById('loading-screen').classList.add('hidden-page');
+            document.getElementById('app-container').classList.add('hidden-page');
+            document.getElementById('auth-screen').classList.remove('hidden-page');
+        }
+
+        function showMainApp() {
+            document.getElementById('loading-screen').classList.add('hidden-page');
+            document.getElementById('auth-screen').classList.add('hidden-page');
+            document.getElementById('app-container').classList.remove('hidden-page');
+            updatePrice(); // Init price
+            loadChart(currentAsset.symbol);
+        }
+
+        function updateProfileUI(data) {
+            document.getElementById('profile-email-card').innerText = data.email;
+            document.getElementById('package-name').innerText = data.packageType || "MEMBER";
             
-            if(diff <= 0) {
-                isExpired = true;
-                document.getElementById('status-text').innerText = "EXPIRED";
-                document.getElementById('status-dot').className = "w-2 h-2 rounded-full bg-red-500";
-                document.getElementById('lock-overlay').classList.remove('hidden');
-                document.getElementById('header-timer').innerText = "00:00:00";
-                document.getElementById('header-timer').classList.add('text-red-500');
-            } else {
-                isExpired = false;
-                document.getElementById('status-text').innerText = "ONLINE";
-                document.getElementById('status-dot').className = "w-2 h-2 rounded-full bg-green-500 shadow-[0_0_10px_#0f0]";
-                document.getElementById('lock-overlay').classList.add('hidden');
-                document.getElementById('header-timer').classList.remove('text-red-500');
+            if (data.expiryDate) {
+                const expDate = data.expiryDate.toDate();
                 
-                // Countdown Loop
-                setInterval(() => {
-                    const n = new Date();
-                    const d = date - n;
-                    if(d > 0) {
-                        const h = Math.floor((d % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                        const m = Math.floor((d % (1000 * 60 * 60)) / (1000 * 60));
-                        const s = Math.floor((d % (1000 * 60)) / 1000);
-                        document.getElementById('header-timer').innerText = `${pad(h)}:${pad(m)}:${pad(s)}`;
-                    }
-                }, 1000);
+                // Show Date
+                const options = { year: 'numeric', month: 'short', day: 'numeric' };
+                document.getElementById('expiry-date-text').innerText = expDate.toLocaleDateString('th-TH', options);
+
+                // Start Countdown
+                startCountdown(expDate);
             }
         }
-        function pad(n) { return n < 10 ? '0'+n : n; }
 
-        function updateInsight() {
-            const msgs = [
-                "สภาพคล่อง BTC เริ่มสูง แนะนำ Timeframe 15M...",
-                "ระวังข่าวเศรษฐกิจ USD อาจเกิดความผันผวนรุนแรง...",
-                "GOLD มีแรงซื้อที่แนวรับสำคัญ 2025.50...",
-                "AI ตรวจพบสัญญาณ Divergence ในคู่ EUR/USD..."
-            ];
-            document.getElementById('ai-insight-text').innerText = msgs[Math.floor(Math.random()*msgs.length)];
-        }
-
-        // --- NAVIGATION ---
-        window.nav = (page) => {
-            ['home', 'chart', 'profile'].forEach(p => document.getElementById('tab-'+p).classList.add('hidden'));
-            document.querySelectorAll('nav button').forEach(b => b.classList.replace('text-yellow-500', 'text-gray-600'));
+        function startCountdown(endDate) {
+            if (expiryTimer) clearInterval(expiryTimer);
             
-            document.getElementById('tab-'+page).classList.remove('hidden');
-            document.getElementById('nav-'+page).classList.replace('text-gray-600', 'text-yellow-500');
-            
-            if(page === 'chart') loadChart('BTCUSDT', 'tv-chart-container');
+            expiryTimer = setInterval(() => {
+                const now = new Date();
+                const diff = endDate - now;
+
+                if (diff <= 0) {
+                    document.getElementById('countdown').innerHTML = "<span class='text-red-500'>EXPIRED</span>";
+                    document.getElementById('status-pill').innerHTML = "<div class='w-2 h-2 rounded-full bg-red-500'></div><span class='text-red-500'>EXPIRED</span>";
+                    document.getElementById('scan-btn').classList.add('grayscale-mode');
+                    document.getElementById('expired-alert').classList.remove('hidden');
+                    isExpired = true;
+                    clearInterval(expiryTimer);
+                } else {
+                    const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                    const s = Math.floor((diff % (1000 * 60)) / 1000);
+                    
+                    document.getElementById('countdown').innerText = `${d}วัน : ${pad(h)}ชม : ${pad(m)}น : ${pad(s)}วิ`;
+                    document.getElementById('status-pill').innerHTML = "<div class='w-2 h-2 rounded-full bg-green-500 animate-pulse'></div><span class='text-green-500'>ACTIVE</span>";
+                    document.getElementById('scan-btn').classList.remove('grayscale-mode');
+                    document.getElementById('expired-alert').classList.add('hidden');
+                    isExpired = false;
+                }
+            }, 1000);
         }
 
-        // --- SCANNER SYSTEM ---
-        window.openAssetSelect = () => {
-            if(isExpired) return alert("กรุณาต่ออายุการใช้งาน");
-            document.getElementById('modal-assets').classList.remove('hidden');
+        function pad(n) { return n < 10 ? '0' + n : n; }
+
+        function setupContactButtons(line, fb) {
+            const btnLine = document.getElementById('btn-line');
+            const btnFb = document.getElementById('btn-fb');
+            
+            btnLine.onclick = () => window.open(line || '#', '_blank');
+            btnFb.onclick = () => window.open(fb || '#', '_blank');
         }
+
+        // --- SCANNER LOGIC ---
+        window.openSearchModal = () => {
+            document.getElementById('search-modal').classList.remove('hidden');
+            renderAssetList(assets);
+        };
+
         window.closeModal = (id) => document.getElementById(id).classList.add('hidden');
-        window.closeResult = () => document.getElementById('modal-result').classList.add('hidden');
 
-        window.selectAsset = (pair, name) => {
-            selectedPair = pair;
-            selectedPairName = name;
-            // Highlight logic here if needed (omitted for brevity)
-        }
-
-        document.getElementById('btn-start-process').addEventListener('click', () => {
-            if(!selectedPair) return alert("กรุณาเลือกเหรียญ");
-            closeModal('modal-assets');
-            
-            const proc = document.getElementById('screen-process');
-            proc.classList.remove('hidden');
-            document.getElementById('proc-target').innerText = selectedPair;
-            loadChart(selectedPair, 'tv-mini-chart', true); // Mini Chart
-
-            // Fake Logs Sequence
-            setTimeout(() => document.getElementById('log-1').style.opacity=1, 800);
-            setTimeout(() => document.getElementById('log-2').style.opacity=1, 1600);
-            setTimeout(() => document.getElementById('log-3').style.opacity=1, 2400);
-            setTimeout(() => document.getElementById('log-4').style.opacity=1, 3200);
-            setTimeout(() => document.getElementById('log-5').style.opacity=1, 4000);
-
-            setTimeout(() => {
-                proc.classList.add('hidden');
-                showResult();
-            }, 4500);
+        document.getElementById('asset-search-input').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtered = assets.filter(a => a.name.toLowerCase().includes(term) || a.id.toLowerCase().includes(term));
+            renderAssetList(filtered);
         });
 
-        function showResult() {
-            const isBuy = Math.random() > 0.5;
-            document.getElementById('res-pair-name').innerText = selectedPair;
-            
-            const bg = document.getElementById('res-action-bg');
-            const icon = document.getElementById('res-icon');
-            const txt = document.getElementById('res-action-text');
-            const reason = document.getElementById('res-reason');
-
-            if(isBuy) {
-                bg.className = "inline-flex items-center gap-3 px-6 py-2 rounded-full bg-green-500/20 border border-green-500 text-green-500 mb-2";
-                icon.className = "fa-solid fa-arrow-up text-2xl";
-                txt.innerText = "BUY";
-                reason.innerText = "กราฟยืนเหนือ EMA 200 เกิดสัญญาณ Golden Cross พร้อมแรงซื้อ Volume สูง";
-                document.getElementById('res-tp').innerText = "Next Resistance / +1.2%";
-                document.getElementById('res-sl').innerText = "Recent Swing Low";
-            } else {
-                bg.className = "inline-flex items-center gap-3 px-6 py-2 rounded-full bg-red-500/20 border border-red-500 text-red-500 mb-2";
-                icon.className = "fa-solid fa-arrow-down text-2xl";
-                txt.innerText = "SELL";
-                reason.innerText = "ราคาติดแนวต้านสำคัญ เกิดแท่งเทียน Bearish Engulfing และ RSI ทำ Bearish Divergence";
-                document.getElementById('res-tp').innerText = "Next Support / -1.0%";
-                document.getElementById('res-sl').innerText = "Recent Swing High";
-            }
-
-            document.getElementById('modal-result').classList.remove('hidden');
+        function renderAssetList(list) {
+            const container = document.getElementById('asset-list');
+            container.innerHTML = '';
+            list.forEach(asset => {
+                const el = document.createElement('div');
+                el.className = 'flex items-center justify-between p-4 rounded-xl bg-gray-900 border border-gray-800 hover:border-gold cursor-pointer transition';
+                el.innerHTML = `
+                    <div>
+                        <div class="font-bold text-white">${asset.name}</div>
+                        <div class="text-xs text-gray-500">${asset.type}</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-gray-600"></i>
+                `;
+                el.onclick = () => {
+                    currentAsset = { symbol: asset.id, name: asset.name, type: asset.type };
+                    document.getElementById('current-asset-name').innerText = asset.name;
+                    closeModal('search-modal');
+                    updatePrice();
+                };
+                container.appendChild(el);
+            });
         }
 
-        // --- TRADING VIEW ---
-        window.changeChart = (pair) => loadChart(pair, 'tv-chart-container');
+        window.openTimeframeModal = () => {
+            if (isExpired) return alert('กรุณาต่ออายุเพื่อใช้งาน AI');
+            document.getElementById('tf-modal').classList.remove('hidden');
+        };
 
-        window.loadChart = (symbol, containerId, isMini = false) => {
-            let tvSym = "BINANCE:" + symbol;
-            if(symbol === "XAUUSD") tvSym = "OANDA:XAUUSD";
-            if(symbol.includes("USD") && !symbol.includes("USDT")) tvSym = "FX:" + symbol;
+        window.selectTF = (tf) => {
+            selectedTimeframe = tf;
+            // Visual feedback could be added here
+            startAIScan();
+        };
 
+        window.startAIScan = () => {
+            closeModal('tf-modal');
+            document.getElementById('loading-screen').classList.remove('hidden-page');
+            document.querySelector('#loading-screen .text-xl').innerText = "AI PROCESSING...";
+            
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('hidden-page');
+                showAIResult();
+            }, 2500);
+        };
+
+        function showAIResult() {
+            // Mock AI Logic
+            const price = parseFloat(document.getElementById('main-price').innerText.replace('$','').replace(',',''));
+            const isBuy = Math.random() > 0.5;
+            const tfMin = parseInt(selectedTimeframe);
+            
+            // Calculate Times
+            const now = new Date();
+            const closeTime = new Date(now.getTime() + tfMin * 60000);
+            
+            // UI Update
+            const box = document.getElementById('res-signal-box');
+            const action = document.getElementById('res-action');
+            const entry = document.getElementById('res-entry');
+            const tp = document.getElementById('res-tp');
+            const sl = document.getElementById('res-sl');
+            
+            if (isBuy) {
+                box.className = "w-full p-6 rounded-2xl bg-green-500/10 border border-green-500/50 text-center mb-6 relative overflow-hidden";
+                action.innerText = "BUY (LONG)";
+                action.className = "text-3xl font-black text-green-500 mb-1 tracking-wider";
+                tp.innerText = (price * 1.005).toFixed(2);
+                sl.innerText = (price * 0.995).toFixed(2);
+                document.getElementById('res-advice').innerText = "Momentum ฝั่งซื้อแข็งแกร่ง (Strong Buy) volume เข้าสนับสนุน แนะนำให้เปิด Long ทันที";
+            } else {
+                box.className = "w-full p-6 rounded-2xl bg-red-500/10 border border-red-500/50 text-center mb-6 relative overflow-hidden";
+                action.innerText = "SELL (SHORT)";
+                action.className = "text-3xl font-black text-red-500 mb-1 tracking-wider";
+                tp.innerText = (price * 0.995).toFixed(2);
+                sl.innerText = (price * 1.005).toFixed(2);
+                document.getElementById('res-advice').innerText = "เกิดสัญญาณกลับตัว (Reversal) RSI เข้าโซน Overbought แนะนำให้เปิด Short เพื่อทำกำไรระยะสั้น";
+            }
+
+            document.getElementById('res-pair').innerText = currentAsset.name;
+            document.getElementById('res-tf-badge').innerText = `Timeframe: ${selectedTimeframe}`;
+            entry.innerText = price.toFixed(2);
+            document.getElementById('res-close-time').innerText = `${pad(closeTime.getHours())}:${pad(closeTime.getMinutes())}`;
+
+            document.getElementById('result-modal').classList.remove('hidden');
+        }
+
+        // --- CHART & PRICE ---
+        async function updatePrice() {
+            try {
+                // Mock Fetch for demo - replace with real API if needed
+                const res = await fetch(`https://api.binance.com/api/v3/ticker/24hr?symbol=${currentAsset.symbol.replace('/','')}`);
+                const data = await res.json();
+                
+                const p = parseFloat(data.lastPrice);
+                const chg = parseFloat(data.priceChangePercent);
+                
+                document.getElementById('main-price').innerText = `$${p.toFixed(2)}`;
+                const elChg = document.getElementById('price-change');
+                elChg.innerText = `${chg > 0 ? '+' : ''}${chg.toFixed(2)}%`;
+                elChg.className = `text-xl font-tech font-bold ${chg >= 0 ? 'text-green-400' : 'text-red-400'}`;
+            } catch (e) {
+                // If forex or error, show dummy
+                document.getElementById('main-price').innerText = "$1934.50"; 
+            }
+        }
+        setInterval(updatePrice, 5000);
+
+        // Navigation
+        window.switchTab = (tab) => {
+            ['home-page', 'chart-page', 'profile-page'].forEach(id => document.getElementById(id).classList.add('hidden-page'));
+            document.querySelectorAll('.nav-item').forEach(el => {
+                el.classList.remove('active', 'text-gold');
+                el.classList.add('text-gray-500');
+            });
+
+            document.getElementById(tab + '-page').classList.remove('hidden-page');
+            document.getElementById('nav-' + tab).classList.add('active', 'text-gold');
+            document.getElementById('nav-' + tab).classList.remove('text-gray-500');
+            
+            if (tab === 'chart') loadChart(currentAsset.symbol);
+        };
+
+        function loadChart(symbol) {
+            // Adjust symbol for TV
+            let tvSymbol = "BINANCE:" + symbol.replace('/','');
+            if(currentAsset.type === 'FOREX') tvSymbol = symbol.replace('/',''); 
+            
+            document.getElementById('tv_chart_container').innerHTML = "";
             new TradingView.widget({
-                "container_id": containerId,
-                "autosize": true,
-                "symbol": tvSym,
-                "interval": "15",
-                "timezone": "Asia/Bangkok",
-                "theme": "dark",
-                "style": "1",
-                "locale": "th_TH",
-                "toolbar_bg": "#f1f3f6",
-                "enable_publishing": false,
-                "hide_top_toolbar": isMini,
-                "hide_legend": isMini,
-                "save_image": false,
-                "backgroundColor": "#000000"
+                "width": "100%", "height": "100%",
+                "symbol": tvSymbol,
+                "interval": "15", "timezone": "Asia/Bangkok", "theme": "dark", "style": "1",
+                "container_id": "tv_chart_container", "backgroundColor": "rgba(18, 18, 18, 1)",
+                "hide_top_toolbar": true, "allow_symbol_change": false
             });
         }
     </script>
